@@ -1,0 +1,16 @@
+[package]
+description = "An Web Data Scraper Tauri Plugin for fund.easymoney"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+name = "fund-easymoney"
+readme = "README.md"
+repository = "https://github.com/QAlphaPartners/webscraper-plugins-workspace"
+version = "0.1.0"
+
+[dependencies]
+base64 = "0.21"
+sentry = "0.31"
+sentry-rust-minidump = "0.6"
+serde = "1"
+tauri = "1"
+thiserror = "1"
