@@ -3,7 +3,7 @@
 
 A Tauri Plugin for fund-eastmoney web data scraper.
 
-**Reference** https://github.com/timfish/sentry-tauri
+**Reference** <https://github.com/timfish/sentry-tauri>
 
 ## Installation
 
@@ -13,6 +13,7 @@ Add the required dependencies in `Cargo.toml`:
 [dependencies]
 fund-easymoney = "0.1"
 ```
+
 `sentry` and `sentry-rust-minidump` are re-exported by `fund-easymoney` so you
 don't need to add them as dependencies.
 
@@ -46,16 +47,20 @@ fn main() {
 
 ## Example App
 
-Clone this repository, install dependencies and build:
+1. Clone this repository, install dependencies:
 
 ```shell
 > pnpm install
 > pnpm build 
 ```
 
-In `examples/basic-app/src-tauri/src/main.rs` replace the DSN with your DSN
+2. Build ts into js and build rust(see scripts in package.json)
 
-Run in development mode:
+```shell
+> pnpm build 
+```
+
+3. Run in development mode:
 
 ```shell
 > pnpm example

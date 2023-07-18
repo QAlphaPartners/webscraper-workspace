@@ -4,6 +4,7 @@
 )]
 
 use fund_easymoney::sentry;
+use tauri::{Builder, plugin::plugin_init_script};
 
 #[tauri::command]
 fn rust_breadcrumb() {
@@ -24,24 +25,22 @@ fn native_crash() {
 }
 
 fn main() {
-    let client = sentry::init((
-        "https://233a45e5efe34c47a3536797ce15dafa@o447951.ingest.sentry.io/5650507",
-        sentry::ClientOptions {
-            release: sentry::release_name!(),
-            debug: true,
-            ..Default::default()
-        },
-    ));
-
-    let _guard = fund_easymoney::minidump::init(&client);
-
     tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(fund_easymoney::plugin())
         .invoke_handler(tauri::generate_handler![
             rust_breadcrumb,
             rust_panic,
             native_crash
         ])
-        .run(tauri::generate_context!())
+        .run({
+            // configure the app
+            let mut config = tauri::generate_context!();
+            // inject js_a_plugin script
+            plugin_init_script("js_a_plugin", include_str!("../ui/js_a_script.js")).unwrap();
+            // inject js_b_plugin script
+            plugin_init_script("js_b_plugin", include_str!("../ui/js_b_script.js")).unwrap();
+            config
+          })
         .expect("error while starting tauri app");
 }

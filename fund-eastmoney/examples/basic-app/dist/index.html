@@ -37,6 +37,8 @@
       <button id="js-error">JavaScript Error</button>
       <button id="rust-panic">Rust Panic</button>
       <button id="native-crash">Native Crash</button>
+      <button id="inject-js">inject Js to Webview </button>
+      <button id="remove-js">Remove Js from Webview </button>
     </div>
 
     <script>
@@ -48,6 +50,7 @@
         window.document
           .getElementById("js-breadcrumb")
           .addEventListener("click", () => {
+            console.log("you just clicked [js-breadcrumb]")
             Sentry.addBreadcrumb({
               message: "This is a breadcrumb from JavaScript",
             });
@@ -76,6 +79,25 @@
           .addEventListener("click", () => {
             window.__TAURI__.invoke("native_crash");
           });
+
+          window.document
+          .getElementById("inject-js")
+          .addEventListener("click", () => {
+            console.log("you just clicked [inject-js]")
+
+            window.__TAURI__.invoke("plugin:sentry|inject_js_file");
+          });
+
+          window.document
+          .getElementById("remove-js")
+          .addEventListener("click", () => {
+            console.log("you just clicked [remove-js]")
+
+            window.__TAURI__.invoke("plugin:sentry|remove_js_file");
+
+          });
+
+
       });
     </script>
   </body>

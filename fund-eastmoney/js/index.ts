@@ -2,6 +2,7 @@ import { BrowserOptions } from "@sentry/browser";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Breadcrumb, Event } from "@sentry/types";
 
+
 /**
  * A simple `beforeSend` that sends the envelope to the Rust process via Tauri invoke.
  */
@@ -32,6 +33,7 @@ export async function sendEventToRust(event: Event): Promise<Error | null> {
 export function sendBreadcrumbToRust(
   breadcrumb: Breadcrumb
 ): Breadcrumb | null {
+  console.log("Conan A simple `beforeBreadcrumb` hook that sends the breadcrumb to the Rust process via Tauri invoke.") 
   invoke("plugin:sentry|breadcrumb", { breadcrumb });
   // We don't collect breadcrumbs in the renderer since they are passed to Rust
   return null;
