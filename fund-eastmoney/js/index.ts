@@ -1,25 +1,57 @@
-import { BrowserOptions } from "@sentry/browser";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Breadcrumb, Event } from "@sentry/types";
 
-
+export interface BrowserOptions {
+  dsn?: string;
+  name?: string;
+  version?: string;
+  autoSessionTracking?:boolean;
+  integrations?: string[];
+}
+//# sourceMappingURL=sdkinfo.d.ts.map
+export interface Breadcrumb {
+  type?: string;
+  event_id?: string;
+  category?: string;
+  message?: string;
+  data?: {
+      [key: string]: any;
+  };
+  timestamp?: number;
+}
+export interface Event {
+  event_id?: string;
+  message?: string;
+  timestamp?: number;
+  start_timestamp?: number;
+  platform?: string;
+  logger?: string;
+  server_name?: string;
+  release?: string;
+  dist?: string;
+  environment?: string;
+  request?: Request;
+  transaction?: string;
+  modules?: {
+      [key: string]: string;
+  };
+  fingerprint?: string[];
+  breadcrumbs?: Breadcrumb[];
+  sdkProcessingMetadata?: {
+      [key: string]: any;
+  };
+}
 /**
  * A simple `beforeSend` that sends the envelope to the Rust process via Tauri invoke.
  */
 export async function sendEventToRust(event: Event): Promise<Error | null> {
   // The Sentry Rust type de-serialisation doesn't like these in their
   // current state
-  delete event.sdk;
   delete event.breadcrumbs;
   // These will be overridden in the host
   delete event.environment;
   // This isn't in the Rust types
   delete event.sdkProcessingMetadata;
 
-  // We delete the user agent header so Sentry doesn't display guess weird browsers
-  if (event?.request?.headers?.["User-Agent"]) {
-    delete event.request.headers["User-Agent"];
-  }
 
   await invoke("plugin:sentry|event", { event });
 
@@ -44,10 +76,7 @@ export function sendBreadcrumbToRust(
  * the Rust SDK.
  */
 export const defaultOptions: BrowserOptions = {
-  // We don't send from the browser but a DSN is required for the SDK to start
   dsn: "https://123456@dummy.dsn/0",
   // We want to track app sessions rather than browser sessions
   autoSessionTracking: false,
-  beforeSend: sendEventToRust,
-  beforeBreadcrumb: sendBreadcrumbToRust,
 };
