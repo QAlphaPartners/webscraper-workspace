@@ -32,11 +32,9 @@
   <body>
     <h1>fund-eastmoney-tauri</h1>
     <div class="buttons">
-      <button id="js-breadcrumb">JavaScript Breadcrumb</button>
-      <button id="rust-breadcrumb">Rust Breadcrumb</button>
-      <button id="js-error">JavaScript Error</button>
-      <button id="rust-panic">Rust Panic</button>
-      <button id="native-crash">Native Crash</button>
+      <button id="eastmoney_count">eastmoney website</button>
+      <button id="finance_yahoo">Finance Yahoo website</button>
+      <button id="tauri_count">tauri apps website</button>
       <button id="inject-js">inject Js to Webview </button>
       <button id="remove-js">Remove Js from Webview </button>
     </div>
@@ -48,36 +46,19 @@
 
       window.addEventListener("DOMContentLoaded", (event) => {
         window.document
-          .getElementById("js-breadcrumb")
+          .getElementById("eastmoney_count")
           .addEventListener("click", () => {
-            console.log("you just clicked [js-breadcrumb]")
-            Sentry.addBreadcrumb({
-              message: "This is a breadcrumb from JavaScript",
-            });
+            console.log("you just clicked [eastmoney_count]")
+            
+            window.__TAURI__.invoke("plugin:sentry|create_window");
           });
 
-        window.document
-          .getElementById("js-error")
+          window.document
+          .getElementById("finance_yahoo")
           .addEventListener("click", () => {
-            aFunctionThatThrows();
-          });
-
-        window.document
-          .getElementById("rust-breadcrumb")
-          .addEventListener("click", () => {
-            window.__TAURI__.invoke("rust_breadcrumb");
-          });
-
-        window.document
-          .getElementById("rust-panic")
-          .addEventListener("click", () => {
-            window.__TAURI__.invoke("rust_panic");
-          });
-
-        window.document
-          .getElementById("native-crash")
-          .addEventListener("click", () => {
-            window.__TAURI__.invoke("native_crash");
+            console.log("you just clicked [finance_yahoo]")
+            
+            window.__TAURI__.invoke("plugin:sentry|create_window_finance_yahoo");
           });
 
           window.document

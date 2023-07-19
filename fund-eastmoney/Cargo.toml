@@ -14,3 +14,5 @@ sentry-rust-minidump = "0.6"
 serde = "1"
 tauri = "1.4.1"
 thiserror = "1"
+
+tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
