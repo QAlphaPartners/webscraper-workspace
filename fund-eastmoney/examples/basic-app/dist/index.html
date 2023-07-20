@@ -1,85 +1,96 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
 
-      body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-      }
+<head>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-      .buttons {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-      }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
 
-      button {
-        margin-bottom: 0.5rem;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>fund-eastmoney-tauri</h1>
-    <div class="buttons">
-      <button id="eastmoney_count">eastmoney website</button>
-      <button id="finance_yahoo">Finance Yahoo website</button>
-      <button id="tauri_count">tauri apps website</button>
-      <button id="inject-js">inject Js to Webview </button>
-      <button id="remove-js">Remove Js from Webview </button>
-    </div>
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
 
-    <script>
-      function aFunctionThatThrows() {
-        throw new Error("This is a JavaScript Error");
-      }
+    button {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
 
-      window.addEventListener("DOMContentLoaded", (event) => {
-        window.document
-          .getElementById("eastmoney_count")
-          .addEventListener("click", () => {
-            console.log("you just clicked [eastmoney_count]")
-            
-            window.__TAURI__.invoke("plugin:sentry|create_window");
-          });
+<body>
+  <h1>fund-eastmoney-tauri</h1>
+  <div class="buttons">
 
-          window.document
-          .getElementById("finance_yahoo")
-          .addEventListener("click", () => {
-            console.log("you just clicked [finance_yahoo]")
-            
-            window.__TAURI__.invoke("plugin:sentry|create_window_finance_yahoo");
-          });
+    <button onclick="loadTauri()">Load Tauri</button>
+    <button id="eastmoney_count">eastmoney website</button>
+    <button id="finance_yahoo">Finance Yahoo website</button>
+    <button id="tauri_count">tauri apps website</button>
+    <button id="inject-js">inject Js to Webview </button>
+    <button id="remove-js">Remove Js from Webview </button>
+  </div>
 
-          window.document
-          .getElementById("inject-js")
-          .addEventListener("click", () => {
-            console.log("you just clicked [inject-js]")
+  <script>
 
-            window.__TAURI__.invoke("plugin:sentry|inject_js_file");
-          });
-
-          window.document
-          .getElementById("remove-js")
-          .addEventListener("click", () => {
-            console.log("you just clicked [remove-js]")
-
-            window.__TAURI__.invoke("plugin:sentry|remove_js_file");
-
-          });
+    function loadTauri() {
+      window.location = "https://tauri.app/";
+    }
 
 
-      });
-    </script>
-  </body>
+    function aFunctionThatThrows() {
+      throw new Error("This is a JavaScript Error");
+    }
+
+    window.addEventListener("DOMContentLoaded", (event) => {
+      window.document
+        .getElementById("eastmoney_count")
+        .addEventListener("click", () => {
+          console.log("you just clicked [eastmoney_count]")
+
+          window.__TAURI__.invoke("plugin:sentry|create_window");
+        });
+
+      window.document
+        .getElementById("finance_yahoo")
+        .addEventListener("click", () => {
+          console.log("you just clicked [finance_yahoo]")
+
+          window.__TAURI__.invoke("plugin:sentry|create_window_finance_yahoo");
+        });
+
+      window.document
+        .getElementById("inject-js")
+        .addEventListener("click", () => {
+          console.log("you just clicked [inject-js]")
+
+          window.__TAURI__.invoke("plugin:sentry|inject_js_file");
+        });
+
+      window.document
+        .getElementById("remove-js")
+        .addEventListener("click", () => {
+          console.log("you just clicked [remove-js]")
+
+          window.__TAURI__.invoke("plugin:sentry|remove_js_file");
+
+        });
+
+
+    });
+  </script>
+</body>
+
 </html>

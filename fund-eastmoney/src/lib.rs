@@ -39,7 +39,9 @@ async fn create_window_finance_yahoo<R: Runtime>(handle: AppHandle<R>) {
         &handle,
         "finance_yahoo", // the unique window label
         tauri::WindowUrl::App("https://finance.yahoo.com/".into()), // the url to load
+        
     )
+    .title("Finance Yahoo Scraper")
     // set the actual label
     // .with_label("fund.eastmoney")s
     // .with_config(|config| {
@@ -57,6 +59,7 @@ async fn create_window<R: Runtime>(handle: AppHandle<R>) {
         "fund_eastmoney", // the unique window label
         tauri::WindowUrl::App("https://fund.eastmoney.com/".into()), // the url to load
     )
+    .title("Fund Eastmoney Scraper")
     // set the actual label
     // .with_label("fund.eastmoney")s
     // .with_config(|config| {

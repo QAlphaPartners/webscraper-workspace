@@ -12,7 +12,7 @@
     "build": "pnpm build:ts && pnpm build:rust",
     "build:ts": "tsc --project ./js/tsconfig.json && rollup -c ./js/rollup.config.js",
     "build:rust": "cargo build",
-    "example": "cd examples/basic-app && pnpm install && pnpm tauri dev",
+    "example": "pnpm build && cd examples/basic-app && pnpm install && pnpm tauri dev",
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {

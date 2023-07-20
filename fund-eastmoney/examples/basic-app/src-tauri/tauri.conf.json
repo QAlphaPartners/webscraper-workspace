@@ -67,19 +67,25 @@
       "dangerousRemoteDomainIpcAccess": [
         {
           "domain": "fund.eastmoney.com",
-          "windows": ["fund_eastmoney"],
-          "enableTauriAPI": true
-        },
-         {
-          "domain": "finance.yahoo.com",
-          "windows": ["finance_yahoo"],
+          "windows": [
+            "fund_eastmoney"
+          ],
           "enableTauriAPI": true
         },
         {
-         "domain": "s.yimg.com",
-         "windows": ["finance_yahoo"],
-         "enableTauriAPI": true
-       }
+          "domain": "finance.yahoo.com",
+          "windows": [
+            "finance_yahoo"
+          ],
+          "enableTauriAPI": true
+        },
+        {
+          "domain": "s.yimg.com",
+          "windows": [
+            "finance_yahoo"
+          ],
+          "enableTauriAPI": true
+        }
       ]
     }
   }
