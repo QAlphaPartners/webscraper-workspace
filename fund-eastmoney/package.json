@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.4.0",
+    "cash-dom": "^8.1.5",
     "tslib": "^2.6.0"
   }
 }

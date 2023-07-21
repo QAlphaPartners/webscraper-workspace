@@ -10,7 +10,7 @@ export default [
     output: {
       dir: "./dist",
       entryFileNames: "[name].min.js",
-      format: "iife",
+      format: "esm",
     },
     plugins: [resolve({ browser: true }), terser({ format: { comments: false } }), commonjs({ requireReturnsDefault: "auto" }), json()],
   },
