@@ -12,11 +12,6 @@ export default [
       entryFileNames: "[name].min.js",
       format: "iife",
     },
-    plugins: [resolve(), terser({ format: { comments: false } }), commonjs({
-      // include the playwright-core module
-      include: /node_modules\/.pnpm\/playwright-core/,
-      // specify how to handle default exports
-      requireReturnsDefault: "auto",
-    }), json()],
+    plugins: [resolve({ browser: true }), terser({ format: { comments: false } }), commonjs({ requireReturnsDefault: "auto" }), json()],
   },
 ];
