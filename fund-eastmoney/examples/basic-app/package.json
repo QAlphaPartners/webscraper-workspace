@@ -1,5 +1,5 @@
 {
-  "name": "tauri-test-app",
+  "name": "fund-eastmoney-test-app",
   "scripts": {
     "tauri": "tauri"
   },
