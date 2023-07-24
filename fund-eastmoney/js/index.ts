@@ -86,7 +86,7 @@ export const defaultOptions: BrowserOptions = {
 export function createWebviewWindow(uniqueLabel: string, title: string, url: string) {
   const webview = new WebviewWindow(uniqueLabel, {
     title: title,
-    url: url
+    url: url,
   });
   webview.once('tauri://created', function () {
     console.log("webview window successfully created", webview.label)
