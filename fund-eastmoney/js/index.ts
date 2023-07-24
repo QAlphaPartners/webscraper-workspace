@@ -1,10 +1,12 @@
 import { invoke } from "@tauri-apps/api/tauri";
 
+import { WebviewWindow } from '@tauri-apps/api/window';
+
 export interface BrowserOptions {
   dsn?: string;
   name?: string;
   version?: string;
-  autoSessionTracking?:boolean;
+  autoSessionTracking?: boolean;
   integrations?: string[];
 }
 //# sourceMappingURL=sdkinfo.d.ts.map
@@ -14,7 +16,7 @@ export interface Breadcrumb {
   category?: string;
   message?: string;
   data?: {
-      [key: string]: any;
+    [key: string]: any;
   };
   timestamp?: number;
 }
@@ -32,12 +34,12 @@ export interface Event {
   request?: Request;
   transaction?: string;
   modules?: {
-      [key: string]: string;
+    [key: string]: string;
   };
   fingerprint?: string[];
   breadcrumbs?: Breadcrumb[];
   sdkProcessingMetadata?: {
-      [key: string]: any;
+    [key: string]: any;
   };
 }
 /**
@@ -65,7 +67,7 @@ export async function sendEventToRust(event: Event): Promise<Error | null> {
 export function sendBreadcrumbToRust(
   breadcrumb: Breadcrumb
 ): Breadcrumb | null {
-  console.log("Conan A simple `beforeBreadcrumb` hook that sends the breadcrumb to the Rust process via Tauri invoke.") 
+  console.log("Conan A simple `beforeBreadcrumb` hook that sends the breadcrumb to the Rust process via Tauri invoke.")
   invoke("plugin:sentry|breadcrumb", { breadcrumb });
   // We don't collect breadcrumbs in the renderer since they are passed to Rust
   return null;
@@ -80,3 +82,16 @@ export const defaultOptions: BrowserOptions = {
   // We want to track app sessions rather than browser sessions
   autoSessionTracking: false,
 };
+
+export function createWebviewWindow(uniqueLabel: string, title: string, url: string) {
+  const webview = new WebviewWindow(uniqueLabel, {
+    title: title,
+    url: url
+  });
+  webview.once('tauri://created', function () {
+    console.log("webview window successfully created", webview.label)
+  });
+  webview.once('tauri://error', function (e) {
+    console.log("an error happened creating the webview window", webview.label)
+  });
+}

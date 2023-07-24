@@ -24,7 +24,9 @@ var tauri_count = 0;
 console.log("You call me inject.min.js here for url=", window.location.href)
 
 // check the current URL of the webview
-if (window.location.href === "https://fund.eastmoney.com/" || window.location.href === "https://finance.yahoo.com/") {
+if (window.location.hostname === "fund.eastmoney.com"
+  || window.location.hostname === "fundf10.eastmoney.com"
+  || window.location.href === "https://finance.yahoo.com/") {
   eastmoney_count += 1
   // execute the script only for this URL
   console.log("hello from ", window.location.href, "eastmoney_count=", eastmoney_count);
@@ -59,8 +61,18 @@ function handleClick(event: MouseEvent) {
     // get the link URL from the href attribute
     const url = target.href;
 
-    // use window.eval to change the window location to the link URL
-    window.eval(`window.location.replace('${url}')`);
+    // Open the URL in the current window
+    window.open(url, "_self");
+  } else if (target instanceof HTMLElement && target.tagName === "LABEL") {
+
+    // To use it: http://fundf10.eastmoney.com/jjjz_002190.html
+    waitForElm<HTMLDivElement>("#jztable table").then(elm => {
+      console.log("extractJjjzHistoryData for Element(jztable) is ready: ", $(elm).text());
+
+      extractJjjzHistoryData(elm)
+
+    });
+
   }
 }
 
@@ -123,10 +135,68 @@ function handleLoaded() {
 
   // To use it:
   waitForElm<HTMLDivElement>("#my-float-div").then(elm => {
-    console.log("Element is ready: ",$(elm).text());
+    console.log("Element(my-float-div) is ready: ", $(elm).text());
   });
 
+  // To use it:
+  waitForElm<HTMLDivElement>("#pagebar").then(elm => {
+    console.log("Element(pagebar) is ready: ", $(elm).text());
+
+    // Select the pagebtns' labels
+    var labels = $(".pagebtns label");
+    console.log(".pagebtns labels", labels, labels.length);
+
+    // Attach a click handler
+    labels.on("click", function (event) {
+      // Do something when a label is clicked
+      console.log(".pagebtns", event.target);
+
+      var tableDiv = $("#jztable table");
+      if (tableDiv instanceof HTMLDivElement) {
+        extractJjjzHistoryData(tableDiv)
+      }
+    });
+
+  });
+
+  // To use it: http://fundf10.eastmoney.com/jjjz_002190.html
+  waitForElm<HTMLDivElement>("#jztable table").then(elm => {
+    console.log("extractJjjzHistoryData for Element(jztable) is ready: ", $(elm).text());
+
+    extractJjjzHistoryData(elm)
+
+  });
+
+
 };
+
+function extractJjjzHistoryData(elm: HTMLDivElement) {
+
+  // Assume you have a variable called tableDiv that is an HTMLDivElement
+  // var tableDiv = document.getElementById("myTableDiv");
+  var tableDiv = elm;
+
+  // Wrap it in a cash object
+  var table = $(tableDiv);
+
+  // Select the table rows
+  var rows = table.find("tr");
+
+  // Iterate over the rows
+  rows.each(function (index, element) {
+    // Do something with each row
+    var row = $(element);
+    var heads = row.find("th")
+    if (heads.length > 0) {
+      console.log(index, heads[0]?.innerText, heads[1]?.innerText, heads[2]?.innerText, heads[3]?.innerText);
+    }
+
+    var cells = row.find("td")
+    if (cells.length > 0) {
+      console.log(index, cells[0]?.innerText, cells[1]?.innerText, cells[2]?.innerText, cells[3]?.innerText);
+    }
+  });
+}
 
 // Declare a generic type parameter T that extends HTMLElement
 function waitForElm<T extends HTMLElement>(selector: string): Promise<T> {

@@ -73,6 +73,13 @@
           "enableTauriAPI": true
         },
         {
+          "domain": "fundf10.eastmoney.com",
+          "windows": [
+            "fundf10"
+          ],
+          "enableTauriAPI": true
+        },
+        {
           "domain": "finance.yahoo.com",
           "windows": [
             "finance_yahoo"

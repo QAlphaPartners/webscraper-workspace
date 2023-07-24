@@ -37,6 +37,7 @@
 
     <button onclick="loadTauri()">Load Tauri</button>
     <button id="eastmoney_count">eastmoney website</button>
+    <button id="jjjz_002190">eastmoney jjjz_002190</button>
     <button id="finance_yahoo">Finance Yahoo website</button>
     <button id="tauri_count">tauri apps website</button>
     <button id="inject-js">inject Js to Webview </button>
@@ -62,7 +63,12 @@
 
           window.__TAURI__.invoke("plugin:sentry|create_window");
         });
-
+      window.document
+        .getElementById("jjjz_002190")
+        .addEventListener("click", () => {
+          console.log("you just clicked [jjjz_002190]")
+          Sentry.createWebviewWindow('fundf10', 'jjjz 002190', 'http://fundf10.eastmoney.com/jjjz_002190.html')
+        });
       window.document
         .getElementById("finance_yahoo")
         .addEventListener("click", () => {
