@@ -55,7 +55,7 @@ export async function sendEventToRust(event: Event): Promise<Error | null> {
   delete event.sdkProcessingMetadata;
 
 
-  await invoke("plugin:sentry|event", { event });
+  await invoke("plugin:fund_eastmoney|event", { event });
 
   // Stop events from being sent from the browser
   return null;
@@ -68,7 +68,7 @@ export function sendBreadcrumbToRust(
   breadcrumb: Breadcrumb
 ): Breadcrumb | null {
   console.log("Conan A simple `beforeBreadcrumb` hook that sends the breadcrumb to the Rust process via Tauri invoke.")
-  invoke("plugin:sentry|breadcrumb", { breadcrumb });
+  invoke("plugin:fund_eastmoney|breadcrumb", { breadcrumb });
   // We don't collect breadcrumbs in the renderer since they are passed to Rust
   return null;
 }

@@ -54,13 +54,14 @@ function handleClick(event: MouseEvent) {
   // get the event target
   const target = event.target;
 
-  console.log("handleClick target=", target)
+  console.log("handleClick target is HTMLAnchorElement?", target, target instanceof HTMLAnchorElement)
 
   // check if the target is an <a> element
-  if (target instanceof HTMLLinkElement && target.tagName === "A") {
+  if (target instanceof HTMLAnchorElement && target.tagName === "A") {
     // get the link URL from the href attribute
     const url = target.href;
 
+    console.log("trying to window.open url _self",url)
     // Open the URL in the current window
     window.open(url, "_self");
   } else if (target instanceof HTMLElement && target.tagName === "LABEL") {

@@ -40,8 +40,6 @@
     <button id="jjjz_002190">eastmoney jjjz_002190</button>
     <button id="finance_yahoo">Finance Yahoo website</button>
     <button id="tauri_count">tauri apps website</button>
-    <button id="inject-js">inject Js to Webview </button>
-    <button id="remove-js">Remove Js from Webview </button>
   </div>
 
   <script>
@@ -61,7 +59,7 @@
         .addEventListener("click", () => {
           console.log("you just clicked [eastmoney_count]")
 
-          window.__TAURI__.invoke("plugin:sentry|create_window");
+          window.__TAURI__.invoke("plugin:fund_eastmoney|create_window");
         });
       window.document
         .getElementById("jjjz_002190")
@@ -74,24 +72,7 @@
         .addEventListener("click", () => {
           console.log("you just clicked [finance_yahoo]")
 
-          window.__TAURI__.invoke("plugin:sentry|create_window_finance_yahoo");
-        });
-
-      window.document
-        .getElementById("inject-js")
-        .addEventListener("click", () => {
-          console.log("you just clicked [inject-js]")
-
-          window.__TAURI__.invoke("plugin:sentry|inject_js_file");
-        });
-
-      window.document
-        .getElementById("remove-js")
-        .addEventListener("click", () => {
-          console.log("you just clicked [remove-js]")
-
-          window.__TAURI__.invoke("plugin:sentry|remove_js_file");
-
+          window.__TAURI__.invoke("plugin:fund_eastmoney|create_window_finance_yahoo");
         });
 
 
