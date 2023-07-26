@@ -1,2 +1,5 @@
-# webscraper-plugins-workspace
-workspace for webscraper tauri-plugins 
+# webscraper-workspace
+
+## webscraper tauri-plugins 
+
+## webscraper desktop application using plugins

@@ -1,0 +1,11 @@
+[package]
+name = "common-plugin"
+version = "0.0.0"
+authors = [ "Me" ]
+description = ""
+edition = "2021"
+rust-version = "1.60"
+exclude = ["/examples"]
+
+[dependencies]
+tauri = { version = "1.4.0" }
