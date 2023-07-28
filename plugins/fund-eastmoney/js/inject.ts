@@ -81,9 +81,9 @@ function handleClick(event: MouseEvent) {
 }
 
 // Wait for the window to load
-function handleLoaded() {
+async function handleLoaded() {
 
-  console.log("try to create floatDiv when window.load", window.location.href)
+
   // Create a new div element using JavaScript
   var floatDiv = document.createElement("div");
 
@@ -172,6 +172,8 @@ function handleLoaded() {
   });
 
 
+  console.log("done created floatDiv when window.load and invoke(open_link) for url", window.location.href)
+  await invoke("plugin:fund_eastmoney|open_link", { "url": "open from /plugins/fund-eastmoney/js/inject.ts" });
 };
 
 function extractJjjzHistoryData(elm: HTMLDivElement) {
