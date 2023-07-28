@@ -35,7 +35,7 @@
   <h1>Fund Eastmoney Scraper</h1>
   <div class="buttons">
     <button onclick="loadTauri()">Load Tauri</button>
-    <button id="eastmoney_count">eastmoney website</button>
+    <button id="eastmoney_website">eastmoney website</button>
 
     <button id="jjjz_002190">eastmoney jjjz_002190</button>
     <button id="finance_yahoo">Finance Yahoo website</button>
@@ -57,9 +57,9 @@
 
     window.addEventListener("DOMContentLoaded", (event) => {
       window.document
-        .getElementById("eastmoney_count")
+        .getElementById("eastmoney_website")
         .addEventListener("click", () => {
-          console.log("you just clicked [eastmoney_count]")
+          console.log("you just clicked [eastmoney_website]")
 
           window.__TAURI__.invoke("plugin:fund_eastmoney|open_link", { "url": "open from /examples/basic-app/dist/index.html" });
           window.__TAURI__.invoke("plugin:fund_eastmoney|create_window");
