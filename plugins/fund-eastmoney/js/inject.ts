@@ -1,5 +1,7 @@
 import * as Sentry from "./";
 
+import { invoke } from "@tauri-apps/api/tauri";
+import * as Crawler from "./crawler"
 // Import the $() function from Cash JS
 import $ from "cash-dom";
 
@@ -26,7 +28,8 @@ console.log("You call me inject.min.js here for url=", window.location.href)
 // check the current URL of the webview
 if (window.location.hostname === "fund.eastmoney.com"
   || window.location.hostname === "fundf10.eastmoney.com"
-  || window.location.href === "https://finance.yahoo.com/") {
+  || window.location.hostname === "finance.yahoo.com") {
+
   eastmoney_count += 1
   // execute the script only for this URL
   console.log("hello from ", window.location.href, "eastmoney_count=", eastmoney_count);
@@ -61,7 +64,7 @@ function handleClick(event: MouseEvent) {
     // get the link URL from the href attribute
     const url = target.href;
 
-    console.log("trying to window.open url _self",url)
+    console.log("trying to window.open url _self", url)
     // Open the URL in the current window
     window.open(url, "_self");
   } else if (target instanceof HTMLElement && target.tagName === "LABEL") {
@@ -223,4 +226,36 @@ function waitForElm<T extends HTMLElement>(selector: string): Promise<T> {
       subtree: true
     });
   });
+}
+
+async function handleCrawling(url: string) {
+  console.log("handleCrawling start to crawl url", url);
+
+  await invoke("plugin:fund_eastmoney|open_link", { "url": url });
+
+  // // Define an empty links array of HTMLAnchorElement objects
+  // const links: HTMLAnchorElement[] = [];
+
+  // // Get all the links from the new page and add them to the links array if they belong to the same domain as the original link
+  // $('a', document).each((i: number, el: Element) => {
+  //   const link = el as HTMLAnchorElement;
+  //   if (Crawler.isSameDomain(link.href, url)) {
+  //     console.log("handleCrawling 2 got link", link.href)
+  //     links.push(link);
+  //   }
+  // });
+  // // Define a global index to keep track of the current link
+  // let currentIndex = 0;
+  // // Open the first link in the same tab that belongs to the same domain as the original link
+  // while (currentIndex < links.length && !Crawler.isSameDomain(links[currentIndex].href, url)) {
+  //   links.shift()
+  //   currentIndex++;
+  // }
+  // console.log("handleCrawling 3 got currentIndex,links.length", currentIndex, links.length)
+  // // Check if there are any links to visit within the same domain
+  // if (currentIndex < links.length) {
+  //   console.log("handleCrawling 4 openLink", currentIndex)
+  //   Crawler.openLink(links[currentIndex], links, currentIndex);
+  // }
+
 }

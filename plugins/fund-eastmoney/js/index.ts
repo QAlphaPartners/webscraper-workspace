@@ -1,3 +1,8 @@
+// Import the $() function from Cash JS
+import $ from "cash-dom";
+
+import * as Crawler from "./crawler"
+
 import { invoke } from "@tauri-apps/api/tauri";
 
 import { WebviewWindow } from '@tauri-apps/api/window';
@@ -94,4 +99,56 @@ export function createWebviewWindow(uniqueLabel: string, title: string, url: str
   webview.once('tauri://error', function (e) {
     console.log("an error happened creating the webview window", webview.label)
   });
+}
+
+
+export async function loadURL(url: string): Promise<void> {
+  // Open the URL in the current window
+  window.open(url, "_self");
+}
+
+
+// Define and export a function to start the crawler on a new tab
+export function startCrawler(url: string): void {
+  // Define an empty links array of HTMLAnchorElement objects
+  const links: HTMLAnchorElement[] = [];
+  // Open the link in a new tab
+  const newTab = window.open(url, '_blank');
+  // Check if the new tab is not null
+  if (newTab) {
+    console.log("startCrawler get newTab ", url);
+    // Request an animation frame for the new tab
+    newTab.requestAnimationFrame(() => {
+      // Switch to the new tab
+      newTab.focus();
+      // Create a new MutationObserver to observe the DOM ready event
+      const observer = new MutationObserver((mutations: MutationRecord[], observer: MutationObserver) => {
+        // Check if the document is ready
+        if (newTab.document.readyState === 'complete') {
+          // Disconnect the observer
+          observer.disconnect();
+          // Get all the links from the new page and add them to the links array if they belong to the same domain as the original link
+          $('a', newTab.document).each((i: number, el: Element) => {
+            const link = el as HTMLAnchorElement;
+            if (Crawler.isSameDomain(link.href, url)) {
+              console.log("crawler got link",link.href)
+              links.push(link);
+            }
+          });
+          // Define a global index to keep track of the current link
+          let currentIndex = 0;
+          // Open the first link in the same tab that belongs to the same domain as the original link
+          while (currentIndex < links.length && Crawler.isSameDomain(links[currentIndex].href, url)) {
+            currentIndex++;
+          }
+          // Check if there are any links to visit within the same domain
+          if (currentIndex < links.length) {
+            Crawler.openLink(links[currentIndex], links, currentIndex);
+          }
+        }
+      });
+      // Start observing the document for changes in its ready state
+      observer.observe(newTab.document, { attributes: true });
+    });
+  }
 }

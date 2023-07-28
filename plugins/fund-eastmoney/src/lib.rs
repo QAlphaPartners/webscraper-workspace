@@ -1,3 +1,5 @@
+use std::time::SystemTime;
+
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
@@ -25,6 +27,37 @@ impl Default for JavaScriptOptions {
 #[derive(Debug, Clone, Default)]
 pub struct Options {
     pub javascript: JavaScriptOptions,
+}
+// Accessing the Window in Commands
+#[tauri::command]
+async fn access_the_window<R: Runtime>(window: tauri::Window<R>, url: String) {
+    println!("Window: {}", window.label());
+    let js = r#"
+  console.log("Hello, world!")
+  "#;
+
+    let open_url_js = &r#"
+    window.open(_URL_, "_self");
+  "#
+    .replace("_URL_", &url);
+
+    let _ = window.eval(open_url_js);
+
+    let js1 = &include_str!("../dist/inject.min.js").replace("__DEBUG__", &format!("{}", true));
+
+    let _ = window.eval(js1);
+}
+
+#[tauri::command]
+async fn open_link<R: Runtime>(window: tauri::Window<R>, url: String) {
+    let now = SystemTime::now();
+
+    println!(
+        "open_link Window: {} url: {} now: {:?}",
+        window.label(),
+        url,
+        now
+    );
 }
 
 #[tauri::command]
@@ -72,6 +105,8 @@ where
 
 pub fn plugin_with_options<R: Runtime>(options: Options) -> TauriPlugin<R> {
     let mut plugin_builder = Builder::new("fund_eastmoney").invoke_handler(generate_handler![
+        open_link,
+        access_the_window,
         create_window_finance_yahoo,
         create_window,
     ]);

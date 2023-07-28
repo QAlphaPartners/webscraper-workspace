@@ -36,9 +36,12 @@
   <div class="buttons">
     <button onclick="loadTauri()">Load Tauri</button>
     <button id="eastmoney_count">eastmoney website</button>
+
     <button id="jjjz_002190">eastmoney jjjz_002190</button>
     <button id="finance_yahoo">Finance Yahoo website</button>
     <button id="tauri_count">tauri apps website</button>
+
+
   </div>
 
   <script>
@@ -58,8 +61,10 @@
         .addEventListener("click", () => {
           console.log("you just clicked [eastmoney_count]")
 
+          window.__TAURI__.invoke("plugin:fund_eastmoney|open_link", { "url": "open from /examples/basic-app/dist/index.html" });
           window.__TAURI__.invoke("plugin:fund_eastmoney|create_window");
         });
+         
       window.document
         .getElementById("jjjz_002190")
         .addEventListener("click", () => {
