@@ -14,4 +14,13 @@ export default [
     },
     plugins: [resolve({ browser: true }), terser({ format: { comments: false } }), commonjs({ requireReturnsDefault: "auto" }), json()],
   },
+  {
+    input: "./dist/crawler_lazy.js",
+    output: {
+      dir: "./dist",
+      entryFileNames: "[name].min.js",
+      format: "esm",
+    },
+    plugins: [resolve({ browser: true }), terser({ format: { comments: false } }), commonjs({ requireReturnsDefault: "auto" }), json()],
+  },
 ];

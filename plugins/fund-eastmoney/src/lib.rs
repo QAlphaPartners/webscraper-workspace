@@ -100,9 +100,9 @@ async fn create_window<R: Runtime>(handle: AppHandle<R>) {
     //     config.decorations = false; // no titlebar or borders
     //     config.state = WindowState::default(); // use the plugin's default state
     // })
-    // .initialization_script(
-    //     &include_str!("../dist/inject.min.js").replace("__DEBUG__", &format!("{}", true)),
-    // )
+    .initialization_script(
+        &include_str!("../dist/crawler_lazy.min.js").replace("__DEBUG__", &format!("{}", true)),
+    )
     
     .build()
     .unwrap();
