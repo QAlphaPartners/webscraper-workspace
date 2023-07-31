@@ -53,6 +53,7 @@
     },
     "windows": [
       {
+        "label": "main",
         "title": "Fund Eastmoney Scraper",
         "width": 800,
         "height": -1,

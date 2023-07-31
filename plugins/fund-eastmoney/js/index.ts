@@ -7,6 +7,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 import { WebviewWindow } from '@tauri-apps/api/window';
 
+import { emit, listen } from '@tauri-apps/api/event'
 export interface BrowserOptions {
   dsn?: string;
   name?: string;
@@ -88,17 +89,33 @@ export const defaultOptions: BrowserOptions = {
   autoSessionTracking: false,
 };
 
-export function createWebviewWindow(uniqueLabel: string, title: string, url: string) {
+export async function createWebviewWindow(uniqueLabel: string, title: string, url: string) {
   const webview = new WebviewWindow(uniqueLabel, {
     title: title,
     url: url,
   });
   webview.once('tauri://created', function () {
     console.log("webview window successfully created", webview.label)
+
   });
   webview.once('tauri://error', function (e) {
     console.log("an error happened creating the webview window", webview.label)
   });
+
+
+  // listen to the DOM loaded event from the new window
+  const unlisten = await listen<string>('BackendEventxyz', async (event) => {
+    // do something when the DOM is loaded
+    console.log('The BackendEventxyz is ready event', event)
+    // await invoke("plugin:fund_eastmoney|open_link", { "url": "open from /plugins/fund-eastmoney/js/index.ts" });
+  })
+
+
+  webview.once('tauri://destroyed', function (e) {
+    console.log("webview window successfully destroyed", webview.label);
+    unlisten();
+  });
+
 }
 
 
@@ -131,7 +148,7 @@ export function startCrawler(url: string): void {
           $('a', newTab.document).each((i: number, el: Element) => {
             const link = el as HTMLAnchorElement;
             if (Crawler.isSameDomain(link.href, url)) {
-              console.log("crawler got link",link.href)
+              console.log("crawler got link", link.href)
               links.push(link);
             }
           });

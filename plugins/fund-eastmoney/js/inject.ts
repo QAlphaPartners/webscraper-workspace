@@ -5,6 +5,7 @@ import * as Crawler from "./crawler"
 // Import the $() function from Cash JS
 import $ from "cash-dom";
 
+import { emit, listen } from '@tauri-apps/api/event'
 
 declare var __DEBUG__: boolean;
 
@@ -137,10 +138,58 @@ async function handleLoaded() {
 
 
 
+  const unlisten = await listen("BackendEventxyz", (event) => {
+    console.log("listen got BackendEventxyz@my-float-div ", event)
+  })
+
   // To use it:
-  waitForElm<HTMLDivElement>("#my-float-div").then(elm => {
-    console.log("Element(my-float-div) is ready: ", $(elm).text());
+  waitForElm<HTMLDivElement>("#my-float-div").then(async elm => {
+    console.log("Element(my-float-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
+
+    var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#my-float-div")' });
+    console.log("after emit(DOMContentLoadedxxx)", pp);
+
+
+
   });
+
+  // Add an event listener for the window.onbeforeunload event
+  window.onbeforeunload = function () {
+    // Call unlisten() before closing the window
+    unlisten();
+    // Return null to prevent any confirmation dialog
+    return null;
+  };
+
+
+  // Select the node that will be observed for mutations
+  var targetNode = document.body;
+
+  // Options for the observer (which mutations to observe)
+  var config1 = { childList: true, subtree: true };
+
+
+  // Create an observer instance linked to the callback function
+  var observer1 = new MutationObserver((mutationsList) => {
+    // Use traditional 'for loops' for IE 11
+    for (var mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        // Check if the element with id "my-float-div" is removed
+        var elm = document.getElementById("my-float-div");
+        if (!document.body.contains(elm)) {
+          console.log('The element with id "my-float-div" is removed from the DOM');
+          // Stop listening to the "BackendEventxyz" event
+          unlisten();
+          // Stop observing
+          observer.disconnect();
+        }
+      }
+    }
+  });
+
+  // Start observing the target node for configured mutations
+  observer1.observe(targetNode, config1);
+
 
   // To use it:
   waitForElm<HTMLDivElement>("#pagebar").then(elm => {
@@ -173,7 +222,6 @@ async function handleLoaded() {
 
 
   console.log("done created floatDiv when window.load and invoke(open_link) for url", window.location.href)
-  await invoke("plugin:fund_eastmoney|open_link", { "url": "open from /plugins/fund-eastmoney/js/inject.ts" });
 };
 
 function extractJjjzHistoryData(elm: HTMLDivElement) {

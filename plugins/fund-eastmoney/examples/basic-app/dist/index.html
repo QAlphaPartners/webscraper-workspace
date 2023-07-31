@@ -55,6 +55,16 @@
       throw new Error("This is a JavaScript Error");
     }
 
+    window.__TAURI__.event.listen("BackendEventxyz", (event) => {
+      console.log("got backend BackendEventxyz on /examples/basic-app/dist/index.html", event)
+    })
+   
+    window.__TAURI__.event.listen("DOMContentLoadedxxx", (event) => {
+      console.log("got frontend DOMContentLoadedxxx on /examples/basic-app/dist/index.html", event)
+    })
+     
+    
+
     window.addEventListener("DOMContentLoaded", (event) => {
       window.document
         .getElementById("eastmoney_website")
@@ -64,7 +74,7 @@
           window.__TAURI__.invoke("plugin:fund_eastmoney|open_link", { "url": "open from /examples/basic-app/dist/index.html" });
           window.__TAURI__.invoke("plugin:fund_eastmoney|create_window");
         });
-         
+
       window.document
         .getElementById("jjjz_002190")
         .addEventListener("click", () => {
