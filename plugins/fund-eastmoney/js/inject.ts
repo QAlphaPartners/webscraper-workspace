@@ -1,11 +1,11 @@
-import * as Sentry from "./";
+import * as Sentry from "./index";
 
 import { invoke } from "@tauri-apps/api/tauri";
 import * as Crawler from "./crawler"
 // Import the $() function from Cash JS
 import $ from "cash-dom";
 
-import { emit, listen } from '@tauri-apps/api/event'
+import { UnlistenFn, emit, listen } from '@tauri-apps/api/event'
 
 declare var __DEBUG__: boolean;
 
@@ -16,39 +16,45 @@ declare global {
 }
 
 window.Sentry = Sentry;
-var eastmoney_count = 0;
-var tauri_count = 0;
-// Sentry.init({
-//   ...defaultOptions,
-//   // We replace this with true or false before injecting this code into the browser
-//   debug: __DEBUG__,
-// });
 
-console.log("You call me inject.min.js here for url=", window.location.href)
 
-// check the current URL of the webview
-if (window.location.hostname === "fund.eastmoney.com"
-  || window.location.hostname === "fundf10.eastmoney.com"
-  || window.location.hostname === "finance.yahoo.com") {
 
-  eastmoney_count += 1
-  // execute the script only for this URL
-  console.log("hello from ", window.location.href, "eastmoney_count=", eastmoney_count);
-  // do something else
+console.log("[inject.ts] Start scraping web-data for url=", window.location.href)
+// add the function as an event listener for the load event
+window.addEventListener("DOMContentLoaded", handleLoaded);
 
-  // add the function as an event listener for the load event
-  window.addEventListener("DOMContentLoaded", handleLoaded);
 
-} else if (window.location.href === "https://tauri.app/") {
-  tauri_count += 1
-  // execute the script only for this URL
-  console.log("hello from ", window.location.href, "tauri_count=", tauri_count);
-  // do something else
+function start() {
+  var eastmoney_count = 0;
+  var tauri_count = 0;
+  // Sentry.init({
+  //   ...defaultOptions,
+  //   // We replace this with true or false before injecting this code into the browser
+  //   debug: __DEBUG__,
+  // });
+
+  console.log("Start scraping web-data for url=", window.location.href)
+
+  // check the current URL of the webview
+  if (window.location.hostname === "fund.eastmoney.com"
+    || window.location.hostname === "fundf10.eastmoney.com"
+    || window.location.hostname === "finance.yahoo.com") {
+
+    eastmoney_count += 1
+    // execute the script only for this URL
+    console.log("hello from ", window.location.href, "eastmoney_count=", eastmoney_count);
+    // do something else
+
+    // add the function as an event listener for the load event
+    window.addEventListener("DOMContentLoaded", handleLoaded);
+
+  } else if (window.location.href === "https://tauri.app/") {
+    tauri_count += 1
+    // execute the script only for this URL
+    console.log("hello from ", window.location.href, "tauri_count=", tauri_count);
+    // do something else
+  }
 }
-
-
-
-
 
 // define a function that will run when any link is clicked
 function handleClick(event: MouseEvent) {
@@ -138,57 +144,59 @@ async function handleLoaded() {
 
 
 
-  const unlisten = await listen("BackendEventxyz", (event) => {
-    console.log("listen got BackendEventxyz@my-float-div ", event)
-  })
-
   // To use it:
   waitForElm<HTMLDivElement>("#my-float-div").then(async elm => {
     console.log("Element(my-float-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
 
     var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#my-float-div")' });
-    console.log("after emit(DOMContentLoadedxxx)", pp);
+
+    
+    console.log("after emit(DOMContentLoadedxxx)");
 
 
+    const unlisten = await listen("BackendEventxyz", (event) => {
+      console.log("listen got BackendEventxyz@my-float-div ", event)
+    })
+
+
+    // Add an event listener for the window.onbeforeunload event
+    window.onbeforeunload = function () {
+      // Call unlisten() before closing the window
+      unlisten();
+      // Return null to prevent any confirmation dialog
+      return null;
+    };
 
   });
 
-  // Add an event listener for the window.onbeforeunload event
-  window.onbeforeunload = function () {
-    // Call unlisten() before closing the window
-    unlisten();
-    // Return null to prevent any confirmation dialog
-    return null;
-  };
+
+  // // Select the node that will be observed for mutations
+  // var targetNode = document.body;
+
+  // // Options for the observer (which mutations to observe)
+  // var config1 = { childList: true, subtree: true };
 
 
-  // Select the node that will be observed for mutations
-  var targetNode = document.body;
+  // // Create an observer instance linked to the callback function
+  // var observer1 = new MutationObserver((mutationsList) => {
+  //   // Use traditional 'for loops' for IE 11
+  //   for (var mutation of mutationsList) {
+  //     if (mutation.type === 'childList') {
+  //       // Check if the element with id "my-float-div" is removed
+  //       var elm = document.getElementById("my-float-div");
+  //       if (!document.body.contains(elm)) {
+  //         console.log('The element with id "my-float-div" is removed from the DOM');
+  //         // Stop listening to the "BackendEventxyz" event
+  //         unlisten();
+  //         // Stop observing
+  //         observer.disconnect();
+  //       }
+  //     }
+  //   }
+  // });
 
-  // Options for the observer (which mutations to observe)
-  var config1 = { childList: true, subtree: true };
-
-
-  // Create an observer instance linked to the callback function
-  var observer1 = new MutationObserver((mutationsList) => {
-    // Use traditional 'for loops' for IE 11
-    for (var mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-        // Check if the element with id "my-float-div" is removed
-        var elm = document.getElementById("my-float-div");
-        if (!document.body.contains(elm)) {
-          console.log('The element with id "my-float-div" is removed from the DOM');
-          // Stop listening to the "BackendEventxyz" event
-          unlisten();
-          // Stop observing
-          observer.disconnect();
-        }
-      }
-    }
-  });
-
-  // Start observing the target node for configured mutations
-  observer1.observe(targetNode, config1);
+  // // Start observing the target node for configured mutations
+  // observer1.observe(targetNode, config1);
 
 
   // To use it:

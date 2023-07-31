@@ -545,3 +545,22 @@ struct PluginInfo {
 ```
 
 This way, you can get all the plugins information in a Tauri application. I hope this helps.
+
+
+## DAPP - Scraping Web Data
+
+```mermaid
+
+sequenceDiagram
+
+    MainWindow->>RustBackend: 0 request to scrape website, e.g. finance.yahoo.com 
+    RustBackend->>ScraperWindow: 1 create window with url 
+
+    RustBackend->>ScraperWindow: 2 initialization_script on ScraperWindow
+
+    ScraperWindow-->>+RustBackend: 3.0 emit scraped data!
+
+    RustBackend-->>-ScraperWindow: 3.1 emit event to continue to scrape data
+
+    RustBackend->>ScraperWindow: 4 stop scraping and close the window
+```

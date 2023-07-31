@@ -18,33 +18,35 @@ fn native_crash() {
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
+            let app_ = app.handle();
             // in this place we can only listen events from frontend
 
             // --- listen event from frontend
-            app.listen_global("DOMContentLoadedxxx", |handler| {
-
+            app.listen_global("DOMContentLoadedxxx", move |handler| {
                 println!(
                     "This event [DOMContentLoadedxxx] is come from frontend!!!\n\n\t{}",
                     handler.payload().unwrap()
                 );
 
-                // main_window
-                // .emit_to(
-                //     "main",
-                //     "BackendEventxyz",
-                //     format!("payload {} in listener","you have done with frondend event [DOMContentLoadedxxx]"),
-                // );
+                app_.emit_all("BackendEventxyz", format!("payload {}", "listen_global"))
+                    .unwrap();
             });
             Ok(())
         })
         .on_page_load(|app, _ev| {
+            let window_ = app.clone();
+
             println!(
                 "on_page_load to emit_all BackendEventxyz {} {}",
                 app.label(),
                 app.url()
             );
-            app.emit_all("BackendEventxyz", format!("payload {}", app.url()))
-                .unwrap();
+
+            window_.eval("console.log(' on_page_load eval javascript')").unwrap();
+
+            window_.emit("BackendEventxyz", format!("payload {}", "on_page_load"))
+            .unwrap();
+
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(fund_easymoney::plugin())

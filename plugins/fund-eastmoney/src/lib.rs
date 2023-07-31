@@ -3,7 +3,7 @@ use std::time::SystemTime;
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
-    AppHandle, Runtime,
+    AppHandle, Event, Runtime,
 };
 
 #[derive(Debug, Clone)]
@@ -78,6 +78,14 @@ async fn create_window_finance_yahoo<R: Runtime>(handle: AppHandle<R>) {
     .unwrap();
 }
 
+const INIT_SCRIPT: &str = r#"
+  // if (window.location.origin === 'https://tauri.app') {
+    console.log("RUST INIT_SCRIPT: hello world from js init script");
+
+    window.__MY_CUSTOM_PROPERTY__ = { foo: 'bar' };
+  //}
+"#;
+
 #[tauri::command]
 async fn create_window<R: Runtime>(handle: AppHandle<R>) {
     let _new_window = tauri::WindowBuilder::new(
@@ -92,8 +100,14 @@ async fn create_window<R: Runtime>(handle: AppHandle<R>) {
     //     config.decorations = false; // no titlebar or borders
     //     config.state = WindowState::default(); // use the plugin's default state
     // })
+    // .initialization_script(
+    //     &include_str!("../dist/inject.min.js").replace("__DEBUG__", &format!("{}", true)),
+    // )
+    
     .build()
     .unwrap();
+
+
 }
 
 pub fn plugin<R>() -> tauri::plugin::TauriPlugin<R>
