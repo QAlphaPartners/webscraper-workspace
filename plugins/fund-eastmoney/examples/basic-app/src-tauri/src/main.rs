@@ -31,6 +31,19 @@ fn main() {
                 app_.emit_all("BackendEventxyz", format!("payload {}", "listen_global"))
                     .unwrap();
             });
+
+
+            // --- listen event from frontend
+            app.listen_global("InjectInited", move |handler| {
+                println!(
+                    "This event [InjectInited] is come from frontend!!!\n\n\t{}",
+                    handler.payload().unwrap()
+                );
+
+            });
+
+            
+
             Ok(())
         })
         .on_page_load(|app, _ev| {

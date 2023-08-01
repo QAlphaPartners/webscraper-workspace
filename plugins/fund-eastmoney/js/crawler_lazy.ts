@@ -188,6 +188,7 @@ async function handleLoaded() {
 
 
   console.log("done created floatDiv when window.load and invoke(open_link) for url", window.location.href)
+  await invoke("plugin:fund_eastmoney|open_link", { "url": "open_link from /plugins/fund-eastmoney/js/crawler_lazy.ts" });
 };
 
 function extractJjjzHistoryData(elm: HTMLDivElement) {

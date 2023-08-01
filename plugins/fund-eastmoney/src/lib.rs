@@ -3,7 +3,7 @@ use std::time::SystemTime;
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
-    AppHandle, Event, Runtime,
+    AppHandle, Event, EventHandler, Manager, RunEvent, Runtime, Window,
 };
 
 #[derive(Debug, Clone)]
@@ -103,11 +103,8 @@ async fn create_window<R: Runtime>(handle: AppHandle<R>) {
     .initialization_script(
         &include_str!("../dist/crawler_lazy.min.js").replace("__DEBUG__", &format!("{}", true)),
     )
-    
     .build()
     .unwrap();
-
-
 }
 
 pub fn plugin<R>() -> tauri::plugin::TauriPlugin<R>
@@ -125,14 +122,53 @@ pub fn plugin_with_options<R: Runtime>(options: Options) -> TauriPlugin<R> {
         create_window,
     ]);
 
+    let mut unlisten: Option<EventHandler> = None;
+
     if options.javascript.inject {
         println!("plugin_with_options to inject ../dist/inject.min.js");
 
-        plugin_builder = plugin_builder.js_init_script(
-            include_str!("../dist/inject.min.js")
-                .replace("__DEBUG__", &format!("{}", options.javascript.debug)),
-        );
+        plugin_builder = plugin_builder
+            .js_init_script(
+                include_str!("../dist/inject.min.js")
+                    .replace("__DEBUG__", &format!("{}", options.javascript.debug)),
+            )
+            .setup(move |app| {
+                // listen to the "my-event" global event
+                let id_ = app.listen_global("InjectInited", |event| {
+                    println!(
+                        "[plugin_builder] Got InjectInited with payload {:?}",
+                        event.payload()
+                    );
+                });
+    
+                unlisten = Some(id_);
+    
+                Ok(())
+            })
+            .on_event(move |app_handle, event| {
+                match event {
+                    RunEvent::ExitRequested { api, .. } => {
+                            println!("[plugin_builder] unlisten...1, {:?}",unlisten);
+                        // unlisten to the event using the ID returned by listen_global
+                        if let Some(id_) = unlisten {
+                            println!("[plugin_builder] unlisten...2");
+                            app_handle.unlisten(id_);
+                        }
+                    }
+                    // RunEvent::WindowEvent { label, event, .. } => {
+                    //     println!(
+                    //         "[plugin_builder] on_event label={:?} event={:?}",
+                    //         label, event
+                    //     );
+                    // }
+
+                    // Ignore all other cases.
+                    _ => {}
+                }
+            });
     }
 
-    plugin_builder.build()
+    plugin_builder
+       
+        .build()
 }
