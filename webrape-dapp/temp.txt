@@ -1,0 +1,14 @@
+
+
+./dist/jsA.js → ./dist...
+[!] (plugin node-resolve) Error: Insufficient rollup version: "@rollup/plugin-node-resolve" requires at least rollup@2.78.0 but found rollup@2.70.2.
+Error: Insufficient rollup version: "@rollup/plugin-node-resolve" requires at least rollup@2.78.0 but found rollup@2.70.2.
+    at validateVersion (xxx/node_modules/.pnpm/@rollup+plugin-node-resolve@15.1.0/node_modules/@rollup/plugin-node-resolve/dist/cjs/index.js:953:11)
+    at Object.buildStart (xxx/node_modules/.pnpm/@rollup+plugin-node-resolve@15.1.0/node_modules/@rollup/plugin-node-resolve/dist/cjs/index.js:1204:7)
+    at /usr/local/lib/node_modules/rollup/dist/shared/rollup.js:22823:37
+    at async Promise.all (index 0)
+    at async /usr/local/lib/node_modules/rollup/dist/shared/rollup.js:23611:13
+    at async catchUnfinishedHookActions (/usr/local/lib/node_modules/rollup/dist/shared/rollup.js:23121:20)
+    at async rollupInternal (/usr/local/lib/node_modules/rollup/dist/shared/rollup.js:23609:5)
+    at async build (/usr/local/lib/node_modules/rollup/dist/bin/rollup:1528:20)
+    at async runRollup (/usr/local/lib/node_modules/rollup/dist/bin/rollup:1668:21)

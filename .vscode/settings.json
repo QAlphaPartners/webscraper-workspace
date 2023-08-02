@@ -1,0 +1,11 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./webrape-dapp/src-tauri/Cargo.toml",
+        "./plugins/tauri-plugin-jsinject/Cargo.toml",
+        "./plugins/fund-eastmoney/Cargo.toml",
+        "./plugins/fund-eastmoney/examples/basic-app/src-tauri/Cargo.toml",
+        "./plugins/common-plugin/Cargo.toml",
+        "./plugins/common-plugin/examples/vanilla/src-tauri/Cargo.toml",
+        "./plugins/tauri-plugin-jsinject/examples/vanilla/src-tauri/Cargo.toml"
+    ]
+}
