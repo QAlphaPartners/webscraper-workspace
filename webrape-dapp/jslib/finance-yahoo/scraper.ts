@@ -87,9 +87,7 @@ async function handleLoaded() {
             return null;
         };
 
-        // var pp = await appWindow.emit("URLS_SCRAPED", { loggedIn: true, token: 'authToken@scrape_urls:', url: window.location.href });
-
-        await scrape_urls(window.location.href)
+        await scrape_urls()
 
     });
 
