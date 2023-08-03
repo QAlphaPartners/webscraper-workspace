@@ -14,7 +14,7 @@ export default [
     plugins: [resolve({ browser: true }),  commonjs({ requireReturnsDefault: "auto" }), json()],
   },
   {
-    input: "./dist-jslib/finance-yahoo/crawler.js",
+    input: "./dist-jslib/finance-yahoo/scraper.js",
     output: {
       dir: "./dist-jslib",
       entryFileNames: "finance-yahoo-[name].min.js",

@@ -1,12 +1,21 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use chrono::offset::Utc;
+use chrono::DateTime;
 use std::time::SystemTime;
 
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
     AppHandle, Event, EventHandler, Manager, RunEvent, Runtime, Window,
+};
+
+// use the encode and decode functions
+use base64::{
+    alphabet, decode, encode,
+    engine::{self, general_purpose},
+    Engine,
 };
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -22,7 +31,7 @@ async fn create_window<R: Runtime>(handle: AppHandle<R>) {
         "fund_eastmoney", // the unique window label
         tauri::WindowUrl::App("https://fund.eastmoney.com/".into()), // the url to load
     )
-    .title("Fund Eastmoney Scraper")
+    .title("Scraping...: https://finance.yahoo.com/quote/NQ%3DF?p=NQ%3DF")
     // set the actual label
     // .with_label("fund.eastmoney")s
     // .with_config(|config| {
@@ -30,11 +39,30 @@ async fn create_window<R: Runtime>(handle: AppHandle<R>) {
     //     config.state = WindowState::default(); // use the plugin's default state
     // })
     .initialization_script(
-        &include_str!("../../dist-jslib/finance-yahoo-crawler.min.js")
+        &include_str!("../../dist-jslib/finance-yahoo-scraper.min.js")
             .replace("__DEBUG__", &format!("{}", true)),
     )
     .build()
     .unwrap();
+}
+
+fn base64_hello() {
+    // define a string to encode
+    let input = "Hello, world!";
+
+    const CUSTOM_ENGINE: engine::GeneralPurpose =
+        engine::GeneralPurpose::new(&alphabet::URL_SAFE, general_purpose::NO_PAD);
+
+    let b64_url = CUSTOM_ENGINE.encode(input);
+
+    // print the encoded string
+    println!("Encoded: {}", b64_url); // SGVsbG8sIHdvcmxkIQ==
+
+    // decode the string from base64
+    let decoded = CUSTOM_ENGINE.decode(&b64_url).unwrap();
+
+    // print the decoded string as UTF-8
+    println!("Decoded: {}", String::from_utf8(decoded).unwrap()); // Hello, world!
 }
 
 fn main() {
@@ -62,24 +90,20 @@ fn main() {
                 );
             });
 
+            let system_time = SystemTime::now();
+            let datetime: DateTime<Utc> = system_time.into();
+
+            // --- listen event from frontend: 网页刮取的网址，格式json
+            app.listen_global("URLS_SCRAPED", move |handler| {
+                println!(
+                    "This event [URLS_SCRAPED] is come from frontend payload:{} now:{}",
+                    handler.payload().unwrap(),
+                    datetime.format("%d/%m/%Y %T")
+                );
+                base64_hello()
+            });
+
             Ok(())
-        })
-        .on_page_load(|app, _ev| {
-            let window_ = app.clone();
-
-            println!(
-                "on_page_load to emit_all BackendEventxyz {} {}",
-                app.label(),
-                app.url()
-            );
-
-            window_
-                .eval("console.log(' on_page_load eval javascript')")
-                .unwrap();
-
-            window_
-                .emit("BackendEventxyz", format!("payload {}", "on_page_load"))
-                .unwrap();
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_jsinject::init())
