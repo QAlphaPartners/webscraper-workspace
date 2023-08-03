@@ -21,5 +21,5 @@ window.Sentry = Sentry;
 
 console.log("[inject.ts] Start scraping web-data for url=", window.location.href)
 window.addEventListener("DOMContentLoaded", async (event) => {
-  await emit("InjectInited", { loggedIn: true, token: '[inject.ts] init', type: event.type });
+  await emit("InjectInited", { logged_in: true, token: '[inject.ts] init', type: event.type });
 })

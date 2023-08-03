@@ -46,7 +46,7 @@ async function handleLoaded() {
             console.log("[finance-yahoo/scraper] listen got BOMA@float-scrape-div ", event)
         })
 
-        await getCurrent().emit("FATA", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
+        await getCurrent().emit("FATA", { logged_in: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
 
         // Add an event listener for the window.onbeforeunload event
         window.onbeforeunload = function () {

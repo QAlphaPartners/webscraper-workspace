@@ -106,7 +106,7 @@ async function handleLoaded() {
   waitForElm<HTMLDivElement>("#float-scrape-div").then(async elm => {
     console.log("[crawler_lazy.ts] Element(float-scrape-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
 
-    var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
+    var pp = await emit("DOMContentLoadedxxx", { logged_in: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
 
     
     console.log("[crawler_lazy.ts] after emit(DOMContentLoadedxxx)");
