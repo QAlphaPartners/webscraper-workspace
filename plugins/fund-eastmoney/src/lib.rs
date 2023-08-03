@@ -86,6 +86,8 @@ const INIT_SCRIPT: &str = r#"
   //}
 "#;
 
+const MAX_CONCURRENT_SCRAPERS:i32 = 10;
+
 #[tauri::command]
 async fn create_window<R: Runtime>(handle: AppHandle<R>) {
     let _new_window = tauri::WindowBuilder::new(

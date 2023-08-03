@@ -36,53 +36,95 @@
         {
           "domain": "fund.eastmoney.com",
           "windows": [
-            "fund_eastmoney",
-            "fundf10"
+            "Scraper_0",
+            "Scraper_1",
+            "Scraper_2",
+            "Scraper_3",
+            "Scraper_4",
+            "Scraper_5",
+            "Scraper_6",
+            "Scraper_7",
+            "Scraper_8",
+            "Scraper_9"
           ],
           "enableTauriAPI": true
         },
         {
           "domain": "quote.eastmoney.com",
           "windows": [
-            "fund_eastmoney",
-            "fundf10"
+            "Scraper_0",
+            "Scraper_1",
+            "Scraper_2",
+            "Scraper_3",
+            "Scraper_4",
+            "Scraper_5",
+            "Scraper_6",
+            "Scraper_7",
+            "Scraper_8",
+            "Scraper_9"
           ],
           "enableTauriAPI": true
         },
         {
           "domain": "fundf10.eastmoney.com",
           "windows": [
-            "fund_eastmoney",
-            "fundf10"
+            "Scraper_0",
+            "Scraper_1",
+            "Scraper_2",
+            "Scraper_3",
+            "Scraper_4",
+            "Scraper_5",
+            "Scraper_6",
+            "Scraper_7",
+            "Scraper_8",
+            "Scraper_9"
           ],
           "enableTauriAPI": true
         },
         {
           "domain": "finance.yahoo.com",
           "windows": [
-            "finance_yahoo",
-            "fundf10"
+            "Scraper_0",
+            "Scraper_1",
+            "Scraper_2",
+            "Scraper_3",
+            "Scraper_4",
+            "Scraper_5",
+            "Scraper_6",
+            "Scraper_7",
+            "Scraper_8",
+            "Scraper_9"
           ],
           "enableTauriAPI": true
         },
         {
           "domain": "s.yimg.com",
           "windows": [
-            "finance_yahoo",
-            "fundf10"
+            "Scraper_0",
+            "Scraper_1",
+            "Scraper_2",
+            "Scraper_3",
+            "Scraper_4",
+            "Scraper_5",
+            "Scraper_6",
+            "Scraper_7",
+            "Scraper_8",
+            "Scraper_9"
           ],
           "enableTauriAPI": true
         }
-
       ]
     },
     "windows": [
       {
-        "fullscreen": false,
+        "label": "main",
+        "title": "Webraper",
+        "width": 1024,
+        "height": -1,
         "resizable": true,
-        "title": "webrape-dapp",
-        "width": 800,
-        "height": 600
+        "fullscreen": false,
+        "x": 0,
+        "y": 0
       }
     ]
   }

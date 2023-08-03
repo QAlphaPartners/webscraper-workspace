@@ -104,9 +104,9 @@ export async function createWebviewWindow(uniqueLabel: string, title: string, ur
 
 
   // listen to the DOM loaded event from the new window
-  const unlisten = await listen<string>('BackendEventxyz', async (event) => {
+  const unlisten = await listen<string>('BOMA', async (event) => {
     // do something when the DOM is loaded
-    console.log('The BackendEventxyz is ready event', event)
+    console.log('The BOMA is ready event', event)
     // await invoke("plugin:fund_eastmoney|open_link", { "url": "open from /plugins/fund-eastmoney/js/index.ts" });
   })
 

@@ -10,7 +10,7 @@ async function handleLoaded() {
     // Create a new div element using JavaScript
     var floatDiv = document.createElement("div");
     // Set the div's id
-    floatDiv.id = "my-float-div";
+    floatDiv.id = "float-scrape-div";
     // Set the div's content and style
     floatDiv.innerHTML = "This is a float div with scraped web data in json from url=" + window.location.href;
     floatDiv.style.position = "fixed"; // Change position to fixed
@@ -44,12 +44,12 @@ async function handleLoaded() {
     // Start observing changes in the document element
     observer.observe(document.documentElement, config);
     // To use it:
-    waitForElm("#my-float-div").then(async (elm) => {
-        console.log("[crawler_lazy.ts] Element(my-float-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
-        var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#my-float-div")' });
+    waitForElm("#float-scrape-div").then(async (elm) => {
+        console.log("[crawler_lazy.ts] Element(float-scrape-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
+        var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
         console.log("[crawler_lazy.ts] after emit(DOMContentLoadedxxx)", pp);
-        const unlisten = await listen("BackendEventxyz", (event) => {
-            console.log("[crawler_lazy.ts] listen got BackendEventxyz@my-float-div ", event);
+        const unlisten = await listen("BOMA", (event) => {
+            console.log("[crawler_lazy.ts] listen got BOMA@float-scrape-div ", event);
         });
         // Add an event listener for the window.onbeforeunload event
         window.onbeforeunload = function () {
@@ -68,11 +68,11 @@ async function handleLoaded() {
     //   // Use traditional 'for loops' for IE 11
     //   for (var mutation of mutationsList) {
     //     if (mutation.type === 'childList') {
-    //       // Check if the element with id "my-float-div" is removed
-    //       var elm = document.getElementById("my-float-div");
+    //       // Check if the element with id "float-scrape-div" is removed
+    //       var elm = document.getElementById("float-scrape-div");
     //       if (!document.body.contains(elm)) {
-    //         console.log('The element with id "my-float-div" is removed from the DOM');
-    //         // Stop listening to the "BackendEventxyz" event
+    //         console.log('The element with id "float-scrape-div" is removed from the DOM');
+    //         // Stop listening to the "BOMA" event
     //         unlisten();
     //         // Stop observing
     //         observer.disconnect();

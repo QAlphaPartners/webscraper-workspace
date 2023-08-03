@@ -13,16 +13,31 @@ async function greet() {
 }
 
 
-async function createWindow() {
-  await invoke("create_window");
+async function start_scrape(url: string) {
+  await invoke("start_scrape", { url: url });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   greetInputEl = document.querySelector("#greet-input");
   greetMsgEl = document.querySelector("#greet-msg");
+
   document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
     e.preventDefault();
     greet();
-    createWindow();
   });
+
+  document.querySelector("#fundeastmoney")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    let link = e.target as HTMLAnchorElement
+    start_scrape(link.href);
+  });
+
+
+
+  document.querySelector("#financeyahoo")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    let link = e.target as HTMLAnchorElement
+    start_scrape(link.href);
+  });
+
 });

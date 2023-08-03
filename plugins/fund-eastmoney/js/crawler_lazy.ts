@@ -53,7 +53,7 @@ async function handleLoaded() {
   var floatDiv = document.createElement("div");
 
   // Set the div's id
-  floatDiv.id = "my-float-div";
+  floatDiv.id = "float-scrape-div";
 
 
   // Set the div's content and style
@@ -103,17 +103,17 @@ async function handleLoaded() {
 
 
   // To use it:
-  waitForElm<HTMLDivElement>("#my-float-div").then(async elm => {
-    console.log("[crawler_lazy.ts] Element(my-float-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
+  waitForElm<HTMLDivElement>("#float-scrape-div").then(async elm => {
+    console.log("[crawler_lazy.ts] Element(float-scrape-div) is ready and emit(DOMContentLoadedxxx): ", $(elm).text());
 
-    var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#my-float-div")' });
+    var pp = await emit("DOMContentLoadedxxx", { loggedIn: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
 
     
     console.log("[crawler_lazy.ts] after emit(DOMContentLoadedxxx)");
 
 
-    const unlisten = await listen("BackendEventxyz", (event) => {
-      console.log("[crawler_lazy.ts] listen got BackendEventxyz@my-float-div ", event)
+    const unlisten = await listen("BOMA", (event) => {
+      console.log("[crawler_lazy.ts] listen got BOMA@float-scrape-div ", event)
     })
 
 
@@ -140,11 +140,11 @@ async function handleLoaded() {
   //   // Use traditional 'for loops' for IE 11
   //   for (var mutation of mutationsList) {
   //     if (mutation.type === 'childList') {
-  //       // Check if the element with id "my-float-div" is removed
-  //       var elm = document.getElementById("my-float-div");
+  //       // Check if the element with id "float-scrape-div" is removed
+  //       var elm = document.getElementById("float-scrape-div");
   //       if (!document.body.contains(elm)) {
-  //         console.log('The element with id "my-float-div" is removed from the DOM');
-  //         // Stop listening to the "BackendEventxyz" event
+  //         console.log('The element with id "float-scrape-div" is removed from the DOM');
+  //         // Stop listening to the "BOMA" event
   //         unlisten();
   //         // Stop observing
   //         observer.disconnect();
