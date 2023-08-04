@@ -4,12 +4,12 @@
 use chrono::offset::Utc;
 use chrono::DateTime;
 use std::time::SystemTime;
-
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
     AppHandle, Event, EventHandler, Manager, RunEvent, Runtime, Window,
 };
+use url::Url;
 
 // use the encode and decode functions
 use base64::{
@@ -18,11 +18,15 @@ use base64::{
     Engine,
 };
 
+mod event;
+
 #[derive(serde::Deserialize, Debug)]
 struct Payload {
+    etype: Option<String>,
     logged_in: bool,
     token: String,
-    parent_url: String,
+    url: Option<String>,
+    parent_url: Option<String>,
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -36,6 +40,12 @@ const MAX_CONCURRENT_SCRAPERS: i32 = 10;
 #[tauri::command]
 async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String) {
     let handle_ = &handle.clone();
+    // Parse a URL string into a Url struct
+    let url_ = Url::parse(url.as_str()).unwrap();
+    // Get the host as an Option<&str>
+    let host = url_.host_str();
+    // Print the host
+    println!("Host: {:?}", host); // Some("www.bing.com")
 
     for i in 0..MAX_CONCURRENT_SCRAPERS {
         let label = format!("Scraper_{}", i);
@@ -56,33 +66,33 @@ async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String) {
             .build()
             .unwrap();
 
-
             let w_ = new_window.clone();
             // --- listen event from frontend: 网页刮取的网址，格式json
-            new_window.listen("FATA", move |event| {
-    
+            new_window.listen("FataEvent", move |event| {
                 let system_time = SystemTime::now();
                 let datetime: DateTime<Utc> = system_time.into();
 
                 // get a reference to the payload object
                 let payload = event.payload().unwrap();
                 // try to deserialize it into your struct
-                match serde_json::from_str::<Payload>(payload) {
+                match serde_json::from_str::<event::FataEvent<String>>(payload) {
                     Ok(data) => {
-                        println!(
-                            "window [{}] got event [FATA] from frontend payload:{:?} now:{}",
-                            w_.label(),
-                            data,
-                            datetime.format("%d/%m/%Y %T")
+                        // do something with the data
+                        println!("got FataEvent with payload: {:?}", data);
+
+                        // Create a new object for the struct FataEvent using the new method
+                        let e_: event::BomaEvent<String> = event::BomaEvent::new(
+                            "some hub name".to_string(),
+                            "some topic name".to_string(),
+                            Some("some label".to_string()),
+                            Some("some data".to_string()),
                         );
-                        w_.emit_to(w_.label(),
-                            "BOMA",  
-                            format!("window [{}] backend command after done [FATA] payload {:?}", w_.label(), data))
-                        .unwrap();
+
+                        w_.emit_all( "BomaEvent", e_).unwrap();
                     }
                     Err(e) => {
                         // handle the error
-                        eprintln!("window [{}] [FATA] failed to deserialize payload: {} error:{}",w_.label(),payload, e);
+                        eprintln!("failed to deserialize payload: {}", e);
                     }
                 }
                 // base64_hello()
@@ -117,26 +127,6 @@ fn main() {
         .setup(|app| {
             let app_ = app.handle();
             // in this place we can only listen events from frontend
-
-            // --- listen event from frontend
-            app.listen_global("DOMContentLoadedxxx", move |handler| {
-                println!(
-                    "This event [DOMContentLoadedxxx] is come from frontend! payload:{}",
-                    handler.payload().unwrap()
-                );
-
-                app_.emit_all("BOMA", format!("payload {}", "listen_global"))
-                    .unwrap();
-            });
-
-            // --- listen event from frontend
-            app.listen_global("InjectInited", move |handler| {
-                println!(
-                    "This event [InjectInited] is come from frontend!!!\n\n\t{}",
-                    handler.payload().unwrap()
-                );
-            });
-
             Ok(())
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())

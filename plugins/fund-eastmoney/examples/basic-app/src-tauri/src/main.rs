@@ -28,7 +28,7 @@ fn main() {
                     handler.payload().unwrap()
                 );
 
-                app_.emit_all("BOMA", format!("payload {}", "listen_global"))
+                app_.emit_all("BomaEvent", format!("payload {}", "listen_global"))
                     .unwrap();
             });
 
@@ -50,14 +50,14 @@ fn main() {
             let window_ = app.clone();
 
             println!(
-                "on_page_load to emit_all BOMA {} {}",
+                "on_page_load to emit_all BomaEvent {} {}",
                 app.label(),
                 app.url()
             );
 
             window_.eval("console.log(' on_page_load eval javascript')").unwrap();
 
-            window_.emit("BOMA", format!("payload {}", "on_page_load"))
+            window_.emit("BomaEvent", format!("payload {}", "on_page_load"))
             .unwrap();
 
         })

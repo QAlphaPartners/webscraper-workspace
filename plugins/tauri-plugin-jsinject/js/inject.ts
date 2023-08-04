@@ -1,5 +1,6 @@
 
-import { emit, } from '@tauri-apps/api/event'
+import { getCurrent } from '@tauri-apps/api/window';
+import type { FataEvent } from '../../../webrape-dapp/jslib/events/bindings/index.js';
 
 declare var __DEBUG__: boolean;
 
@@ -10,8 +11,18 @@ window.addEventListener("DOMContentLoaded", async (event) => {
 
   // Check if the current URL is different from the previous one
   if (window.location.href !== previousUrl) {
+    if (window.location.href !== "about:blank") {
 
-    await emit("InjectInited", { logged_in: true, token: '[inject.ts] init', type: event.type, url: window.location.href });
+      // Create an object literal with the required fields
+      let fataEvent = {
+        hub: "some hub name",
+        topic: "some topic name",
+        // Optionally, you can also add the label and data fields
+        label: "some label",
+        data: "some data from [inject.ts] init " + event.type,
+      } as FataEvent<any>; // Cast the object to the FataEvent type
+      await getCurrent().emit("FataEvent", fataEvent);
+    }
 
     // Update the previous URL
     previousUrl = window.location.href;

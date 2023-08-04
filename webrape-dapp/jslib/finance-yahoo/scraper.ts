@@ -3,6 +3,8 @@ import $ from 'cash-dom';
 import { getCurrent } from '@tauri-apps/api/window';
 import { scrape_urls } from '../url_scraper';
 import { waitForElm } from '../utils';
+import { Event as TauriEvent, listen } from '@tauri-apps/api/event';
+import type { FataEvent,BomaEvent } from '../events/bindings/index.js';
 
 // Specify the mutation observer options
 const observerConfig = {
@@ -30,7 +32,7 @@ async function handleLoaded() {
             console.log('[finance-yahoo/scraper] The URL has changed from ' + previousUrl + ' to ' + window.location.href);
 
             floatDiv.innerHTML = "[finance-yahoo/scraper] This is a float div with scraped web data in json from url=" + window.location.href;
-            
+
             // Update the previous URL
             previousUrl = window.location.href;
 
@@ -42,11 +44,33 @@ async function handleLoaded() {
     // To use it:
     waitForElm<HTMLDivElement>("#float-scrape-div").then(async elm => {
 
-        const unlisten = await getCurrent().listen("BOMA", (event) => {
-            console.log("[finance-yahoo/scraper] listen got BOMA@float-scrape-div ", event)
-        })
+        await scrape_urls()
 
-        await getCurrent().emit("FATA", { logged_in: true, token: 'authToken@waitForElm<HTMLDivElement>("#float-scrape-div")' });
+        // Create an object literal with the required fields
+        let fataEvent = {
+            hub: "some hub name",
+            topic: "some topic name",
+            // Optionally, you can also add the label and data fields
+            label: "some label",
+            data: "some data from [scraper.ts]",
+        } as FataEvent<any>; // Cast the object to the FataEvent type
+        await getCurrent().emit("FataEvent", fataEvent);
+
+
+        // listener has to be registered after emit event to backend!!! or else 
+        // [Error] TypeError: listener.handler is not a function. (In 'listener.handler(eventData)', 'listener.handler' is undefined)
+        const unlisten = await getCurrent().listen("BomaEvent", 
+            function (evt: TauriEvent<BomaEvent<any>>) {
+                const bomaEvent = evt.payload;
+
+                // Publish event to the given Hub
+                if (bomaEvent.label != null) {
+                    console.log("[finance-yahoo/scraper] listen got BomaEvent@float-scrape-div ", bomaEvent.topic, bomaEvent.label, bomaEvent.data);
+                } else {
+                    console.log("[finance-yahoo/scraper] listen got BomaEvent@float-scrape-div ", bomaEvent.topic, bomaEvent.data);
+                }
+            }
+        );
 
         // Add an event listener for the window.onbeforeunload event
         window.onbeforeunload = function () {
@@ -56,7 +80,6 @@ async function handleLoaded() {
             return null;
         };
 
-        await scrape_urls()
 
     });
 

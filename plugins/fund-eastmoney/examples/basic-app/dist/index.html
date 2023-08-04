@@ -55,8 +55,8 @@
       throw new Error("This is a JavaScript Error");
     }
 
-    window.__TAURI__.event.listen("BOMA", (event) => {
-      console.log("got backend BOMA on /examples/basic-app/dist/index.html", event)
+    window.__TAURI__.event.listen("BomaEvent", (event) => {
+      console.log("got backend BomaEvent on /examples/basic-app/dist/index.html", event)
     })
    
     window.__TAURI__.event.listen("DOMContentLoadedxxx", (event) => {

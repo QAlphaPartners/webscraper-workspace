@@ -112,8 +112,8 @@ async function handleLoaded() {
     console.log("[crawler_lazy.ts] after emit(DOMContentLoadedxxx)");
 
 
-    const unlisten = await listen("BOMA", (event) => {
-      console.log("[crawler_lazy.ts] listen got BOMA@float-scrape-div ", event)
+    const unlisten = await listen("BomaEvent", (event) => {
+      console.log("[crawler_lazy.ts] listen got BomaEvent@float-scrape-div ", event)
     })
 
 
@@ -144,7 +144,7 @@ async function handleLoaded() {
   //       var elm = document.getElementById("float-scrape-div");
   //       if (!document.body.contains(elm)) {
   //         console.log('The element with id "float-scrape-div" is removed from the DOM');
-  //         // Stop listening to the "BOMA" event
+  //         // Stop listening to the "BomaEvent" event
   //         unlisten();
   //         // Stop observing
   //         observer.disconnect();
