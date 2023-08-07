@@ -2,17 +2,19 @@
 type CallbackFunction = (element: HTMLElement, once: boolean) => void;
 
 // Update the type of waitForElm to accept a function parameter and a boolean parameter
-export function waitForElm<T extends HTMLElement>(selector: string, debug:boolean , callback: CallbackFunction, once: boolean): void {
+export function waitForElm<T extends HTMLElement>(selector: string, debug: boolean, once: boolean, callback: CallbackFunction): void {
     const observer = new MutationObserver((mutations) => {
         // Loop through the mutations
         mutations.forEach(function (mutation) {
             // Check if any nodes were added
             if (mutation.addedNodes.length > 0) {
-                // Loop through the added nodes
-                mutation.addedNodes.forEach(function (node) {
-                    // Log the node to the console
-                    console.log("[utils.ts] MutationObserver addedNodes", node);
-                });
+                if (debug) {
+                    // Loop through the added nodes
+                    mutation.addedNodes.forEach(function (node) {
+                        // Log the node to the console
+                        console.log("[utils.ts] MutationObserver addedNodes", node);
+                    });
+                }
             }
         });
 

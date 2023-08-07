@@ -18,12 +18,8 @@ async function handleLoaded() {
 
     console.log("[scraper.ts] DOMContentLoaded handleLoaded");
 
-    waitForElm<HTMLDivElement>("#jztable", true,(element: HTMLElement) => {
-        console.log(element);
-    }, true);
-
     // To use it:
-    waitForElm("#float-scrape-div", true, async (floatDiv: HTMLElement) => {
+    waitForElm("#float-scrape-div", true, true, async (floatDiv: HTMLElement) => {
         console.log("[waitForElm] found Element(float-scrape-div) is ready: ", floatDiv);
 
         floatDiv.innerHTML = "[finance-yahoo/scraper] float div with scraped web data in json from url=" + window.location.href;
@@ -64,22 +60,22 @@ async function handleLoaded() {
         };
 
 
-    }, true);
+    });
 
 
     // To use it: http://fundf10.eastmoney.com/jjjz_002190.html
-    waitForElm("#jztable thead", true, (thead: HTMLElement) => {
+    waitForElm("#jztable thead", true, false, (thead: HTMLElement) => {
         console.log("[extractJjjzHistoryData] thead ready: ", thead);
 
         var tr_rows = thead.querySelectorAll("tr");
         // // The first child node is the table element, the second child node is the tbody element, and its child nodes are the tr elements
         console.log("[extractJjjzHistoryData] thead tr_rows", tr_rows)
 
-    }, false);
+    });
 
 
     // To use it: http://fundf10.eastmoney.com/jjjz_002190.html
-    waitForElm("#jztable tbody", false, (jztable: HTMLElement) => {
+    waitForElm("#jztable tbody", false, false, (jztable: HTMLElement) => {
         console.log("[extractJjjzHistoryData] tbody ready: ", jztable);
 
         var tr_rows = jztable.querySelectorAll("tr");
@@ -94,6 +90,6 @@ async function handleLoaded() {
 
         })
 
-    }, false);
+    });
 
 };
