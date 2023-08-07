@@ -1,5 +1,4 @@
 // Import cash-dom
-import $ from 'cash-dom';
 import type { FataEvent } from './events/bindings/index.js';
 
 import { getCurrent } from '@tauri-apps/api/window';

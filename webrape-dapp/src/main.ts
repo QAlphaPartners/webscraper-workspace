@@ -32,6 +32,12 @@ window.addEventListener("DOMContentLoaded", () => {
     start_scrape(link.href);
   });
 
+  document.querySelector("#fundf10")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    let link = e.target as HTMLAnchorElement
+    start_scrape(link.href);
+  });
+
 
 
   document.querySelector("#financeyahoo")?.addEventListener("click", (e) => {

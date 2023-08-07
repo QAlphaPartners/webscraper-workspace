@@ -5,10 +5,10 @@ import json from '@rollup/plugin-json';
 
 export default [
   {
-    input: "./dist-jslib/jsA.js",
+    input: "./dist-jslib/fund-eastmoney/scraper.js",
     output: {
       dir: "./dist-jslib",
-      entryFileNames: "[name].min.js",
+      entryFileNames: "fund-eastmoney-[name].min.js",
       format: "esm",
     },
     plugins: [resolve({ browser: true }),  commonjs({ requireReturnsDefault: "auto" }), json()],

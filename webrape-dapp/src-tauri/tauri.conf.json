@@ -36,6 +36,7 @@
         {
           "domain": "fund.eastmoney.com",
           "windows": [
+            "main",
             "Scraper_0",
             "Scraper_1",
             "Scraper_2",
@@ -52,6 +53,7 @@
         {
           "domain": "quote.eastmoney.com",
           "windows": [
+            "main",
             "Scraper_0",
             "Scraper_1",
             "Scraper_2",
@@ -68,6 +70,7 @@
         {
           "domain": "fundf10.eastmoney.com",
           "windows": [
+            "main",
             "Scraper_0",
             "Scraper_1",
             "Scraper_2",
@@ -84,6 +87,7 @@
         {
           "domain": "finance.yahoo.com",
           "windows": [
+            "main",
             "Scraper_0",
             "Scraper_1",
             "Scraper_2",
@@ -100,6 +104,7 @@
         {
           "domain": "s.yimg.com",
           "windows": [
+            "main",
             "Scraper_0",
             "Scraper_1",
             "Scraper_2",
