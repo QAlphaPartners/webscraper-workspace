@@ -37,7 +37,7 @@ window.addEventListener("DOMContentLoaded", async (event) => {
         // Loop through the added nodes
         mutation.addedNodes.forEach(function (node) {
           // Log the node to the console
-          console.log("[inject.ts] MutationObserver addedNodes", node);
+          console.log("[inject.ts] DOMContentLoaded MutationObserver addedNodes", node);
         });
       }
     });
