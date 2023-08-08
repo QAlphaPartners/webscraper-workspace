@@ -1,5 +1,5 @@
 // Import cash-dom
-import type { FataEvent } from './events/bindings/index.js';
+import type { DataValue, FataEvent } from './event/bindings/index.js';
 
 import { getCurrent } from '@tauri-apps/api/window';
 export async function scrape_urls() {
@@ -9,16 +9,16 @@ export async function scrape_urls() {
 
     // url网页刮取的网址
     // Create an object literal with the required fields
-    let event = {
+    let fataEvent = {
         hub: "some hub name",
         topic: "URLS_SCRAPED",
         // Optionally, you can also add the label and data fields
         label: "some label ",
-        data: "some data from [url_scraper.ts] parent_url:" + parent_url,
-    } as FataEvent<any>; // Cast the object to the FataEvent type
-    await getCurrent().emit("FataEvent", event);
-
-
+        data: [{
+            StringValue: { data: "some data from [url_scraper.ts] parent_url:" + parent_url, enalbe: true, }// This is the String value
+        }], // Specify the type of the data field
+    } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
+    await getCurrent().emit("FataEvent", fataEvent);
 }
 
 

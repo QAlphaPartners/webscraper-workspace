@@ -19,15 +19,7 @@ use base64::{
 };
 
 mod event;
-
-#[derive(serde::Deserialize, Debug)]
-struct Payload {
-    etype: Option<String>,
-    logged_in: bool,
-    token: String,
-    url: Option<String>,
-    parent_url: Option<String>,
-}
+use event::{DataValue, FataEvent};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -60,7 +52,7 @@ async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String) {
             )
             .title(format!("[{}]Scraping...: {}", label_, url_))
             .initialization_script(
-                &include_str!("../../dist-jslib/finance-yahoo-scraper.min.js")
+                &include_str!("../../dist-jslib/fund-eastmoney-scraper.min.js")
                     .replace("__DEBUG__", &format!("{}", true)),
             )
             .build()
@@ -74,27 +66,63 @@ async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String) {
 
                 // get a reference to the payload object
                 let payload = event.payload().unwrap();
+                println!("got FataEvent with payload: {:?}\n", payload);
                 // try to deserialize it into your struct
-                match serde_json::from_str::<event::FataEvent<String>>(payload) {
-                    Ok(data) => {
-                        // do something with the data
-                        println!("got FataEvent with payload: {:?}", data);
+                match serde_json::from_str::<FataEvent<DataValue>>(payload) {
+                    Ok(fata_event) => {
+                        println!("got FataEvent with fata_event: {:?}\n", fata_event);
+                        // get the data field as an option of a vector of DataValue enums
+                        let data_values = fata_event.data;
 
-                        // Create a new object for the struct FataEvent using the new method
-                        let e_: event::BomaEvent<String> = event::BomaEvent::new(
-                            "some hub name".to_string(),
-                            "some topic name".to_string(),
-                            Some("some label".to_string()),
-                            Some("some data".to_string()),
-                        );
+                        // match on the option of a vector of DataValue enums
+                        match data_values {
+                            Some(data_values) => {
+                                // use a for loop or an iterator to process each element of the vector
+                                for data_value in data_values {
+                                    // match on the variant of the DataValue enum
+                                    match data_value {
+                                        DataValue::StoreValue(store_value) => {
+                                            // do something with the store_value
+                                        }
+                                        DataValue::ShopValue(shop_value) => {
+                                            // do something with the shop_value
+                                        }
+                                        DataValue::ProductValue(product_value) => {
+                                            // do something with the product_value
+                                        }
+                                        DataValue::FundNetValue(fund_net_value) => {
 
-                        w_.emit_all( "BomaEvent", e_).unwrap();
+                                            println!("got FataEvent DataValue::FundNetValue(fund_net_value) {:?}\n",fund_net_value);
+                                            // Create a new object for the struct FataEvent using the new method
+                                            let e_: event::BomaEvent<String> =
+                                                event::BomaEvent::new(
+                                                    "some hub name".to_string(),
+                                                    "some topic name".to_string(),
+                                                    Some("some label".to_string()),
+                                                    Some("some data".to_string()),
+                                                );
+
+                                            w_.emit_all("BomaEvent", e_).unwrap();
+                                        }
+                                        DataValue::StringValue(string_value)=>{
+
+                                            println!("got FataEvent DataValue::StringValue(string_value) {:?}\n",string_value);
+
+                                        }
+                                    }
+                                }
+                            }
+                            None => {
+                                // handle the case when there is no data
+                                println!("got FataEvent None!!!!")
+                            }
+                        }
                     }
                     Err(e) => {
                         // handle the error
-                        eprintln!("failed to deserialize payload: {}", e);
                     }
                 }
+
                 // base64_hello()
             });
 

@@ -20,10 +20,11 @@ base64 = "0.21.2"
 chrono = "0.4.26"
 url = "2.4.0"
 # NOTE: , features = ["format"] would be nice, but it is very heavy, and sometime have compiles issues with swc_ components
-ts-rs = { version = "6" }
+ts-rs = { version = "7.0.0" }
 
 tauri-plugin-jsinject = { path = "../../plugins/tauri-plugin-jsinject" }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+fraction = "0.13.1"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

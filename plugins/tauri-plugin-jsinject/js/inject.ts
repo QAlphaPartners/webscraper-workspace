@@ -1,6 +1,6 @@
 
 import { getCurrent } from '@tauri-apps/api/window';
-import type { FataEvent } from '../../../webrape-dapp/jslib/events/bindings/index.js';
+import type { DataValue, FataEvent } from '../../../webrape-dapp/jslib/event/bindings/index.js';
 
 declare var __DEBUG__: boolean;
 
@@ -19,8 +19,13 @@ window.addEventListener("DOMContentLoaded", async (event) => {
         topic: "some topic name",
         // Optionally, you can also add the label and data fields
         label: "some label",
-        data: "some data from [inject.ts] init " + event.type,
-      } as FataEvent<any>; // Cast the object to the FataEvent type
+        data: [{
+          StringValue: {
+            data: "some data from [inject.ts] init " + event.type,
+            enalbe: true,
+          }// This is the StringValue
+        }]
+      } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
       await getCurrent().emit("FataEvent", fataEvent);
     }
 

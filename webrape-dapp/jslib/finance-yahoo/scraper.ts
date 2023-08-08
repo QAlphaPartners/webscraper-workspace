@@ -3,7 +3,7 @@ import { getCurrent } from '@tauri-apps/api/window';
 import { scrape_urls } from '../url_scraper';
 import { waitForElm } from '../utils';
 import { Event as TauriEvent, listen } from '@tauri-apps/api/event';
-import type { FataEvent, BomaEvent } from '../events/bindings/index.js';
+import type { FataEvent, BomaEvent, DataValue } from '../event/bindings/index.js';
 
 
 console.log("I am finance-yahoo/scraper.ts")
@@ -31,10 +31,11 @@ async function handleLoaded() {
             topic: "some topic name",
             // Optionally, you can also add the label and data fields
             label: "some label",
-            data: "some data from [scraper.ts]",
-        } as FataEvent<any>; // Cast the object to the FataEvent type
+            data: [{
+                StringValue: {data:"Hello world!", enalbe:true}
+            }] 
+        }  as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
         await getCurrent().emit("FataEvent", fataEvent);
-
 
         // listener has to be registered after emit event to backend!!! or else 
         // [Error] TypeError: listener.handler is not a function. (In 'listener.handler(eventData)', 'listener.handler' is undefined)
