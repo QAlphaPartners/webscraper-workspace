@@ -13,12 +13,12 @@ use url::Url;
 
 // use the encode and decode functions
 use base64::{
-    alphabet, decode, encode,
+    alphabet,
     engine::{self, general_purpose},
     Engine,
 };
 
-use webrape_events::event::{DataValue, FataEvent,BomaEvent};
+use webrape_events::event::{BomaEvent, DataValue, FataEvent};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -29,21 +29,20 @@ fn greet(name: &str) -> String {
 const MAX_CONCURRENT_SCRAPERS: i32 = 10;
 
 #[tauri::command]
-async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String) {
+async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String, to_crawl: bool) {
     let handle_ = &handle.clone();
     // Parse a URL string into a Url struct
     let url_ = Url::parse(url.as_str()).unwrap();
     // Get the host as an Option<&str>
     let host = url_.host_str();
     // Print the host
-    println!("Host: {:?}", host); // Some("www.bing.com")
+    println!("Host: {:?} to_crawl={}", host,to_crawl); // Some("www.bing.com")
 
     for i in 0..MAX_CONCURRENT_SCRAPERS {
         let label = format!("Scraper_{}", i);
         if let Some(_w) = handle_.app_handle().get_window(label.as_str()) {
         } else {
-
-            let new_window = create_fund_eastmoney_window(url,handle,label);
+            let new_window = create_fund_eastmoney_window(url, handle, label);
 
             let w_ = new_window.clone();
             // --- listen event from frontend: 网页刮取的网址，格式json
@@ -83,7 +82,6 @@ fn create_fund_eastmoney_window<R: Runtime>(
     .unwrap();
     return new_window;
 }
-
 
 fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
     println!("got FataEvent with payload: {:?}\n", payload);
@@ -129,6 +127,13 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                                 println!(
                                     "got FataEvent DataValue::StringValue(string_value) {:?}\n",
                                     string_value
+                                );
+                            }
+
+                            DataValue::HTMLAnchorElementValue(value) => {
+                                println!(
+                                    "got FataEvent DataValue::HTMLAnchorElementValue(value) {:?}\n",
+                                    value
                                 );
                             }
                         }

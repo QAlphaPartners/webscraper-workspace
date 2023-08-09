@@ -80,12 +80,20 @@ pub struct StoreValue {
     pub daily_rate: f32,
 }
 
-
 #[derive(TS, Serialize, Deserialize, Clone, Debug)]
 #[ts(export, export_to = "./jslib/event/bindings/")]
 pub struct StringValue {
     pub data: String,
     pub enalbe: bool,
+}
+
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "./jslib/event/bindings/")]
+pub struct HTMLAnchorElementValue {
+    pub title: Option<String>,
+    pub href: String,
+    pub inner_text: String,
+    pub scraped_date: Option<u64>,
 }
 
 #[derive(TS, Serialize, Deserialize, Clone, Debug)]
@@ -96,4 +104,5 @@ pub enum DataValue {
     ProductValue(ProductValue),
     FundNetValue(FundNetValue),
     StringValue(StringValue),
+    HTMLAnchorElementValue(HTMLAnchorElementValue),
 }

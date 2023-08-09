@@ -9,5 +9,7 @@ export * from './event/bindings/ProductValue.js';
 export * from './event/bindings/ShopValue.js';
 export * from './event/bindings/StoreValue.js';
 export * from './event/bindings/StringValue.js';
+export * from './event/bindings/HTMLAnchorElementValue.js';
+
 
 

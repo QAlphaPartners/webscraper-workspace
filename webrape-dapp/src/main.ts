@@ -13,8 +13,8 @@ async function greet() {
 }
 
 
-async function start_scrape(url: string) {
-  await invoke("start_scrape", { url: url });
+async function start_scrape(url: string, to_crawl: boolean) {
+  await invoke("start_scrape", { url: url, toCrawl: to_crawl });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -29,13 +29,13 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#fundeastmoney")?.addEventListener("click", (e) => {
     e.preventDefault();
     let link = e.target as HTMLAnchorElement
-    start_scrape(link.href);
+    start_scrape(link.href, true);
   });
 
   document.querySelector("#fundf10")?.addEventListener("click", (e) => {
     e.preventDefault();
     let link = e.target as HTMLAnchorElement
-    start_scrape(link.href);
+    start_scrape(link.href, false);
   });
 
 
@@ -43,7 +43,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#financeyahoo")?.addEventListener("click", (e) => {
     e.preventDefault();
     let link = e.target as HTMLAnchorElement
-    start_scrape(link.href);
+    start_scrape(link.href, true);
   });
 
 });

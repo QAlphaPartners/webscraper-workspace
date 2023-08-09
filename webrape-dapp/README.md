@@ -1,4 +1,18 @@
-# Tauri + Vanilla TS
+# webrape dapp
+
+
+## prerequisite
+
+  1. build webrape-events first
+  1. build plugins/tauri-plugin-jsinject first
+
+## build
+
+```bs
+    pnpm install && pnpm run tauri dev
+```
+
+## Tauri + Vanilla TS
 
 This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
 
