@@ -25,7 +25,7 @@ ts-rs = { version = "7.0.0" }
 tauri-plugin-jsinject = { path = "../../plugins/tauri-plugin-jsinject" }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 fraction = "0.13.1"
-
+webrape-events = { path = "../../webrape-events" }
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!

@@ -2,7 +2,7 @@ pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
-mod event;
+pub mod event;
 
 #[cfg(test)]
 mod tests {

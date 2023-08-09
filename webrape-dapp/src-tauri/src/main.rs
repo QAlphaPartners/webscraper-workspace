@@ -18,8 +18,7 @@ use base64::{
     Engine,
 };
 
-mod event;
-use event::{DataValue, FataEvent};
+use webrape_events::event::{DataValue, FataEvent,BomaEvent};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -117,7 +116,7 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                                     fund_net_value
                                 );
                                 // Create a new object for the struct FataEvent using the new method
-                                let e_: event::BomaEvent<String> = event::BomaEvent::new(
+                                let e_: BomaEvent<String> = BomaEvent::new(
                                     "some hub name".to_string(),
                                     "some topic name".to_string(),
                                     Some("some label".to_string()),

@@ -1,6 +1,7 @@
 
 import { getCurrent } from '@tauri-apps/api/window';
-import type { DataValue, FataEvent } from '../../../webrape-dapp/jslib/event/bindings/index.js';
+
+import type { FataEvent,  DataValue } from 'webrape-events';
 
 declare var __DEBUG__: boolean;
 
