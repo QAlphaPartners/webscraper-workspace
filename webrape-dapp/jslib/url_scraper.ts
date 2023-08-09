@@ -1,5 +1,5 @@
 // Import cash-dom
-import type { DataValue, FataEvent } from './index.js';
+import type { DataValue, FataEvent } from 'webrape-events';
 
 import { getCurrent } from '@tauri-apps/api/window';
 export async function scrape_urls() {
