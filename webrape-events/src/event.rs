@@ -93,7 +93,7 @@ pub struct HTMLAnchorElementValue {
     pub title: Option<String>,
     pub href: String,
     pub inner_text: String,
-    pub scraped_date: Option<u64>,
+    pub scraped_date: u32,
 }
 
 #[derive(TS, Serialize, Deserialize, Clone, Debug)]

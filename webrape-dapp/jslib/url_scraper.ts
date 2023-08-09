@@ -15,7 +15,7 @@ export async function scrape_urls() {
                 var elm_ = elm as HTMLAnchorElement;
                 if (elm_.href && elm_.href.startsWith("http")) {
                     var dataValue: DataValue = {
-                        HTMLAnchorElementValue: { title: elm.title, href: elm.href, inner_text: elm.innerText.replace("\n", ""), scraped_date: BigInt(-1) }
+                        HTMLAnchorElementValue: { title: elm.title, href: elm.href, inner_text: elm.innerText.replace("\n", ""), scraped_date: 0 }
                     }
                     links.push(dataValue);
                 }
