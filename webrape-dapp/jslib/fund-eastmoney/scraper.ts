@@ -77,22 +77,30 @@ async function handleLoaded() {
         // // The first child node is the table element, the second child node is the tbody element, and its child nodes are the tr elements
         console.log("[extractJjjzHistoryData] 净值日期	单位净值	累计净值	日增长率", tr_rows)
 
+        var netValues = Array<DataValue>();
+
         tr_rows.forEach((tr, trkey, parent) => {
             var tds = tr.querySelectorAll("td");
+            var dataValue: DataValue = {
+                FundNetValue: {
+                    date: tds.item(0).innerText,
+                    unit_value: Number(tds.item(1).innerText),
+                    cumulate_value: Number(tds.item(2).innerText),
+                    daily_rate: Number(tds.item(3).innerText.replace("%", ""))
+                }
+            }
+            netValues.push(dataValue);
+
             console.log("tr[" + trkey + "]" + " td[0]=" + tds.item(0).innerText + " td[1]=" + tds.item(1).innerText + " td[2]=" + tds.item(2).innerText + " td[3]=" + tds.item(3).innerText)
         })
 
         // Create an object literal with the required fields
         let fataEvent = {
-            hub: "some hub name",
-            topic: "some topic name",
+            hub: "fund-eastmoney",
+            topic: "fund-net-value",
             // Optionally, you can also add the label and data fields
             label: "some label",
-            data: [
-                { FundNetValue: { date: "2023-08-07", unit_value: 1.4630, cumulate_value: 1.4630, daily_rate: -0.27 } },
-                { FundNetValue: { date: "2023-08-07", unit_value: 1.4630, cumulate_value: 1.4630, daily_rate: -0.27 } },
-                { FundNetValue: { date: "2023-08-07", unit_value: 1.4630, cumulate_value: 1.4630, daily_rate: -0.27 } },
-            ],
+            data: netValues,
         } as FataEvent<DataValue>; // Cast the object to the FataEvent type
         await getCurrent().emit("FataEvent", fataEvent);
     });

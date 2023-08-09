@@ -96,7 +96,7 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
             match data_values {
                 Some(data_values) => {
                     // use a for loop or an iterator to process each element of the vector
-                    for data_value in data_values {
+                    for (index, data_value) in data_values.iter().enumerate()  {
                         // match on the variant of the DataValue enum
                         match data_value {
                             DataValue::StoreValue(store_value) => {
@@ -110,8 +110,8 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                             }
                             DataValue::FundNetValue(fund_net_value) => {
                                 println!(
-                                    "got FataEvent DataValue::FundNetValue(fund_net_value) {:?}\n",
-                                    fund_net_value
+                                    "[{}] got FataEvent DataValue::FundNetValue(fund_net_value) {:?}\n",
+                                    index,fund_net_value
                                 );
                                 // Create a new object for the struct FataEvent using the new method
                                 let e_: BomaEvent<String> = BomaEvent::new(
