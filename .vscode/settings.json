@@ -1,5 +1,6 @@
 {
     "rust-analyzer.linkedProjects": [
+        "./events-crate/Cargo.toml",
         "./webrape-dapp/src-tauri/Cargo.toml",
         "./plugins/tauri-plugin-jsinject/Cargo.toml",
         "./plugins/fund-eastmoney/Cargo.toml",
