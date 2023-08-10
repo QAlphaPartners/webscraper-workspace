@@ -36,25 +36,12 @@ async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String, to_crawl: b
     // Get the host as an Option<&str>
     let host = url_.host_str();
     // Print the host
-    println!("Host: {:?} to_crawl={}", host,to_crawl); // Some("www.bing.com")
+    println!("Host: {:?} to_crawl={}", host, to_crawl); // Some("www.bing.com")
 
     for i in 0..MAX_CONCURRENT_SCRAPERS {
         let label = format!("Scraper_{}", i);
-        if let Some(_w) = handle_.app_handle().get_window(label.as_str()) {
-        } else {
-            let new_window = create_fund_eastmoney_window(url, handle, label);
-
-            let w_ = new_window.clone();
-            // --- listen event from frontend: 网页刮取的网址，格式json
-            new_window.listen("FataEvent", move |event| {
-                let system_time = SystemTime::now();
-                let datetime: DateTime<Utc> = system_time.into();
-
-                // get a reference to the payload object
-                let payload = event.payload().unwrap();
-                process_fata_event(&w_, payload);
-                // base64_hello()
-            });
+        if let None = handle_.app_handle().get_window(label.as_str()) {
+            let _new_window = create_fund_eastmoney_window(url, handle, label);
 
             break;
         }
@@ -80,6 +67,19 @@ fn create_fund_eastmoney_window<R: Runtime>(
     )
     .build()
     .unwrap();
+
+    let w_ = new_window.clone();
+    // --- listen event from frontend: 网页刮取的网址，格式json
+    new_window.listen("FataEvent", move |event| {
+        let system_time = SystemTime::now();
+        let datetime: DateTime<Utc> = system_time.into();
+
+        // get a reference to the payload object
+        let payload = event.payload().unwrap();
+        process_fata_event(&w_, payload);
+        // base64_hello()
+    });
+
     return new_window;
 }
 
@@ -96,22 +96,22 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
             match data_values {
                 Some(data_values) => {
                     // use a for loop or an iterator to process each element of the vector
-                    for (index, data_value) in data_values.iter().enumerate()  {
+                    for (index, data_value) in data_values.iter().enumerate() {
                         // match on the variant of the DataValue enum
                         match data_value {
-                            DataValue::StoreValue(store_value) => {
+                            DataValue::StoreValue(value) => {
                                 // do something with the store_value
                             }
-                            DataValue::ShopValue(shop_value) => {
+                            DataValue::ShopValue(value) => {
                                 // do something with the shop_value
                             }
-                            DataValue::ProductValue(product_value) => {
+                            DataValue::ProductValue(value) => {
                                 // do something with the product_value
                             }
-                            DataValue::FundNetValue(fund_net_value) => {
+                            DataValue::FundNetValue(value) => {
                                 println!(
-                                    "[{}] got FataEvent DataValue::FundNetValue(fund_net_value) {:?}\n",
-                                    index,fund_net_value
+                                    "[{}] window:[{}] got FataEvent FundNetValue(fund_net_value) {:?}\n", w_.label(),
+                                    index,value
                                 );
                                 // Create a new object for the struct FataEvent using the new method
                                 let e_: BomaEvent<String> = BomaEvent::new(
@@ -122,18 +122,17 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                                 );
 
                                 w_.emit_all("BomaEvent", e_).unwrap();
+
+                                open_link(w_, "https://fund.eastmoney.com/");
                             }
-                            DataValue::StringValue(string_value) => {
-                                println!(
-                                    "got FataEvent DataValue::StringValue(string_value) {:?}\n",
-                                    string_value
-                                );
+                            DataValue::StringValue(value) => {
+                                println!("got FataEvent StringValue(string_value) {:?}\n", value);
                             }
 
                             DataValue::HTMLAnchorElementValue(value) => {
                                 println!(
-                                    "got FataEvent DataValue::HTMLAnchorElementValue(value) {:?}\n",
-                                    value
+                                    "[{}] window:[{}] got FataEvent HTMLAnchorElementValue(value) {:?}\n", w_.label(),
+                                    index,value
                                 );
                             }
                         }
@@ -149,6 +148,17 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
             // handle the error
         }
     }
+}
+
+fn open_link<R: Runtime>(w_: &Window<R>, url: &str) {
+    let js = r#"
+    window.location.href = '_URL_'
+    "#
+    .replace("_URL_", &url);
+
+    let _ = w_.eval(&js);
+
+    println!("open link {} with js:{}",url,js);
 }
 
 fn base64_hello() {
