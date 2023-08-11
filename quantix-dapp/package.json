@@ -13,23 +13,23 @@
     "svg-symbols": "sketchdev"
   },
   "dependencies": {
-    "@dom-native/ui": "^0.3.0-alpha.1",
-    "@tauri-apps/api": "^1.2.0",
+    "@dom-native/ui": "0.3.0-alpha.1",
+    "@tauri-apps/api": "^1.4.0",
     "dom-native": "^0.11.2",
-    "utils-min": "^0.2.1"
+    "utils-min": "^0.2.2"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.0.2",
-    "@rollup/plugin-typescript": "^11.1.0",
-    "@tauri-apps/cli": "^1.2.3",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@tauri-apps/cli": "^1.4.0",
     "autoprefixer": "^10.4.14",
     "pcss-cli": "^0.2.9",
     "postcss-import": "^15.1.0",
     "postcss-nested": "^6.0.1",
-    "rollup": "^3.20.2",
+    "rollup": "^3.28.0",
     "servor": "^4.0.2",
     "sketchdev": "^0.7.4",
-    "tslib": "^2.5.0",
-    "typescript": "^5.0.3"
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6"
   }
 }
