@@ -79,9 +79,23 @@ fn create_fund_eastmoney_window<R: Runtime>(
         process_fata_event(&w_, payload);
         // base64_hello()
         // open_link(&w_, "https://fund.eastmoney.com/");
+
+        send_boma_event(&w_);
     });
 
     return new_window;
+}
+
+fn send_boma_event<R: Runtime>(w_: &Window<R>) -> () {
+    // Create a new object for the struct FataEvent using the new method
+    let e_: BomaEvent<String> = BomaEvent::new(
+        "some hub name".to_string(),
+        "done FundNetValue".to_string(),
+        Some("some label".to_string()),
+        Some("some data".to_string()),
+    );
+
+    w_.emit("BomaEvent", e_).unwrap();
 }
 
 fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
@@ -111,18 +125,9 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                             }
                             DataValue::FundNetValue(value) => {
                                 println!(
-                                    "[{}] window:[{}] got FataEvent FundNetValue(fund_net_value) {:?}\n", w_.label(),
+                                    "[{}] window:[{}] got FataEvent FundNetValue(value) {:?}\n", w_.label(),
                                     index,value
                                 );
-                                // Create a new object for the struct FataEvent using the new method
-                                let e_: BomaEvent<String> = BomaEvent::new(
-                                    "some hub name".to_string(),
-                                    "done FundNetValue".to_string(),
-                                    Some("some label".to_string()),
-                                    Some("some data".to_string()),
-                                );
-
-                                w_.emit("BomaEvent", e_).unwrap();
                             }
                             DataValue::StringValue(value) => {
                                 println!("got FataEvent StringValue(string_value) {:?}\n", value);
