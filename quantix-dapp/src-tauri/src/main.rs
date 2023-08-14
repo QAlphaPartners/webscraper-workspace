@@ -21,6 +21,8 @@ mod model;
 mod prelude;
 mod utils;
 
+mod scraper;
+
 #[tokio::main]
 async fn main() -> Result<()> {
 	let model_manager = ModelStore::new().await?;
@@ -31,7 +33,16 @@ async fn main() -> Result<()> {
 
 	tauri::Builder::default()
 		.manage(model_manager)
+		.setup(|app| {
+            let app_ = app.handle();
+            // in this place we can only listen events from frontend
+            Ok(())
+        })
+        .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(tauri_plugin_jsinject::init())
 		.invoke_handler(tauri::generate_handler![
+			// Scraper
+			scraper::start_scrape,
 			// Project
 			ipc::get_project,
 			ipc::create_project,

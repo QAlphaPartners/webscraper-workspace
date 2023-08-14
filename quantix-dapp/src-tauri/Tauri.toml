@@ -41,6 +41,35 @@ digestAlgorithm = "sha256"
 timestampUrl = ""
 
 [tauri.security]
+# csp = null
+
+[[tauri.security.dangerousRemoteDomainIpcAccess]]
+domain = "fund.eastmoney.com"
+windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", "Scraper_6", "Scraper_7", "Scraper_8", "Scraper_9"]
+enableTauriAPI = true
+
+[[tauri.security.dangerousRemoteDomainIpcAccess]]
+domain = "quote.eastmoney.com"
+windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", "Scraper_6", "Scraper_7", "Scraper_8", "Scraper_9"]
+enableTauriAPI = true
+
+[[tauri.security.dangerousRemoteDomainIpcAccess]]
+domain = "fundf10.eastmoney.com"
+windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", "Scraper_6", "Scraper_7", "Scraper_8", "Scraper_9"]
+enableTauriAPI = true
+
+[[tauri.security.dangerousRemoteDomainIpcAccess]]
+domain = "finance.yahoo.com"
+windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", "Scraper_6", "Scraper_7", "Scraper_8", "Scraper_9"]
+enableTauriAPI = true
+
+[[tauri.security.dangerousRemoteDomainIpcAccess]]
+domain = "s.yimg.com"
+windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", 
+"Scraper_6"," Scraper _7"," Scraper _8"," Scraper _9"]
+enableTauriAPI = true
+
+
 
 [tauri.updater]
 active = false
