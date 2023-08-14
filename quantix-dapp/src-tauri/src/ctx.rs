@@ -12,21 +12,22 @@ use crate::model::ModelStore;
 use crate::Result;
 use serde::Serialize;
 use std::sync::Arc;
-use tauri::{AppHandle, Manager, Wry};
+use tauri::{AppHandle, Manager, Runtime};
 
-pub struct Ctx {
+pub struct Ctx<R: Runtime> {
 	model_manager: Arc<ModelStore>,
-	app_handle: AppHandle<Wry>,
+	app_handle: AppHandle<R>,
 }
 
-impl Ctx {
-	pub fn from_app(app: AppHandle<Wry>) -> Result<Arc<Ctx>> {
+
+impl<R: Runtime> Ctx<R> {
+	pub fn from_app(app: AppHandle<R>) -> Result<Arc<Ctx<R>>> {
 		Ok(Arc::new(Ctx::new(app)))
 	}
 }
 
-impl Ctx {
-	pub fn new(app_handle: AppHandle<Wry>) -> Self {
+impl<R: Runtime> Ctx<R> {
+	pub fn new(app_handle: AppHandle<R>) -> Self {
 		Ctx {
 			model_manager: (*app_handle.state::<Arc<ModelStore>>()).clone(),
 			app_handle,

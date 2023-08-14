@@ -5,6 +5,7 @@ use super::bmc_base::{bmc_create, bmc_delete, bmc_get, bmc_list, bmc_update};
 use super::store::{Creatable, Filterable, Patchable};
 use super::ModelMutateResultData;
 use crate::ctx::Ctx;
+use tauri::Runtime;
 use crate::utils::{map, XTake};
 use crate::{Error, Result};
 use modql::filter::{FilterNodes, OpValsString};
@@ -132,27 +133,27 @@ pub struct TaskBmc;
 impl TaskBmc {
 	const ENTITY: &'static str = "task";
 
-	pub async fn get(ctx: Arc<Ctx>, id: &str) -> Result<Task> {
-		bmc_get::<Task>(ctx, Self::ENTITY, id).await
+	pub async fn get<R:Runtime>(ctx: Arc<Ctx<R>>, id: &str) -> Result<Task> {
+		bmc_get::<Task,R>(ctx, Self::ENTITY, id).await
 	}
 
-	pub async fn create(ctx: Arc<Ctx>, data: TaskForCreate) -> Result<ModelMutateResultData> {
+	pub async fn create<R:Runtime>(ctx: Arc<Ctx<R>>, data: TaskForCreate) -> Result<ModelMutateResultData> {
 		bmc_create(ctx, Self::ENTITY, data).await
 	}
 
-	pub async fn update(
-		ctx: Arc<Ctx>,
+	pub async fn update<R:Runtime>(
+		ctx: Arc<Ctx<R>>,
 		id: &str,
 		data: TaskForUpdate,
 	) -> Result<ModelMutateResultData> {
 		bmc_update(ctx, Self::ENTITY, id, data).await
 	}
 
-	pub async fn delete(ctx: Arc<Ctx>, id: &str) -> Result<ModelMutateResultData> {
+	pub async fn delete<R:Runtime>(ctx: Arc<Ctx<R>>, id: &str) -> Result<ModelMutateResultData> {
 		bmc_delete(ctx, Self::ENTITY, id).await
 	}
 
-	pub async fn list(ctx: Arc<Ctx>, filter: Option<TaskFilter>) -> Result<Vec<Task>> {
+	pub async fn list<R:Runtime>(ctx: Arc<Ctx<R>>, filter: Option<TaskFilter>) -> Result<Vec<Task>> {
 		let opts = ListOptions {
 			limit: None,
 			offset: None,

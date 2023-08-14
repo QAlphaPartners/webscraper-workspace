@@ -3,6 +3,7 @@
 use super::bmc_base::{bmc_create, bmc_delete, bmc_get, bmc_list, bmc_update};
 use super::store::{Creatable, Filterable, Patchable};
 use super::ModelMutateResultData;
+use tauri::Runtime;
 use crate::ctx::Ctx;
 use crate::utils::XTake;
 use crate::{Error, Result};
@@ -105,27 +106,27 @@ pub struct ProjectBmc;
 impl ProjectBmc {
 	const ENTITY: &'static str = "project";
 
-	pub async fn get(ctx: Arc<Ctx>, id: &str) -> Result<Project> {
+	pub async fn get<R:Runtime>(ctx: Arc<Ctx<R>>, id: &str) -> Result<Project> {
 		bmc_get(ctx, Self::ENTITY, id).await
 	}
 
-	pub async fn create(ctx: Arc<Ctx>, data: ProjectForCreate) -> Result<ModelMutateResultData> {
+	pub async fn create<R:Runtime>(ctx: Arc<Ctx<R>>, data: ProjectForCreate) -> Result<ModelMutateResultData> {
 		bmc_create(ctx, Self::ENTITY, data).await
 	}
 
-	pub async fn update(
-		ctx: Arc<Ctx>,
+	pub async fn update<R:Runtime>(
+		ctx: Arc<Ctx<R>>,
 		id: &str,
 		data: ProjectForUpdate,
 	) -> Result<ModelMutateResultData> {
 		bmc_update(ctx, Self::ENTITY, id, data).await
 	}
 
-	pub async fn delete(ctx: Arc<Ctx>, id: &str) -> Result<ModelMutateResultData> {
+	pub async fn delete<R:Runtime>(ctx: Arc<Ctx<R>>, id: &str) -> Result<ModelMutateResultData> {
 		bmc_delete(ctx, Self::ENTITY, id).await
 	}
 
-	pub async fn list(ctx: Arc<Ctx>, filter: Option<ProjectFilter>) -> Result<Vec<Project>> {
+	pub async fn list<R:Runtime>(ctx: Arc<Ctx<R>>, filter: Option<ProjectFilter>) -> Result<Vec<Project>> {
 		bmc_list(ctx, Self::ENTITY, filter, ListOptions::default()).await
 	}
 }

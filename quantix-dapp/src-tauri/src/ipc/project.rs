@@ -8,10 +8,10 @@ use crate::model::{
 };
 use crate::Error;
 use serde_json::Value;
-use tauri::{command, AppHandle, Wry};
+use tauri::{command, AppHandle, Runtime};
 
 #[command]
-pub async fn get_project(app: AppHandle<Wry>, params: GetParams) -> IpcResponse<Project> {
+pub async fn get_project<R: Runtime>(app: AppHandle<R>, params: GetParams) -> IpcResponse<Project> {
 	match Ctx::from_app(app) {
 		Ok(ctx) => ProjectBmc::get(ctx, &params.id).await.into(),
 		Err(_) => Err(Error::CtxFail).into(),
@@ -19,8 +19,8 @@ pub async fn get_project(app: AppHandle<Wry>, params: GetParams) -> IpcResponse<
 }
 
 #[command]
-pub async fn create_project(
-	app: AppHandle<Wry>,
+pub async fn create_project<R: Runtime>(
+	app: AppHandle<R>,
 	params: CreateParams<ProjectForCreate>,
 ) -> IpcResponse<ModelMutateResultData> {
 	match Ctx::from_app(app) {
@@ -30,8 +30,8 @@ pub async fn create_project(
 }
 
 #[command]
-pub async fn update_project(
-	app: AppHandle<Wry>,
+pub async fn update_project<R: Runtime>(
+	app: AppHandle<R>,
 	params: UpdateParams<ProjectForUpdate>,
 ) -> IpcResponse<ModelMutateResultData> {
 	match Ctx::from_app(app) {
@@ -43,8 +43,8 @@ pub async fn update_project(
 }
 
 #[command]
-pub async fn delete_project(
-	app: AppHandle<Wry>,
+pub async fn delete_project<R: Runtime>(
+	app: AppHandle<R>,
 	params: DeleteParams,
 ) -> IpcResponse<ModelMutateResultData> {
 	match Ctx::from_app(app) {
@@ -54,8 +54,8 @@ pub async fn delete_project(
 }
 
 #[command]
-pub async fn list_projects(
-	app: AppHandle<Wry>,
+pub async fn list_projects<R: Runtime>(
+	app: AppHandle<R>,
 	params: ListParams<Value>,
 ) -> IpcResponse<Vec<Project>> {
 	match Ctx::from_app(app) {

@@ -9,6 +9,7 @@ use crate::ctx::Ctx;
 use crate::event::HubEvent;
 use serde::Serialize;
 use store::SurrealStore;
+use tauri::Runtime;
 use ts_rs::TS;
 
 mod bmc_base;
@@ -27,7 +28,7 @@ pub use seed_for_dev::seed_store_for_dev;
 
 // region:    --- Model Event
 
-fn fire_model_event<D>(ctx: &Ctx, entity: &str, action: &str, data: D)
+fn fire_model_event<D,R:Runtime>(ctx: &Ctx<R>, entity: &str, action: &str, data: D)
 where
 	D: Serialize + Clone,
 {
