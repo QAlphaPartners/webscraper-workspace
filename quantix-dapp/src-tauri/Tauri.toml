@@ -65,8 +65,7 @@ enableTauriAPI = true
 
 [[tauri.security.dangerousRemoteDomainIpcAccess]]
 domain = "s.yimg.com"
-windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", 
-"Scraper_6"," Scraper _7"," Scraper _8"," Scraper _9"]
+windows = ["main", "Scraper_0", "Scraper_1", "Scraper_2", "Scraper_3", "Scraper_4", "Scraper_5", "Scraper_6"," Scraper _7"," Scraper _8"," Scraper _9"]
 enableTauriAPI = true
 
 

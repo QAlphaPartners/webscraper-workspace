@@ -1,4 +1,3 @@
-
 use chrono::offset::Utc;
 use chrono::DateTime;
 use std::time::SystemTime;
@@ -17,6 +16,12 @@ use base64::{
 };
 
 use webrape_events::event::{BomaEvent, DataValue, FataEvent};
+
+use crate::{
+    ctx::Ctx,
+    model::{TaskBmc, TaskForCreate},
+    Error,
+};
 
 const MAX_CONCURRENT_SCRAPERS: i32 = 10;
 
@@ -117,8 +122,10 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                             }
                             DataValue::FundNetValue(value) => {
                                 println!(
-                                    "[{}] window:[{}] got FataEvent FundNetValue(value) {:?}\n", w_.label(),
-                                    index,value
+                                    "[{}] window:[{}] got FataEvent FundNetValue(value) {:?}\n",
+                                    w_.label(),
+                                    index,
+                                    value
                                 );
                             }
                             DataValue::StringValue(value) => {
