@@ -28,16 +28,16 @@ pub use seed_for_dev::seed_store_for_dev;
 
 // region:    --- Model Event
 
-fn fire_model_event<D,R:Runtime>(ctx: &Ctx<R>, entity: &str, action: &str, data: D)
+fn fire_model_event<D, R: Runtime>(ctx: &Ctx<R>, entity: &str, action: &str, data: D)
 where
-	D: Serialize + Clone,
+    D: Serialize + Clone,
 {
-	ctx.emit_hub_event(HubEvent {
-		hub: "Model".to_string(),
-		topic: entity.to_string(),
-		label: Some(action.to_string()),
-		data: Some(data),
-	});
+    ctx.emit_hub_event(HubEvent {
+        hub: "Model".to_string(),
+        topic: entity.to_string(),
+        label: Some(action.to_string()),
+        data: Some(data),
+    });
 }
 
 // endregion: --- Model Event
@@ -46,16 +46,16 @@ where
 
 /// For now, all mutation queries will return an {id} struct.
 /// Note: Keep it light, and client can do a get if needed.
-#[derive(TS, Serialize, Clone)]
+#[derive(TS, Serialize, Clone, Debug)]
 #[ts(export, export_to = "../src-ui/src/bindings/")]
 pub struct ModelMutateResultData {
-	pub id: String,
+    pub id: String,
 }
 
 impl From<String> for ModelMutateResultData {
-	fn from(id: String) -> Self {
-		Self { id }
-	}
+    fn from(id: String) -> Self {
+        Self { id }
+    }
 }
 
 // endregion: --- Common Model Result Data
@@ -63,20 +63,20 @@ impl From<String> for ModelMutateResultData {
 // region:    --- Tests
 #[cfg(test)]
 mod tests {
-	use modql::filter::{FilterNodes, OpValString, OpValsString};
+    use modql::filter::{FilterNodes, OpValString, OpValsString};
 
-	#[derive(Debug, FilterNodes)]
-	struct ProjectFilter {
-		id: Option<OpValsString>,
-	}
+    #[derive(Debug, FilterNodes)]
+    struct ProjectFilter {
+        id: Option<OpValsString>,
+    }
 
-	#[test]
-	fn test_simple() -> anyhow::Result<()> {
-		let pf = ProjectFilter {
-			id: Some(OpValString::Eq("hello".to_string()).into()),
-		};
-		println!("{pf:?}");
-		Ok(())
-	}
+    #[test]
+    fn test_simple() -> anyhow::Result<()> {
+        let pf = ProjectFilter {
+            id: Some(OpValString::Eq("hello".to_string()).into()),
+        };
+        println!("{pf:?}");
+        Ok(())
+    }
 }
 // endregion: --- Tests

@@ -9,12 +9,12 @@
 use crate::Result;
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize,Debug)]
 struct IpcError {
 	message: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize,Debug)]
 pub struct IpcSimpleResult<D>
 where
 	D: Serialize,
@@ -22,7 +22,7 @@ where
 	pub data: D,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize,Debug)]
 pub struct IpcResponse<D>
 where
 	D: Serialize,

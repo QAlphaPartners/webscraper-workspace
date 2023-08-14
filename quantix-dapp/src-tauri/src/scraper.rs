@@ -19,7 +19,8 @@ use webrape_events::event::{BomaEvent, DataValue, FataEvent};
 
 use crate::{
     ctx::Ctx,
-    model::{TaskBmc, TaskForCreate},
+    ipc::IpcResponse,
+    model::{ModelMutateResultData, ProjectBmc, TaskBmc, TaskForCreate},
     Error,
 };
 
@@ -71,13 +72,15 @@ fn create_fund_eastmoney_window<R: Runtime>(
         let system_time = SystemTime::now();
         let datetime: DateTime<Utc> = system_time.into();
 
-        // get a reference to the payload object
-        let payload = event.payload().unwrap();
-        process_fata_event(&w_, payload);
-        // base64_hello()
-        // open_link(&w_, "https://fund.eastmoney.com/");
+        let result = async_std::task::block_on(async {
+            // get a reference to the payload object
+            let payload = event.payload().unwrap();
+            process_fata_event(&w_, payload).await;
+            // base64_hello()
+            // open_link(&w_, "https://fund.eastmoney.com/");
 
-        send_boma_event(&w_);
+            send_boma_event(&w_);
+        });
     });
 
     return new_window;
@@ -95,7 +98,7 @@ fn send_boma_event<R: Runtime>(w_: &Window<R>) -> () {
     w_.emit("BomaEvent", e_).unwrap();
 }
 
-fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
+async fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
     println!("got FataEvent with payload: {:?}\n", payload);
     // try to deserialize it into your struct
     match serde_json::from_str::<FataEvent<DataValue>>(payload) {
@@ -133,9 +136,35 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                             }
 
                             DataValue::HTMLAnchorElementValue(value) => {
+                                let w_clone = w_.clone();
+                                let ap_ = w_clone.app_handle();
+
+                                let db_result = match Ctx::from_app(ap_) {
+                                    Ok(ctx) => {
+                                        let rs = ProjectBmc::list(ctx.clone(), None).await;
+                                        if let Ok(prjs) = rs {
+                                            // use prjs.first() to get an Option<&ProjectBmc>
+                                            if let Some(first_prj) = prjs.first() {
+                                                // use first_prj here
+                                                let _ = TaskBmc::create(
+                                                    ctx.clone(),
+                                                    TaskForCreate {
+                                                        project_id: first_prj.id.clone(), // use the id of the first project
+                                                        title: value.href.clone(),
+                                                        done: Some(true),
+                                                        desc: Some("desc".into()),
+                                                    },
+                                                )
+                                                .await;
+                                            }
+                                        }
+                                    }
+                                    Err(_) => (),
+                                };
+
                                 println!(
-                                    "[{}] window:[{}] got FataEvent HTMLAnchorElementValue(value) {:?}\n", w_.label(),
-                                    index,value
+                                    "[{}] window:[{}] got FataEvent HTMLAnchorElementValue(value) {:?} db_result:{:?}\n", w_.label(),
+                                    index,value,db_result
                                 );
                             }
                         }
