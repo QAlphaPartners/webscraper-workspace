@@ -1,5 +1,9 @@
+// Define a type alias for the function parameter
+type CallbackFunctionElm = (element: HTMLElement, once: boolean) => void;
+type CallbackFunctionElms = (elements: NodeListOf<HTMLElement>, once: boolean) => void;
+
 // Update the type of waitForElm to accept a function parameter and a boolean parameter
-export function waitForElm(selector, debug, once, callback) {
+export function waitForElm<T extends HTMLElement>(selector: string, debug: boolean, once: boolean, callback: CallbackFunctionElm): void {
     const observer = new MutationObserver((mutations) => {
         // Loop through the mutations
         mutations.forEach(function (mutation) {
@@ -14,8 +18,9 @@ export function waitForElm(selector, debug, once, callback) {
                 }
             }
         });
+
         // Check if the element exists in the document
-        const element = document.querySelector(selector);
+        const element = document.querySelector<T>(selector);
         if (element) {
             // Call the callback function with the element and the once parameter
             callback(element, once);
@@ -26,14 +31,18 @@ export function waitForElm(selector, debug, once, callback) {
             }
         }
     });
+
     // Start observing
     observer.observe(document.body, {
         childList: true,
         subtree: true,
     });
 }
+
+
+
 // Update the type of waitForElm to accept a function parameter and a boolean parameter
-export function waitForElms(selector, debug, once, callback) {
+export function waitForElms<T extends HTMLElement>(selector: string, debug: boolean, once: boolean, callback: CallbackFunctionElms): void {
     const observer = new MutationObserver((mutations) => {
         // Loop through the mutations
         mutations.forEach(function (mutation) {
@@ -48,8 +57,9 @@ export function waitForElms(selector, debug, once, callback) {
                 }
             }
         });
+
         // Check if the element exists in the document
-        const elements = document.querySelectorAll(selector);
+        const elements = document.querySelectorAll<T>(selector);
         if (elements) {
             // Call the callback function with the element and the once parameter
             callback(elements, once);
@@ -60,6 +70,7 @@ export function waitForElms(selector, debug, once, callback) {
             }
         }
     });
+
     // Start observing
     observer.observe(document.body, {
         childList: true,

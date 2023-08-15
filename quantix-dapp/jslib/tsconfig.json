@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+
+    "target": "ESNext",
+    "strict": true,
+    "lib": [
+      "ESNext",
+      "DOM",
+    ],
+    "noEmitOnError": true,
+    "isolatedModules": true,
+    // module resolution
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "typeRoots": ["../node_modules/@types"],
+    // advanced
+    "skipLibCheck": true,
+    "rootDir": "./",
+    "outDir": "../dist-jslib",
+    "declaration": true
+  },
+  // "exclude": [
+  //   "node_modules"
+  // ],
+  "include": [
+    "./**/*"
+  ]
+}

@@ -19,6 +19,8 @@ dist/css/
 !dist/images/*.png
 !src-tauri/icons/app-icon.png
 
+dist-jslib
+
 # --- Safety net
 __pycache__/
 npm-debug.log
