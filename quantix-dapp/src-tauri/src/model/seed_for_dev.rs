@@ -26,6 +26,7 @@ pub async fn seed_store_for_dev(model_manager: Arc<ModelStore>) -> Result<()> {
 			let task = TaskForCreate {
 				project_id: project_id.clone(),
 				title: format!("Task {k}.{i}"),
+				href: format!("http://example.com/{k}.{i}.html"),
 				desc: None,
 				done: Some(done),
 			};

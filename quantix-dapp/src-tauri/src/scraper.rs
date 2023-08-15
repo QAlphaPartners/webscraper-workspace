@@ -150,7 +150,8 @@ async fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                                                     ctx.clone(),
                                                     TaskForCreate {
                                                         project_id: first_prj.id.clone(), // use the id of the first project
-                                                        title: value.href.clone(),
+                                                        title: value.inner_text.clone(),
+                                                        href: value.href.clone(),
                                                         done: Some(true),
                                                         desc: Some("desc".into()),
                                                     },

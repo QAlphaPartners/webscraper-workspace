@@ -59,7 +59,7 @@ class TaskFmc extends BaseFmc<Task, TaskForCreate, TaskForUpdate> {
     super("task");
   }
 
-  async list(filter: any): Promise<Project[]> {
+  async list(filter: any): Promise<Task[]> {
     // prune the empty string so that the UI does not have to do too much. 
     filter = pruneEmpty(filter);
     // Note: for now, we just add a 's' for list, might might get rid of plurals
