@@ -10,7 +10,11 @@ const HTML = html`
 	<d-ico class="action show-add-project" name="ico-add"></d-ico>
 </header>
 <menus>
-	<a data-id="menu:stock-exposure" class="sel">Stock Exposure</a>
+	<a data-id="menu:data-scraper" class="sel">Scraper</a>
+	<a data-id="menu:stock">Stock</a>
+	<a data-id="menu:fund">Fund</a>
+	<a data-id="menu:indicator">Indicator</a>
+	<a data-id="menu:stock-exposure">Stock Exposure</a>
 	<a data-id="menu:fund-exposure">Fund Exposure</a>
 </menus>
 <section>
@@ -36,11 +40,13 @@ export class NavView extends BaseHTMLElement { // extends HTMLElement
 	@onHub("Route", "change", "projects")
 	onProjectsRouteChange() {
 		this.updateProjectsContentSel();
+		this.updateMenusContentSel();
 	}
 
 
 	@onHub("Route", "change", "menus")
 	onMenusRouteChange() {
+		this.updateProjectsContentSel();
 		this.updateMenusContentSel();
 	}
 	// #endregion --- App Events
@@ -107,6 +113,7 @@ export class NavView extends BaseHTMLElement { // extends HTMLElement
 		// Create the content DocumentFragment from the projects and replace children
 		const content = frag(projects, (prj: Project) =>
 			elem('a', { "data-id": prj.id, $: { textContent: prj.name } }));
+
 		this.#contentEl.replaceChildren(content);
 
 		// Update selction
