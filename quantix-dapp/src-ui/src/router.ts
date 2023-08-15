@@ -10,7 +10,8 @@ const route_hub = hub("Route");
  * 
  **/
 interface Route {
-	project_id?: string
+	project_id?: string,
+	menu_id?: string
 }
 
 class Router {
@@ -20,7 +21,12 @@ class Router {
 	update_state(state: Partial<Route>) {
 		// Note: DeepClone when Route state cannot be assumed to be flat anymore.
 		Object.assign(this.#current_route, state);
-		route_hub.pub("change", null);
+		console.log("Router.update_state #current_route=", this.#current_route, " state=", state);
+		if (state.project_id) {
+			route_hub.pub("change", "projects", null);
+		} else if (state.menu_id) {
+			route_hub.pub("change", "menus", null);
+		}
 	}
 
 	get_current(): Route {

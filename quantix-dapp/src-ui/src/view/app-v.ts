@@ -30,11 +30,15 @@ export class AppView extends BaseHTMLElement { // extends HTMLElement
 	// #region    --- App Events
 	@onHub("Route", "change") // @onHub(hubName, topic, label?)
 	async onRouteChange() {
-		const { project_id } = router.get_current();
+		const { project_id, menu_id } = router.get_current();
 		if (project_id != null) {
 			const project = await projectFmc.get(project_id);
 			const projectEl = elem('project-v', { $: { project } });
 			this.#mainEl.replaceChildren(projectEl);
+		} else if (menu_id === "menu:stock-exposure") {
+			this.#mainEl.textContent = "Welcome menu:stock-exposure";
+		} else if (menu_id === "menu:fund-exposure") {
+			this.#mainEl.textContent = "Welcome menu:fund-exposure";
 		} else {
 			this.#mainEl.textContent = "Welcome select project";
 		}

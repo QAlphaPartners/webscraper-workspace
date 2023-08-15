@@ -9,6 +9,10 @@ const HTML = html`
 	<label>Projects</label>
 	<d-ico class="action show-add-project" name="ico-add"></d-ico>
 </header>
+<menus>
+	<a data-id="menu:stock-exposure" class="sel">Stock Exposure</a>
+	<a data-id="menu:fund-exposure">Fund Exposure</a>
+</menus>
 <section>
 </section>
 `;
@@ -29,9 +33,15 @@ export class NavView extends BaseHTMLElement { // extends HTMLElement
 		});
 	}
 
-	@onHub("Route", "change")
-	onRouteChange() {
-		this.updateContentSel();
+	@onHub("Route", "change", "projects")
+	onProjectsRouteChange() {
+		this.updateProjectsContentSel();
+	}
+
+
+	@onHub("Route", "change", "menus")
+	onMenusRouteChange() {
+		this.updateMenusContentSel();
 	}
 	// #endregion --- App Events
 
@@ -66,9 +76,20 @@ export class NavView extends BaseHTMLElement { // extends HTMLElement
 
 		const project_id = evt.selectTarget.getAttribute("data-id")!;
 
-		router.update_state({ project_id });
+		router.update_state({ project_id: project_id, menu_id: undefined });
+	}
+
+
+
+	@onEvent("pointerdown", "menus > a")
+	selMenu(evt: Event & OnEvent) {
+
+		const menu_id = evt.selectTarget.getAttribute("data-id")!;
+
+		router.update_state({ project_id: undefined, menu_id: menu_id });
 	}
 	// #endregion --- UI Events
+
 
 	init() {
 		const content = document.importNode(HTML, true);
@@ -89,7 +110,7 @@ export class NavView extends BaseHTMLElement { // extends HTMLElement
 		this.#contentEl.replaceChildren(content);
 
 		// Update selction
-		this.updateContentSel();
+		this.updateProjectsContentSel();
 
 		// If first refresh, select first project (update router)
 		if (first_refresh && projects.length > 0) {
@@ -97,11 +118,24 @@ export class NavView extends BaseHTMLElement { // extends HTMLElement
 		}
 	}
 
-	updateContentSel() {
-		let { project_id } = router.get_current();
+	updateProjectsContentSel() {
+		let { project_id, menu_id } = router.get_current();
+		console.log("[updateProjectsContentSel] project_id=", project_id, " menu_id=", menu_id);
 		all(this, `section > a.sel`).forEach(el => el.classList.remove("sel"));
 		if (project_id != null) {
 			const el = first(`section > a[data-id="${project_id}"]`);
+			el?.classList.add("sel");
+		}
+	}
+
+
+
+	updateMenusContentSel() {
+		let { project_id, menu_id } = router.get_current();
+		console.log("[updateMenusContentSel] project_id=", project_id, " menu_id=", menu_id);
+		all(this, `menus > a.sel`).forEach(el => el.classList.remove("sel"));
+		if (menu_id != null) {
+			const el = first(`menus > a[data-id="${menu_id}"]`);
 			el?.classList.add("sel");
 		}
 	}
