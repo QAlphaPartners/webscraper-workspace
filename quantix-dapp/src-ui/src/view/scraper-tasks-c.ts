@@ -21,8 +21,6 @@ const SCRAPER_TASK_ROW_HTML = html`
 @customElement('scraper-tasks-c')
 export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElement
 	// #region    --- Data
-	#project_id!: string;
-	set project_id(v: string) { this.#project_id = v; this.update() }
 
 	#filter?: any
 	set filter(f: any) { this.#filter = f; this.update() }
@@ -119,7 +117,6 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 	async update() {
 		if (this.initialized) {
 			const filter = {
-				project_id: this.#project_id,
 				...this.#filter
 			}
 			const tasks = await taskFmc.list(filter);

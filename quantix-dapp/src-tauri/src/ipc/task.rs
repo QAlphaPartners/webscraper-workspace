@@ -62,11 +62,13 @@ pub async fn list_tasks<R: Runtime>(
     params: ListParams<Value>,
 ) -> IpcResponse<Vec<Task>> {
     // TODO: Needs to make error handling simpler (use ? rather than all into())
-    match Ctx::from_app(app) {
+    let result = match Ctx::from_app(app) {
         Ok(ctx) => match params.filter.map(serde_json::from_value).transpose() {
             Ok(filter) => TaskBmc::list(ctx, filter).await.into(),
             Err(err) => Err(Error::JsonSerde(err)).into(),
         },
         Err(_) => Err(Error::CtxFail).into(),
-    }
+    };
+
+    result
 }

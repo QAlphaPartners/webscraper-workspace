@@ -5,28 +5,28 @@
 
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize,Debug)]
 pub struct CreateParams<D> {
 	pub data: D,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize,Debug)]
 pub struct UpdateParams<D> {
 	pub id: String,
 	pub data: D,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize,Debug)]
 pub struct ListParams<F> {
 	pub filter: Option<F>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize,Debug)]
 pub struct GetParams {
 	pub id: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize,Debug)]
 pub struct DeleteParams {
 	pub id: String,
 }

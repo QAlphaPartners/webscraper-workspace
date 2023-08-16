@@ -67,8 +67,8 @@ export class ScraperView extends BaseHTMLElement { // extends HTMLElement
 
 	async update(filter?: any) {
 		if (this.#masterEl) {
-			// const taskDt = elem('tasks-dt', { $: { scraper_id: "123", filter } });
-			// this.#masterEl.replaceChildren(taskDt);
+			const taskDt = elem('scraper-tasks-c');
+			this.#masterEl.replaceChildren(taskDt);
 		}
 	}
 }

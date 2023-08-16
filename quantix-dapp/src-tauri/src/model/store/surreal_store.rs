@@ -126,6 +126,8 @@ impl SurrealStore {
 		let filter_or_groups = filter_groups.map(|v| v.into());
 		let (sql, vars) = build_select_query(tb, filter_or_groups, list_options)?;
 
+		println!("[exec_select] sql={}",sql);
+
 		let ress = self.ds.execute(&sql, &self.ses, Some(vars), false).await?;
 
 		let first_res = ress.into_iter().next().expect("Did not get a response");
