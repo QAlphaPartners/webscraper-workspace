@@ -10,3 +10,6 @@ export * from './Task.js';
 export * from './TaskForCreate.js';
 export * from './TaskForUpdate.js';
 
+export * from './ScrapeTask.js';
+export * from './ScrapeTaskForCreate.js';
+export * from './ScrapeTaskForUpdate.js';

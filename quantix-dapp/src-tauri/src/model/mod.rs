@@ -18,11 +18,13 @@ mod project;
 mod seed_for_dev;
 mod store;
 mod task;
+mod scrape_task;
 
 // --- Re-exports
 pub use model_store::*;
 pub use project::*;
 pub use task::*;
+pub use scrape_task::*;
 // For dev only
 pub use seed_for_dev::seed_store_for_dev;
 

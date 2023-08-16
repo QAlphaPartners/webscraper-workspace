@@ -55,6 +55,12 @@ async fn main() -> Result<()> {
 			ipc::update_task,
 			ipc::delete_task,
 			ipc::list_tasks,
+			// ScrapeTask
+			ipc::get_scrape_task,
+			ipc::update_scrape_task,
+			ipc::delete_scrape_task,
+			ipc::list_scrape_tasks,
+
 		])
 		.run(tauri::generate_context!())
 		.expect("error while running tauri application");

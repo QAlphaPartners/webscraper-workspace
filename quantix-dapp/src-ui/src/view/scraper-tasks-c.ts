@@ -1,7 +1,7 @@
 import { DCheckElement } from '@dom-native/ui';
 import { all, BaseHTMLElement, customElement, elem, first, frag, html, on, OnEvent, onEvent, onHub, position, scanChild, trigger } from 'dom-native';
-import { ModelMutateResultData, Task } from '../bindings/index.js';
-import { taskFmc } from '../model/index.js';
+import { ModelMutateResultData, ScrapeTask } from '../bindings/index.js';
+import { scrapeTaskFmc } from '../model/index.js';
 import { classable } from '../utils.js';
 
 const SCRAPER_TASK_HEADER = html`
@@ -61,7 +61,7 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 
 	@onHub("Model", "task", "update")
 	async onTaskUpdate(data: ModelMutateResultData) {
-		const newTask = await taskFmc.get(data.id);
+		const newTask = await scrapeTaskFmc.get(data.id);
 		all(this, `scraper-task-row.${classable(data.id)}`).forEach((taskEl) => (<ScraperTaskRow>taskEl).task = newTask);
 	}
 	// #endregion --- App Event
@@ -87,9 +87,9 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 		document.body.appendChild(menuEl);
 		on(menuEl, "SELECT", (evt: OnEvent<keyof typeof options>) => {
 			if (evt.detail == 'delete') {
-				taskFmc.delete(task.id);
+				scrapeTaskFmc.delete(task.id);
 			} else if (evt.detail == 'toggle') {
-				taskFmc.update(task.id, { done: !task.done });
+				scrapeTaskFmc.update(task.id, { done: !task.done });
 			}
 
 		});
@@ -105,7 +105,7 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 		// Make sure to avoid infine loop 
 		// (will get this event when changed by other mean as well)
 		if (newDone !== taskEl.task.done) {
-			taskFmc.update(task_id, { done: evt.detail.value });
+			scrapeTaskFmc.update(task_id, { done: evt.detail.value });
 		}
 	}
 	// #endregion --- UI Events
@@ -119,15 +119,15 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 			const filter = {
 				...this.#filter
 			}
-			const tasks = await taskFmc.list(filter);
+			const scrapeTasks = await scrapeTaskFmc.list(filter);
 
-			const content = frag(tasks, task => elem('scraper-task-row', { $: { task } }));
+			const content = frag(scrapeTasks, task => elem('scraper-task-row', { $: { task } }));
 
 			content.prepend(document.importNode(SCRAPER_TASK_HEADER, true));
 
 			this.replaceChildren(content);
 
-			if (tasks.length == 0) {
+			if (scrapeTasks.length == 0) {
 				trigger(this, "EMPTY");
 			}
 		}
@@ -145,9 +145,9 @@ declare global {
 @customElement('scraper-task-row')
 export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 	// #region    --- Data
-	#task!: Task;
-	set task(newTask: Task) {
-		const oldTask = this.#task as Task | undefined;
+	#task!: ScrapeTask;
+	set task(newTask: ScrapeTask) {
+		const oldTask = this.#task as ScrapeTask | undefined;
 		if (oldTask !== newTask) {
 			this.#task = newTask;
 			this.update(newTask, oldTask);
@@ -175,7 +175,7 @@ export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 		this.update(this.#task);
 	}
 
-	update(newTask: Task, oldTask?: Task) {
+	update(newTask: ScrapeTask, oldTask?: ScrapeTask) {
 
 		if (oldTask) {
 			this.classList.remove(`${classable(oldTask.id)}`)

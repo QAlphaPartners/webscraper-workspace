@@ -15,9 +15,11 @@ mod params;
 mod project;
 mod response;
 mod task;
+mod scrape_task;
 
 // --- re-exports
 pub use params::*;
 pub use project::*;
 pub use response::*;
 pub use task::*;
+pub use scrape_task::*;

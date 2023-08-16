@@ -1,5 +1,5 @@
 import { pruneEmpty } from 'utils-min';
-import { ModelMutateResultData, Project, ProjectForCreate, ProjectForUpdate, Task, TaskForCreate, TaskForUpdate } from '../bindings/index.js';
+import { ModelMutateResultData, Project, ProjectForCreate, ProjectForUpdate, ScrapeTask, ScrapeTaskForCreate, ScrapeTaskForUpdate, Task, TaskForCreate, TaskForUpdate } from '../bindings/index.js';
 import { ensure_ModelMutateResultData } from '../bindings/type_asserts.js';
 import { ipc_invoke } from '../ipc.js';
 
@@ -67,6 +67,24 @@ class TaskFmc extends BaseFmc<Task, TaskForCreate, TaskForUpdate> {
   }
 }
 export const taskFmc = new TaskFmc();
+
+// #endregion --- TaskBmc
+
+
+// #region    --- ScrapeTaskFmc
+class ScrapeTaskFmc extends BaseFmc<ScrapeTask, ScrapeTaskForCreate, ScrapeTaskForUpdate> {
+  constructor() {
+    super("scrape_task");
+  }
+
+  async list(filter: any): Promise<ScrapeTask[]> {
+    // prune the empty string so that the UI does not have to do too much. 
+    filter = pruneEmpty(filter);
+    // Note: for now, we just add a 's' for list, might might get rid of plurals
+    return ipc_invoke(`list_${this.cmd_suffix}s`, { filter }).then(res => res.data);
+  }
+}
+export const scrapeTaskFmc = new ScrapeTaskFmc();
 
 // #endregion --- TaskBmc
 
