@@ -1,7 +1,7 @@
-scraper-v {
+scraper-data-v {
   margin: 0 0 1rem 0;
   display: grid;
-  grid-template-rows: var(--app-header-height) 1fr 1fr;
+  grid-template-rows: var(--app-header-height) 3rem 1fr;
 
   & > header {
     padding: 0 0 0 3rem;
@@ -9,7 +9,6 @@ scraper-v {
     font-weight: 600;
 
     display: grid;
-    grid-template-columns: 1fr 2fr 3em;
     background: var(--bkg-30);
 
     align-items: center;
@@ -25,15 +24,8 @@ scraper-v {
   }
 
 
-  & > master {
+  & > section {
     padding: 1rem 2rem;
     display: grid;
-  }
-
-
-  & > detail {
-    padding: 1rem 0rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr ;
   }
 }

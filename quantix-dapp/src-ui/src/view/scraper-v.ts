@@ -7,8 +7,29 @@ const HTML = html`
 <h1> Scrape Web Data </h1>
 <d-input class="search-url" placeholder="Search url to scrape"></d-input>
 </header>
-<section></section>
+<master>
+	Section the component data here</br>
+</master>
+<detail>
+	<scraper-link-v></scraper-link-v>
+	<scraper-data-v></scraper-data-v>
+</detail>
 `;
+
+const LINK_HEADER = html`
+	<div class="th">Title </div>
+	<div class="th">Info</div>
+	<div class="th done">Done</div>
+	<div class="th more">&nbsp;</div>
+`
+
+const LINK_ROW_HTML = html`
+	<span class="title"></span>
+	<span class="info"></span>
+	<d-check class="done"></d-check>
+	<d-ico class="show-more" name="ico-more"></d-ico>
+`;
+
 
 @customElement('scraper-v')
 export class ScraperView extends BaseHTMLElement { // extends HTMLElement
@@ -16,7 +37,7 @@ export class ScraperView extends BaseHTMLElement { // extends HTMLElement
 	// #endregion --- Data
 
 	// #region    --- Key Els
-	#contentEl!: HTMLElement
+	#masterEl!: HTMLElement
 	#searchTaskDInputEl!: DInputElement
 	// #endregion --- Key Els
 
@@ -36,8 +57,8 @@ export class ScraperView extends BaseHTMLElement { // extends HTMLElement
 	init() {
 		const content = document.importNode(HTML, true);
 
-		[this.#contentEl,  this.#searchTaskDInputEl] =
-			getFirst(content, "section", "d-input.search-url") as [HTMLElement,  DInputElement];
+		[this.#masterEl, this.#searchTaskDInputEl] =
+			getFirst(content, "master", "d-input.search-url") as [HTMLElement, DInputElement];
 
 		this.replaceChildren(content);
 
@@ -45,9 +66,9 @@ export class ScraperView extends BaseHTMLElement { // extends HTMLElement
 	}
 
 	async update(filter?: any) {
-		if (this.#contentEl ) {
+		if (this.#masterEl) {
 			// const taskDt = elem('tasks-dt', { $: { scraper_id: "123", filter } });
-			// this.#contentEl.replaceChildren(taskDt);
+			// this.#masterEl.replaceChildren(taskDt);
 		}
 	}
 }

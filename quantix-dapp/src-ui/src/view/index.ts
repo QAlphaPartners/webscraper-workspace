@@ -21,6 +21,8 @@ export * from './nav-v.js';
 export * from './project-v.js';
 export * from './tasks-dt.js';
 export * from './scraper-v.js';
+export * from './scraper-link-v.js';
+export * from './scraper-data-v.js';
 
 
 
