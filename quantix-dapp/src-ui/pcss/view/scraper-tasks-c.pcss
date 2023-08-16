@@ -1,4 +1,4 @@
-scraper-tasks-dt {
+scraper-tasks-c {
 	margin-top: 1rem;
 	/* Note: Here we define the bkg in variable because we use it in the .th
 						so that we can use the css-grid for the header and rows of the datagrid
@@ -43,11 +43,12 @@ scraper-tasks-dt {
 	}
 
 	/* Little visual trick for the first row */
-	task-row:first-of-type>* {
+	scraper-task-row:first-of-type>* {
 		margin-top: .5rem;
 	}
 
-	task-row {
+	
+	scraper-task-row {
 		display: contents;
 
 		& > * {

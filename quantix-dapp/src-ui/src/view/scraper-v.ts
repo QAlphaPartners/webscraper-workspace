@@ -4,15 +4,15 @@ import { taskFmc } from '../model/index.js';
 
 const HTML = html`
 <header>
-<h1> Scrape Web Data </h1>
+<h1> Scrape Web Data Tasks </h1>
 <d-input class="search-url" placeholder="Search url to scrape"></d-input>
 </header>
 <master>
 	Section the component data here</br>
 </master>
 <detail>
-	<scraper-link-v></scraper-link-v>
-	<scraper-data-v></scraper-data-v>
+	<scraper-link-c></scraper-link-c>
+	<scraper-data-c></scraper-data-c>
 </detail>
 `;
 

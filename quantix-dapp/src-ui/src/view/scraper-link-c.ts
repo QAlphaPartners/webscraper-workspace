@@ -10,8 +10,8 @@ const HTML = html`
 <section></section>
 `;
 
-@customElement('scraper-link-v')
-export class ScraperLinkView extends BaseHTMLElement { // extends HTMLElement
+@customElement('scraper-link-c')
+export class ScraperLinkComponent extends BaseHTMLElement { // extends HTMLElement
 	// #region    --- Data
 	// #endregion --- Data
 
@@ -40,6 +40,6 @@ export class ScraperLinkView extends BaseHTMLElement { // extends HTMLElement
 }
 declare global {
 	interface HTMLElementTagNameMap {
-		'scraper-link-v': ScraperLinkView;
+		'scraper-link-c': ScraperLinkComponent;
 	}
 }

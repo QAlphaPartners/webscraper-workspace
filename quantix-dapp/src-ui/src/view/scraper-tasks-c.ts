@@ -18,8 +18,8 @@ const SCRAPER_TASK_ROW_HTML = html`
 	<d-ico class="show-more" name="ico-more"></d-ico>
 `;
 
-@customElement('scraper-tasks-dt')
-export class ScraperTasksDataTable extends BaseHTMLElement { // extends HTMLElement
+@customElement('scraper-tasks-c')
+export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElement
 	// #region    --- Data
 	#project_id!: string;
 	set project_id(v: string) { this.#project_id = v; this.update() }
@@ -137,9 +137,10 @@ export class ScraperTasksDataTable extends BaseHTMLElement { // extends HTMLElem
 
 	}
 }
+
 declare global {
 	interface HTMLElementTagNameMap {
-		'scraper-tasks-dt': ScraperTasksDataTable;
+		'scraper-tasks-c': ScraperTasksComponent;
 	}
 }
 
