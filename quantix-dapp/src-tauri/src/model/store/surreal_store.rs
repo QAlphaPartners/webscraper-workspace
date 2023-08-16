@@ -86,6 +86,8 @@ impl SurrealStore {
 			"th".into() => thing(tid)?.into(),
 			"data".into() => data.into()];
 
+		println!("[exec_merge] sql={}",sql);
+		
 		let ress = self.ds.execute(sql, &self.ses, Some(vars), true).await?;
 
 		let first_res = ress.into_iter().next().expect("id not returned");

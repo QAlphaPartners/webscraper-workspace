@@ -28,14 +28,14 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 
 	// #region    --- App Event
 	// Create will refresh the full datagrid, in case of sort by name and such
-	@onHub("Model", "task", "create")
-	onTaskCreate() {
+	@onHub("Model", "scrape_task", "create")
+	onScrapeTaskCreate() {
 		this.update();
 	}
 
 	// Delete can be more selective in this case, will delete the row
-	@onHub("Model", "task", "delete")
-	onTaskDelete(data: ModelMutateResultData) {
+	@onHub("Model", "scrape_task", "delete")
+	onScrapeTaskDelete(data: ModelMutateResultData) {
 		all(this, `scraper-task-row.${classable(data.id)}`).forEach(taskRowEl => {
 			// Note: This will add the class in the taskRow, but the animations are on the cells
 			//       as the scraper-task-row as the display: contents in the css 
@@ -59,8 +59,9 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 		});
 	}
 
-	@onHub("Model", "task", "update")
-	async onTaskUpdate(data: ModelMutateResultData) {
+	@onHub("Model", "scrape_task", "update")
+	async onScrapeTaskUpdate(data: ModelMutateResultData) {
+		console.log("[onScrapeTaskUpdate] Model:scrape_task:update data=",data);
 		const newTask = await scrapeTaskFmc.get(data.id);
 		all(this, `scraper-task-row.${classable(data.id)}`).forEach((taskEl) => (<ScraperTaskRow>taskEl).task = newTask);
 	}

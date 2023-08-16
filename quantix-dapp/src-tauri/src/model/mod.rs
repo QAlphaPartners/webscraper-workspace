@@ -15,16 +15,16 @@ use ts_rs::TS;
 mod bmc_base;
 mod model_store;
 mod project;
+mod scrape_task;
 mod seed_for_dev;
 mod store;
 mod task;
-mod scrape_task;
 
 // --- Re-exports
 pub use model_store::*;
 pub use project::*;
-pub use task::*;
 pub use scrape_task::*;
+pub use task::*;
 // For dev only
 pub use seed_for_dev::seed_store_for_dev;
 
@@ -34,6 +34,10 @@ fn fire_model_event<D, R: Runtime>(ctx: &Ctx<R>, entity: &str, action: &str, dat
 where
     D: Serialize + Clone,
 {
+    println!(
+        "[fire_model_event] hub:Model topic:{} label:{}",
+        entity, action
+    );
     ctx.emit_hub_event(HubEvent {
         hub: "Model".to_string(),
         topic: entity.to_string(),

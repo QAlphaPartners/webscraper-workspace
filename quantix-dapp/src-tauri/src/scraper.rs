@@ -99,11 +99,11 @@ fn send_boma_event<R: Runtime>(w_: &Window<R>) -> () {
 }
 
 async fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
-    println!("got FataEvent with payload: {:?}\n", payload);
+    // println!("got FataEvent with payload: {:?}\n", payload);
     // try to deserialize it into your struct
     match serde_json::from_str::<FataEvent<DataValue>>(payload) {
         Ok(fata_event) => {
-            println!("got FataEvent with fata_event: {:?}\n", fata_event);
+            // println!("got FataEvent with fata_event: {:?}\n", fata_event);
             // get the data field as an option of a vector of DataValue enums
             let data_values = fata_event.data;
 
