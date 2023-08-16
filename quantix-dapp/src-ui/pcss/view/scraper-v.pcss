@@ -1,4 +1,4 @@
-project-v {
+scraper-v {
   margin: 0 0 1rem 0;
   display: grid;
   grid-template-rows: var(--app-header-height) 3rem 1fr;
@@ -9,27 +9,21 @@ project-v {
     font-weight: 600;
 
     display: grid;
+    grid-template-columns: 1fr 2fr 3em;
     background: var(--bkg-30);
 
     align-items: center;
-    grid-template-columns: max-content 20rem;
     gap: 2rem;
 
     h1 {
-      color: var(--txt-50);
+      color: var(--txt-red);
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: 0.04em;
     }
 
   }
 
-  & > .search-task {
-    margin: 1rem;
-    width: 30rem;
-    align-self: flex-start;
-    justify-self: right;
-  }
 
   & > section {
     padding: 1rem 2rem;

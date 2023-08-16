@@ -35,6 +35,9 @@ export class AppView extends BaseHTMLElement { // extends HTMLElement
 			const project = await projectFmc.get(project_id);
 			const projectEl = elem('project-v', { $: { project } });
 			this.#mainEl.replaceChildren(projectEl);
+		} else if (menu_id === "menu:data-scraper") {
+			const scraperEl = elem('scraper-v', {});
+			this.#mainEl.replaceChildren(scraperEl);
 		} else if (menu_id === "menu:stock-exposure") {
 			this.#mainEl.textContent = "Welcome menu:stock-exposure";
 		} else if (menu_id === "menu:fund-exposure") {
