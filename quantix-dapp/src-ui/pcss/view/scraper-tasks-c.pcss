@@ -1,96 +1,98 @@
 scraper-tasks-c {
-	margin-top: 1rem;
-	/* Note: Here we define the bkg in variable because we use it in the .th
+  margin-top: 1rem;
+  /* Note: Here we define the bkg in variable because we use it in the .th
 						so that we can use the css-grid for the header and rows of the datagrid
 	*/
-	--content-bkg: var(--bkg-app);
-	background: var(--content-bkg);
+  --content-bkg: var(--bkg-app);
+  background: var(--content-bkg);
 
-	overflow: auto;
-	display: grid;
-	grid-template-columns: 2fr 1fr 5rem 2rem;
-	grid-auto-rows: min-content;
-	color: var(--txt-70);
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  color: var(--txt-70);
 
+  /* Little visual trick for the first row */
+  scraper-task-row:first-of-type > * {
+    margin-top: 0.1rem;
+  }
 
-	& > div.th {
-		position: sticky;
-		top: 0;
-		height: 2.5rem;
-		background: var(--content-bkg);
-		padding-left: 1rem;
-		border-bottom: solid 1px var(--bdr);
+  scraper-task-row {
+    display: grid;
+    grid-auto-rows: min-content;
 
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: .1em;
-		color: var(--txt-30);
-		display: grid;
-		align-items: flex-start;
+    &.anim-delete {
+      & > * {
+        color: var(--txt-red);
+        opacity: 0.5;
+        transform: scale(0);
+        transform-origin: left;
+        transition-property: transform, opacity;
+        transition-duration: 0.5s;
+      }
+    }
 
-		&.done {
-			padding-left: 0;
-			justify-content: center;
-		}
-	}
+    .H9lube {
+      background-color: #f1f3f4;
+      border: 1px solid #ecedef;
+      border-radius: 50%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      height: 26px;
+      width: 26px;
+      margin-right: 12px;
+    }
 
-	d-ico[name="ico-more"] {
-		cursor: pointer;
-		width: 1.25rem;
-		height: 1.25rem;
-		justify-self: center;
-		align-self: center;
-	}
+    a:hover h3.LC20lb {
+      text-decoration: underline;
+    }
+    .MBeuO {
+      font-family: arial,sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+  }
+  
+    master {
+      display: grid;
+      grid-template-columns: max-content auto;
+      grid-template-rows: max-content auto;
 
-	/* Little visual trick for the first row */
-	scraper-task-row:first-of-type>* {
-		margin-top: .5rem;
-	}
+      logo {
+        grid-row: 1 / span 2;
+        grid-column: 1;
+        margin: 0.1rem;
+        height: 18px;
+        width: 18px;
+      }
 
-	
-	scraper-task-row {
-		display: contents;
+      .title {
+        grid-row: 1;
+        grid-column: 2;
+      }
 
-		& > * {
-			padding: 0 0.5rem 0 1rem;
-			height: 3rem;
-			display: grid;
-			align-items: center;
-		}
+      ops {
+        grid-row: 2;
+        grid-column: 2;
+        a.url {
+          color: white;
+        }
+        a.action {
+          color: var(--clr-prime-500);
+        }
+      }
+    }
 
-		&.anim-delete {
-			& > * {
-				color: var(--txt-red);
-				opacity: .5;
-				transform: scale(0);
-				transform-origin: left;
-				transition-property: transform, opacity;
-				transition-duration: .5s;
-			}
-		}
-
-		& > .info {
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			display: block;
-			align-self: center;
-			height: auto;
-		}
-
-		& > d-ico,
-		& > d-check {
-			padding: 0;
-		}
-
-		& d-check {
-			justify-self: center;
-
-			&[checked] svg {
-				fill: var(--clr-green) !important;
-			}
-		}
-
-	}
-
+    detail {
+      display: flex;
+      align-items: center;
+      b {
+        float: left;
+        white-space: nowrap;
+      }
+      p {
+        text-align: justify;
+      }
+    }
+  }
 }

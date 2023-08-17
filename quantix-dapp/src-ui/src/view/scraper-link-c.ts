@@ -5,7 +5,7 @@ import { taskFmc } from '../model/index.js';
 
 const HTML = html`
 <header>
-<h1> Scraper Link </h1>
+<h1> Fund Eastmoney Scraped Links </h1>
 </header>
 <section></section>
 `;

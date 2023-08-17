@@ -1,22 +1,10 @@
 import { DCheckElement } from '@dom-native/ui';
-import { all, BaseHTMLElement, customElement, elem, first, frag, html, on, OnEvent, onEvent, onHub, position, scanChild, trigger } from 'dom-native';
+import { all, BaseHTMLElement, customElement, elem, first, frag, getFirst, html, on, OnEvent, onEvent, onHub, position, scanChild, trigger } from 'dom-native';
 import { ModelMutateResultData, ScrapeTask } from '../bindings/index.js';
 import { scrapeTaskFmc } from '../model/index.js';
 import { classable } from '../utils.js';
 
-const SCRAPER_TASK_HEADER = html`
-	<div class="th">Title </div>
-	<div class="th">Info</div>
-	<div class="th done">Done</div>
-	<div class="th more">&nbsp;</div>
-`
 
-const SCRAPER_TASK_ROW_HTML = html`
-	<span class="title"></span>
-	<span class="info"></span>
-	<d-check class="done"></d-check>
-	<d-ico class="show-more" name="ico-more"></d-ico>
-`;
 
 @customElement('scraper-tasks-c')
 export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElement
@@ -124,8 +112,6 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 
 			const content = frag(scrapeTasks, task => elem('scraper-task-row', { $: { task } }));
 
-			content.prepend(document.importNode(SCRAPER_TASK_HEADER, true));
-
 			this.replaceChildren(content);
 
 			if (scrapeTasks.length == 0) {
@@ -142,6 +128,25 @@ declare global {
 	}
 }
 
+const SCRAPER_TASK_ROW_HTML = html`
+    <master>
+        <logo class="H9lube">logo</logo>
+        <div class="title">title</div>
+        <ops>
+        	<a class="url" href="#">https://socket.dev/npm/package/vite-plugin-template-html</a>
+            <a id="scrape" class="action" href="#">爬取此页</a>
+            <a id="ignore" class="action" href="#">忽略此页</a>
+        </ops>
+    </master>
+    <a class="turl" href="https://socket.dev/npm/package/vite-plugin-template-html">
+		<h3 class="LC20lb MBeuO">How to add async/await inside the listen events in tauri ...</h3>
+	</a>
+    <detail>
+        <b class="info">2022年11月23日爬取</b> 
+		<p>— Start using Socket to analyze vite-plugin-template-html and its 127 dependencies to secure your app from supply chain attacks.</p>
+    </detail>
+	<d-check class="done"></d-check>
+`;
 // #region    --- scraper-task-row
 @customElement('scraper-task-row')
 export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
@@ -169,7 +174,8 @@ export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 		let content = document.importNode(SCRAPER_TASK_ROW_HTML, true);
 		// Note: dom-native scanChild is a strict one fast pass child scanner. 
 		//       Use all/first if needs to be more flexible. 
-		[this.#titleEl, this.#infoEl, this.#checkEl] = scanChild(content, 'span', 'span', 'd-check');
+		[this.#titleEl, this.#infoEl, this.#checkEl] = getFirst(content, '.title', '.info', 'd-check');
+
 
 		// FIXME: Check that order does not matter here.
 		this.replaceChildren(content);
@@ -188,10 +194,10 @@ export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 			this.classList.add(`${classable(newTask.id)}`);
 			this.#checkEl.checked = newTask.done;
 
-			this.#titleEl.textContent = newTask.title;
+			this.#titleEl.textContent = newTask.title + " ~Title~ ";
 			let info = newTask.ctime;
 			info = info.substring(info.length - 5);
-			this.#infoEl.textContent = `(ctime: ${info})`;
+			this.#infoEl.textContent = `2022年11月23日爬取(ctime: ${info})`;
 		}
 
 	}
