@@ -17,25 +17,35 @@ export async function scrape_urls() {
                     var dataValue: DataValue = {
                         HTMLAnchorElementValue: { title: elm.title, href: elm.href, inner_text: elm.innerText.replace("\n", ""), scraped_date: 0 }
                     }
-                    if (key < 3){
-                        // TODO: very important, event can not be too large to send, or else will block the ipc channel!!!
-                        links.push(dataValue);
-                    }
+                    links.push(dataValue);
                 }
             };
         })
 
+        if (links.length > 0) {
+            var size = 10;
+            var splitArray = Array.from(
+                new Array(Math.ceil(links.length / size)),
+                (_, i) => links.slice(i * size, i * size + size)
+            );
 
-        // url网页刮取的网址
-        // Create an object literal with the required fields
-        let fataEvent = {
-            hub: "links hub",
-            topic: "URLS_SCRAPED",
-            // Optionally, you can also add the label and data fields
-            label: "all http HTMLAnchorElement elements",
-            data: links
-        } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
-        await getCurrent().emit("FataEvent", fataEvent);
+            splitArray.forEach(async function (subarray, index, array) {
+                // TODO: very important, event can not be too large to send, or else will block the ipc channel!!!
+                console.log("Subarray " + index + " of " + array.length + ": " + subarray);
+                // url网页刮取的网址
+                // Create an object literal with the required fields
+                let fataEvent = {
+                    hub: "links hub",
+                    topic: "URLS_SCRAPED",
+                    // Optionally, you can also add the label and data fields
+                    label: "all http HTMLAnchorElement elements",
+                    data: links
+                } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
+                await getCurrent().emit("FataEvent", fataEvent);
+            });
+
+
+        }
     })
 
 }
