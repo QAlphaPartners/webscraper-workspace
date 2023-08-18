@@ -11,7 +11,6 @@ pub async fn seed_store_for_dev(model_manager: Arc<ModelStore>) -> Result<()> {
         .exec_create::<ScrapeTaskForCreate>(
             "scrape_task",
             ScrapeTaskForCreate {
-                project_id: format!("scrape_task"),
                 title: format!("Fund Eastmoney"),
                 href: format!("https://fund.eastmoney.com/"),
                 desc: None,

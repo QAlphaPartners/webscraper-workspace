@@ -83,6 +83,12 @@ class ScrapeTaskFmc extends BaseFmc<ScrapeTask, ScrapeTaskForCreate, ScrapeTaskF
     // Note: for now, we just add a 's' for list, might might get rid of plurals
     return ipc_invoke(`list_${this.cmd_suffix}s`, { filter }).then(res => res.data);
   }
+
+  async start_scrape(task_id: string) {
+    return ipc_invoke('start_scrape_task', { "id": task_id }).then(res => {
+      console.log("return from start_scrape_task")
+    });
+  }
 }
 export const scrapeTaskFmc = new ScrapeTaskFmc();
 

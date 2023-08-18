@@ -49,13 +49,24 @@ export class ScraperTasksComponent extends BaseHTMLElement { // extends HTMLElem
 
 	@onHub("Model", "scrape_task", "update")
 	async onScrapeTaskUpdate(data: ModelMutateResultData) {
-		console.log("[onScrapeTaskUpdate] Model:scrape_task:update data=",data);
+		console.log("[onScrapeTaskUpdate] Model:scrape_task:update data=", data);
 		const newTask = await scrapeTaskFmc.get(data.id);
 		all(this, `scraper-task-row.${classable(data.id)}`).forEach((taskEl) => (<ScraperTaskRow>taskEl).task = newTask);
 	}
 	// #endregion --- App Event
 
 	// #region    --- UI Events
+	@onEvent("pointerup", "scraper-task-row #scrape")
+	async onActionScrape(evt: OnEvent) {
+
+		let taskEl = evt.selectTarget.closest("scraper-task-row")!;
+		let task_id = taskEl.task.id;
+		console.log("[onActionScrape] evt=", evt, " task_id=", task_id);
+
+		await scrapeTaskFmc.start_scrape(task_id);
+
+	}
+
 	@onEvent("pointerup", "scraper-task-row .show-more")
 	onTaskShowMore(evt: OnEvent) {
 		const MENU_CLASS = 'scraper-task-row-more-menu';

@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
         .plugin(tauri_plugin_jsinject::init())
 		.invoke_handler(tauri::generate_handler![
 			// Scraper
-			scraper::start_scrape,
+			scraper::start_scrape_task,
 			// Project
 			ipc::get_project,
 			ipc::create_project,

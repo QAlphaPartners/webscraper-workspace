@@ -25,8 +25,6 @@ use ts_rs::TS;
 pub struct ScrapeTask {
     pub id: String,
     pub ctime: String,
-    pub project_id: String,
-
     pub done: bool,
     pub title: String,
     pub href: String,
@@ -39,7 +37,6 @@ impl TryFrom<Object> for ScrapeTask {
         let scrape_task = ScrapeTask {
             id: val.x_take_val("id")?,
             ctime: val.x_take_val::<i64>("ctime")?.to_string(),
-            project_id: val.x_take_val("project_id")?,
             done: val.x_take_val("done")?,
             title: val.x_take_val("title")?,
             href: val.x_take_val("href")?,
@@ -58,7 +55,6 @@ impl TryFrom<Object> for ScrapeTask {
 #[derive(Deserialize, TS, Debug)]
 #[ts(export, export_to = "../src-ui/src/bindings/")]
 pub struct ScrapeTaskForCreate {
-    pub project_id: String,
     pub title: String,
     pub href: String,
     pub done: Option<bool>,
@@ -68,7 +64,6 @@ pub struct ScrapeTaskForCreate {
 impl From<ScrapeTaskForCreate> for Value {
     fn from(val: ScrapeTaskForCreate) -> Self {
         let mut data = map![
-            "project_id".into() => val.project_id.into(),
             "title".into() => val.title.into(),
             "href".into() => val.href.into(),
         ];
@@ -139,6 +134,10 @@ impl ScrapeTaskBmc {
     pub async fn get<R: Runtime>(ctx: Arc<Ctx<R>>, id: &str) -> Result<ScrapeTask> {
         bmc_get::<ScrapeTask, R>(ctx, Self::ENTITY, id).await
     }
+
+	pub async fn create<R:Runtime>(ctx: Arc<Ctx<R>>, data: ScrapeTaskForCreate) -> Result<ModelMutateResultData> {
+		bmc_create(ctx, Self::ENTITY, data).await
+	}
 
     pub async fn update<R: Runtime>(
         ctx: Arc<Ctx<R>>,

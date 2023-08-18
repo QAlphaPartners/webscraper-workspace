@@ -22,12 +22,6 @@ pub async fn update_scrape_task<R: Runtime>(
     app: AppHandle<R>,
     params: UpdateParams<ScrapeTaskForUpdate>,
 ) -> IpcResponse<ModelMutateResultData> {
-    scraper::start_scrape(
-        app.clone(),
-        "http://fundf10.eastmoney.com/jjjz_001751.html".to_string(),
-        false,
-    )
-    .await;
 
     match Ctx::from_app(app) {
         Ok(ctx) => ScrapeTaskBmc::update(ctx, &params.id, params.data).await.into(),

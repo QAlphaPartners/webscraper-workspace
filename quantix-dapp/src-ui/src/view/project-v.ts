@@ -34,7 +34,7 @@ export class ProjectView extends BaseHTMLElement { // extends HTMLElement
 
 			// Create the task
 			const project_id = this.#project.id;
-			taskFmc.create({ project_id, title });
+			taskFmc.create({ project_id, title ,href:"href"});
 
 			// Clear the input
 			// Note: Here we could also do an await on create, before clearing the input. 

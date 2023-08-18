@@ -19,31 +19,52 @@ use webrape_events::event::{BomaEvent, DataValue, FataEvent};
 
 use crate::{
     ctx::Ctx,
-    ipc::IpcResponse,
-    model::{ModelMutateResultData, ProjectBmc, TaskBmc, TaskForCreate},
+    ipc::{GetParams, IpcResponse},
+    model::{ModelMutateResultData, ProjectBmc, ScrapeTask, ScrapeTaskBmc, TaskBmc, TaskForCreate, ScrapeTaskForCreate},
     Error,
 };
 
 const MAX_CONCURRENT_SCRAPERS: i32 = 10;
 
 #[tauri::command]
-pub async fn start_scrape<R: Runtime>(handle: AppHandle<R>, url: String, to_crawl: bool) {
+pub async fn start_scrape_task<R: Runtime>(
+    handle: AppHandle<R>,
+    params: GetParams,
+) -> IpcResponse<ScrapeTask> {
+    let task_id = params.id;
+    println!("[start_scrape_task] task_id={}", task_id);
     let handle_ = &handle.clone();
-    // Parse a URL string into a Url struct
-    let url_ = Url::parse(url.as_str()).unwrap();
-    // Get the host as an Option<&str>
-    let host = url_.host_str();
-    // Print the host
-    println!("Host: {:?} to_crawl={}", host, to_crawl); // Some("www.bing.com")
+    let handle_1 = handle.clone();
 
-    for i in 0..MAX_CONCURRENT_SCRAPERS {
-        let label = format!("Scraper_{}", i);
-        if let None = handle_.app_handle().get_window(label.as_str()) {
-            let _new_window = create_fund_eastmoney_window(url, handle, label);
+    let result = match Ctx::from_app(handle_1) {
+        Ok(ctx) => ScrapeTaskBmc::get(ctx, &task_id).await,
+        Err(_) => Err(Error::CtxFail),
+    };
 
-            break;
+    if let Ok(ref task) = result {
+        let url_str = task.href.clone();
+
+        // Parse a URL string into a Url struct
+
+        let url = Url::parse(&url_str).unwrap();
+        let url_ = url.clone();
+
+        // Get the host as an Option<&str>
+        let host = url_.host_str();
+        // Print the host
+        println!("Host: {:?}", host); // Some("www.bing.com")
+
+        for i in 0..MAX_CONCURRENT_SCRAPERS {
+            let label = format!("Scraper_{}", i);
+            if let None = handle_.app_handle().get_window(label.as_str()) {
+                let _new_window = create_fund_eastmoney_window(url_str, handle, label);
+
+                break;
+            }
         }
     }
+
+    result.into()
 }
 
 fn create_fund_eastmoney_window<R: Runtime>(
@@ -141,24 +162,16 @@ async fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
 
                                 let db_result = match Ctx::from_app(ap_) {
                                     Ok(ctx) => {
-                                        let rs = ProjectBmc::list(ctx.clone(), None).await;
-                                        if let Ok(prjs) = rs {
-                                            // use prjs.first() to get an Option<&ProjectBmc>
-                                            if let Some(first_prj) = prjs.first() {
-                                                // use first_prj here
-                                                let _ = TaskBmc::create(
-                                                    ctx.clone(),
-                                                    TaskForCreate {
-                                                        project_id: first_prj.id.clone(), // use the id of the first project
-                                                        title: value.inner_text.clone(),
-                                                        href: value.href.clone(),
-                                                        done: Some(true),
-                                                        desc: Some("desc".into()),
-                                                    },
-                                                )
-                                                .await;
-                                            }
-                                        }
+                                        let _ = ScrapeTaskBmc::create(
+                                            ctx.clone(),
+                                            ScrapeTaskForCreate {
+                                                title: value.inner_text.clone(),
+                                                href: value.href.clone(),
+                                                done: Some(true),
+                                                desc: Some("desc".into()),
+                                            },
+                                        )
+                                        .await;
                                     }
                                     Err(_) => (),
                                 };
