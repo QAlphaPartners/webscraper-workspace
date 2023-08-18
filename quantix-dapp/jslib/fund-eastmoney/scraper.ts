@@ -15,7 +15,7 @@ async function handleLoaded() {
     console.log("[scraper.ts] DOMContentLoaded handleLoaded");
 
     // To use it:
-    waitForElm("#float-scrape-div", true, true, async (floatDiv: HTMLElement) => {
+    waitForElm("#float-scrape-div", false, true, async (floatDiv: HTMLElement) => {
         console.log("[waitForElm] found Element(float-scrape-div) is ready: ", floatDiv);
 
         floatDiv.innerHTML = "[fund-eastmoney/scraper] float div with scraped web data in json from url=" + window.location.href;
@@ -29,7 +29,7 @@ async function handleLoaded() {
             label: "some label",
             data: [{ StringValue: { data: "some data from [fund-eastmoney/scraper.ts]", enalbe: false } }], // Specify the type of the data field
         } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
-        await getCurrent().emit("FataEvent", JSON.stringify(fataEvent));
+        await getCurrent().emit("FataEvent", fataEvent);
 
         // listener has to be registered after emit event to backend!!! or else 
         // [Error] TypeError: listener.handler is not a function. (In 'listener.handler(eventData)', 'listener.handler' is undefined)
@@ -59,7 +59,7 @@ async function handleLoaded() {
 
 
     // To use it: http://fundf10.eastmoney.com/jjjz_002190.html
-    waitForElm("#jztable thead", true, false, (thead: HTMLElement) => {
+    waitForElm("#jztable thead", false, false, (thead: HTMLElement) => {
         console.log("[extractJjjzHistoryData] thead ready: ", thead);
 
         var tr_rows = thead.querySelectorAll("tr");

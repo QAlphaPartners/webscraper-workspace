@@ -156,7 +156,6 @@ const SCRAPER_TASK_ROW_HTML = html`
         <b class="info">2022年11月23日爬取</b> 
 		<p>— Start using Socket to analyze vite-plugin-template-html and its 127 dependencies to secure your app from supply chain attacks.</p>
     </detail>
-	<d-check class="done"></d-check>
 `;
 // #region    --- scraper-task-row
 @customElement('scraper-task-row')
@@ -174,8 +173,8 @@ export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 	// #endregion --- Data
 
 	// #region    --- Key Els
-	#checkEl!: DCheckElement;
 	#titleEl!: HTMLElement;
+	#urlEl!: HTMLElement;
 	#infoEl!: HTMLElement;
 	// #endregion --- Key Els
 
@@ -185,7 +184,8 @@ export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 		let content = document.importNode(SCRAPER_TASK_ROW_HTML, true);
 		// Note: dom-native scanChild is a strict one fast pass child scanner. 
 		//       Use all/first if needs to be more flexible. 
-		[this.#titleEl, this.#infoEl, this.#checkEl] = getFirst(content, '.title', '.info', 'd-check');
+		[this.#titleEl, this.#infoEl] = getFirst(content, '.title', '.info');
+		this.#urlEl = getFirst (content,  '.url');
 
 
 		// FIXME: Check that order does not matter here.
@@ -203,9 +203,11 @@ export class ScraperTaskRow extends BaseHTMLElement { // extends HTMLElement
 		if (newTask && this.#titleEl != null) {
 
 			this.classList.add(`${classable(newTask.id)}`);
-			this.#checkEl.checked = newTask.done;
 
 			this.#titleEl.textContent = newTask.title + " ~Title~ ";
+
+			this.#urlEl.textContent= newTask.href;
+
 			let info = newTask.ctime;
 			info = info.substring(info.length - 5);
 			this.#infoEl.textContent = `2022年11月23日爬取(ctime: ${info})`;

@@ -13,7 +13,7 @@ export function waitForElm<T extends HTMLElement>(selector: string, debug: boole
                     // Loop through the added nodes
                     mutation.addedNodes.forEach(function (node) {
                         // Log the node to the console
-                        console.log("[utils.ts] MutationObserver addedNodes", node);
+                        console.log("[waitForElm] MutationObserver addedNodes", node);
                     });
                 }
             }
@@ -41,31 +41,32 @@ export function waitForElm<T extends HTMLElement>(selector: string, debug: boole
 
 
 
-// Update the type of waitForElm to accept a function parameter and a boolean parameter
+// Update the type of waitForElms to accept a function parameter and a boolean parameter
 export function waitForElms<T extends HTMLElement>(selector: string, debug: boolean, once: boolean, callback: CallbackFunctionElms): void {
     const observer = new MutationObserver((mutations) => {
         // Loop through the mutations
         mutations.forEach(function (mutation) {
             // Check if any nodes were added
             if (mutation.addedNodes.length > 0) {
-                if (debug) {
-                    // Loop through the added nodes
-                    mutation.addedNodes.forEach(function (node) {
+                // Loop through the added nodes
+                mutation.addedNodes.forEach(function (node) {
+                    if (debug) {
                         // Log the node to the console
-                        console.log("[utils.ts] MutationObserver addedNodes", node);
-                    });
-                }
+                        console.log("[waitForElms] MutationObserver addedNodes", node);
+                    }
+                });
             }
         });
 
         // Check if the element exists in the document
         const elements = document.querySelectorAll<T>(selector);
         if (elements) {
+            console.log("[waitForElms] querySelectorAll<T>(selector)", selector, " elements=", elements);
             // Call the callback function with the element and the once parameter
             callback(elements, once);
             // Check if the once parameter is true
             if (once) {
-                // Stop observing
+                console.log("[waitForElms] Stop observing for selector=",selector)
                 observer.disconnect();
             }
         }

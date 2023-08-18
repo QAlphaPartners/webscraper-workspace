@@ -19,12 +19,12 @@ async function handleLoaded() {
 
     console.log("[scraper.ts] DOMContentLoaded handleLoaded");
 
+    await scrape_urls()
     // To use it:
     waitForElm("#float-scrape-div", true, true, async (floatDiv: HTMLElement) => {
         console.log("[waitForElm] found Element(float-scrape-div) is ready: ", floatDiv);
 
         floatDiv.innerHTML = "[finance-yahoo/scraper] float div with scraped web data in json from url=" + window.location.href;
-        await scrape_urls()
 
         // Create an object literal with the required fields
         let fataEvent = {
@@ -33,9 +33,9 @@ async function handleLoaded() {
             // Optionally, you can also add the label and data fields
             label: "some label",
             data: [{
-                StringValue: {data:"Hello world!", enalbe:true}
-            }] 
-        }  as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
+                StringValue: { data: "Hello world!", enalbe: true }
+            }]
+        } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
         await getCurrent().emit("FataEvent", fataEvent);
 
         // listener has to be registered after emit event to backend!!! or else 

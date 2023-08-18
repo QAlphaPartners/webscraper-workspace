@@ -20,7 +20,7 @@ async function handleLoaded() {
     console.log("[scraper.ts] DOMContentLoaded handleLoaded");
 
     // To use it:
-    waitForElm("#float-scrape-div", true, true, async (floatDiv: HTMLElement) => {
+    waitForElm("#float-scrape-div", false, true, async (floatDiv: HTMLElement) => {
         console.log("[waitForElm] found Element(float-scrape-div) is ready: ", floatDiv);
 
         floatDiv.innerHTML = "[finance-yahoo/scraper] float div with scraped web data in json from url=" + window.location.href;
@@ -33,9 +33,9 @@ async function handleLoaded() {
             // Optionally, you can also add the label and data fields
             label: "some label",
             data: [{
-                StringValue: {data:"Hello world!", enalbe:true}
-            }] 
-        }  as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
+                StringValue: { data: "Hello world!", enalbe: true }
+            }]
+        } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
         await getCurrent().emit("FataEvent", fataEvent);
 
         // listener has to be registered after emit event to backend!!! or else 
@@ -66,7 +66,7 @@ async function handleLoaded() {
 
 
     // To use it: http://fundf10.eastmoney.com/jjjz_002190.html
-    waitForElm("#jztable thead", true, false, (thead: HTMLElement) => {
+    waitForElm("#jztable thead", false, false, (thead: HTMLElement) => {
         console.log("[extractJjjzHistoryData] thead ready: ", thead);
 
         var tr_rows = thead.querySelectorAll("tr");

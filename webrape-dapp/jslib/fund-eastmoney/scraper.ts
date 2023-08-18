@@ -14,12 +14,12 @@ async function handleLoaded() {
 
     console.log("[scraper.ts] DOMContentLoaded handleLoaded");
 
+    await scrape_urls()
     // To use it:
     waitForElm("#float-scrape-div", true, true, async (floatDiv: HTMLElement) => {
         console.log("[waitForElm] found Element(float-scrape-div) is ready: ", floatDiv);
 
         floatDiv.innerHTML = "[fund-eastmoney/scraper] float div with scraped web data in json from url=" + window.location.href;
-        await scrape_urls()
 
         // Create an object literal with the required fields
         let fataEvent = {
