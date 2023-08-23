@@ -4,6 +4,7 @@
         "./quantix-dapp/src-tauri/Cargo.toml",
         "./webrape-dapp/src-tauri/Cargo.toml",
         "./plugins/tauri-plugin-jsinject/Cargo.toml",
+        "./plugins/localhost/Cargo.toml",
         "./plugins/fund-eastmoney/Cargo.toml",
         "./plugins/fund-eastmoney/examples/basic-app/src-tauri/Cargo.toml",
         "./plugins/common-plugin/Cargo.toml",

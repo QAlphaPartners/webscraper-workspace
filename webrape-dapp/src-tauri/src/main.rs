@@ -7,8 +7,9 @@ use std::time::SystemTime;
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
-    AppHandle, Event, EventHandler, Manager, RunEvent, Runtime, Window,
+    AppHandle, Event, EventHandler, Manager, RunEvent, Runtime, Window, WindowBuilder,
 };
+use tauri_utils::config::{AppUrl, WindowUrl};
 use url::Url;
 
 // use the encode and decode functions
@@ -125,8 +126,10 @@ fn process_fata_event<R: Runtime>(w_: &Window<R>, payload: &str) -> () {
                             }
                             DataValue::FundNetValue(value) => {
                                 println!(
-                                    "[{}] window:[{}] got FataEvent FundNetValue(value) {:?}\n", w_.label(),
-                                    index,value
+                                    "[{}] window:[{}] got FataEvent FundNetValue(value) {:?}\n",
+                                    w_.label(),
+                                    index,
+                                    value
                                 );
                             }
                             DataValue::StringValue(value) => {
@@ -185,15 +188,43 @@ fn base64_hello() {
 }
 
 fn main() {
+    //Expose your apps assets through a localhost server instead of the default custom protocol.
+    let port = portpicker::pick_unused_port().expect("failed to find unused port");
+    let port = 8765;
+    let mut context = tauri::generate_context!();
+    let url = format!("http://localhost:{}", port).parse().unwrap();
+    println!("\n port={} url={}\n", port, url);
+    let window_url = WindowUrl::External(url);
+    // rewrite the config so the IPC is enabled on this URL
+    context.config_mut().build.dist_dir = AppUrl::Url(window_url.clone());
+
+    if cfg!(dev) {
+        println!("cfg!(dev) is here");
+    }
     tauri::Builder::default()
         .setup(|app| {
             let app_ = app.handle();
             // in this place we can only listen events from frontend
+
+            WindowBuilder::new(app, "mainlocal".to_string(), window_url)
+                .title("Localhost Example")
+                .build()?;
+
             Ok(())
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_jsinject::init())
+        .plugin(
+            tauri_plugin_localhost::Builder::new(port)
+                .on_request(|req, resp| {
+                    // req is a reference to a Request object
+                    // resp is a mutable reference to a Response object
+                    println!("The request url is {}", req.url());
+                    resp.add_header("X-Powered-By", "Tauri");
+                })
+                .build(),
+        )
         .invoke_handler(tauri::generate_handler![greet, start_scrape])
-        .run(tauri::generate_context!())
+        .run(context)
         .expect("error while running tauri application");
 }

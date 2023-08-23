@@ -34,6 +34,7 @@ ts-rs = { version = "7" }
 
 tauri-plugin-jsinject = { path = "../../plugins/tauri-plugin-jsinject" }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-localhost = { path = "../../plugins/localhost" }
 fraction = "0.13.1"
 webrape-events = { path = "../../webrape-events" }
 async-std = "1.12.0"

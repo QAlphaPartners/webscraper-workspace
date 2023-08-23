@@ -2,7 +2,8 @@
 beforeBuildCommand = ""
 beforeDevCommand = ""
 devPath = "http://localhost:8080/"
-distDir = "../dist"
+distDir = "http://localhost:8080/"
+# distDir = "../dist"
 
 [package]
 productName = "quantix-dapp"

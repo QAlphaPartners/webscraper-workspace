@@ -40,6 +40,7 @@ async fn main() -> Result<()> {
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_jsinject::init())
+		.plugin(tauri_plugin_localhost::Builder::new(3030).build())
 		.invoke_handler(tauri::generate_handler![
 			// Scraper
 			scraper::start_scrape_task,
