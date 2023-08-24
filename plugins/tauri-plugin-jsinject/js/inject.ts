@@ -1,7 +1,9 @@
 
 import { getCurrent } from '@tauri-apps/api/window';
 
-import type { FataEvent,  DataValue } from 'webrape-events';
+import type { FataEvent, DataValue } from 'webrape-events';
+
+import { invoke } from "@tauri-apps/api/tauri";
 
 declare var __DEBUG__: boolean;
 
@@ -10,6 +12,9 @@ let previousUrl: string = "null";
 console.log("[inject.ts] inject common js into webview with url ", window.location.href)
 window.addEventListener("DOMContentLoaded", async (event) => {
 
+  await invoke("greet", { name: "Conan" }).then((message) => {
+    console.log("[inject.ts] got greet message=", message)
+  });
   // Check if the current URL is different from the previous one
   if (window.location.href !== previousUrl) {
     if (window.location.href !== "about:blank") {
@@ -28,6 +33,7 @@ window.addEventListener("DOMContentLoaded", async (event) => {
         }]
       } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
       await getCurrent().emit("FataEvent", fataEvent);
+
     }
 
     // Update the previous URL

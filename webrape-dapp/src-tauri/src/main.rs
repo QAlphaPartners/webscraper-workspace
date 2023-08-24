@@ -23,8 +23,9 @@ use webrape_events::event::{BomaEvent, DataValue, FataEvent};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn greet<R: Runtime>(window:Window<R> ,name: &str) -> String {
+    println!("[main.rs] calling greet(name)={} from window={}",name, window.label());
+    format!("Hello, {}! You've been greeted from Rust on window={}", name,window.label())
 }
 
 const MAX_CONCURRENT_SCRAPERS: i32 = 10;
@@ -199,13 +200,10 @@ fn main() {
     let external_url = "https://fund.eastmoney.com/";
     let external_url = "https://www.example.com/";
 
-    let url =format!("http://localhost:{}/url={}", port, external_url) ;
-    println!("[main.rs] url={}",url);
-    let window_url = WindowUrl::External(
-        url
-            .parse()
-            .unwrap(),
-    );
+    let url = format!("http://localhost:{}/url={}", port, external_url);
+    // let url =format!("http://localhost:{}/file=index.html", port ) ;
+    println!("[main.rs] url={}", url);
+    let window_url = WindowUrl::External(url.parse().unwrap());
 
     let mut context = tauri::generate_context!();
     let mut builder = tauri::Builder::default();
@@ -222,6 +220,10 @@ fn main() {
             WindowBuilder::new(app, "mainlocal".to_string(), window_url)
                 .title("Localhost Example")
                 .build()?;
+
+            app_.listen_global("FataEvent", move |event| {
+                println!("\n[main.rs] got FataEvent={:?}", event);
+            });
 
             Ok(())
         })

@@ -25,14 +25,20 @@
         "all": true
       },
       "protocol": {
-				"all": true,
-				"asset": true,
-				"assetScope": ["**", "**/*"]
-			},
+        "all": true,
+        "asset": true,
+        "assetScope": [
+          "**",
+          "**/*"
+        ]
+      },
       "http": {
         "all": true,
         "request": true,
-        "scope": ["https://**"]
+        "scope": [
+          "https://**",
+          "http://**"
+        ]
       }
     },
     "bundle": {

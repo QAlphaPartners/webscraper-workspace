@@ -51,7 +51,8 @@ impl HttpHandler for LogHandler {
             let new_req = Request::from_parts(parts, body);
 
             new_req.into()
-        } else {
+        } else { // TODO : local resource
+            
             // Reconstruct the request from parts
             let new_req = Request::from_parts(parts, body);
 
@@ -60,7 +61,7 @@ impl HttpHandler for LogHandler {
     }
 
     async fn handle_response(&mut self, _ctx: &HttpContext, res: Response<Body>) -> Response<Body> {
-        println!("{:?}", res);
+        println!("[HttpHandler] handle_response _ctx={:?} res= {:?}", _ctx, res);
         res
     }
 }
