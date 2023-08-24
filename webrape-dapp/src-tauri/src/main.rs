@@ -199,8 +199,10 @@ fn main() {
     let external_url = "https://fund.eastmoney.com/";
     let external_url = "https://www.example.com/";
 
+    let url =format!("http://localhost:{}/url={}", port, external_url) ;
+    println!("[main.rs] url={}",url);
     let window_url = WindowUrl::External(
-        format!("http://localhost:{}/url={}", port, external_url)
+        url
             .parse()
             .unwrap(),
     );

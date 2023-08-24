@@ -3,7 +3,7 @@
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:1420",
-    "distDir": "http://localhost:8765",
+    "distDir": "../dist",
     "withGlobalTauri": true
   },
   "package": {
@@ -28,7 +28,12 @@
 				"all": true,
 				"asset": true,
 				"assetScope": ["**", "**/*"]
-			}
+			},
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["https://**"]
+      }
     },
     "bundle": {
       "active": true,
@@ -42,6 +47,7 @@
         "icons/icon.ico"
       ]
     },
+    
     "security": {
       "csp": "default-src blob: data: filesystem: wss: http: https: tauri: 'unsafe-inline' asset: https://asset.localhost 'self'; script-src 'self'",
 
