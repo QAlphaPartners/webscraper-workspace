@@ -188,28 +188,31 @@ fn base64_hello() {
 }
 
 fn main() {
-    //Expose your apps assets through a localhost server instead of the default custom protocol.
-    let port = portpicker::pick_unused_port().expect("failed to find unused port");
-    let port = 8765;
-    let mut context = tauri::generate_context!();
-
-    let url_str = format!("http://localhost:{}/url=www.example.com", port);
-
-    let url = url_str.clone()
-        .parse()
-        .unwrap();
-
-    let url_ = url_str.replace("http://localhost:8765", "https://asset.localhost").parse().unwrap();
-    println!("\n [main] port={} url={}\n", port, url);
-    let window_url = WindowUrl::External(url);
-    let window_url_ = WindowUrl::External(url_);
-    // rewrite the config so the IPC is enabled on this URL
-    context.config_mut().build.dist_dir = AppUrl::Url(window_url.clone());
-
     if cfg!(dev) {
         println!("cfg!(dev) is here");
     }
-    tauri::Builder::default()
+
+    //Expose your apps assets through a localhost server instead of the default custom protocol.
+    let port = portpicker::pick_unused_port().expect("failed to find unused port");
+    let port = 8765;
+
+    let external_url = "https://fund.eastmoney.com/";
+    let external_url = "https://www.example.com/";
+
+    let window_url = WindowUrl::External(
+        format!("http://localhost:{}/url={}", port, external_url)
+            .parse()
+            .unwrap(),
+    );
+
+    let mut context = tauri::generate_context!();
+    let mut builder = tauri::Builder::default();
+
+    // rewrite the config so the IPC is enabled on this URL
+    context.config_mut().build.dist_dir = AppUrl::Url(window_url.clone());
+    // context.config_mut().build.dev_path = AppUrl::Url(window_url.clone());
+
+    builder
         .setup(|app| {
             let app_ = app.handle();
             // in this place we can only listen events from frontend

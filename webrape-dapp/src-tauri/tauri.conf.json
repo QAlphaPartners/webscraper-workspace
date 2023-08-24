@@ -43,8 +43,28 @@
       ]
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost; media-src 'self' asset: https://asset.localhost",
+      "csp": "default-src blob: data: filesystem: wss: http: https: tauri: 'unsafe-inline' asset: https://asset.localhost 'self'; script-src 'self'",
+
       "dangerousRemoteDomainIpcAccess": [
+        {
+          "domain": "localhost",
+          "windows": [
+            "main",
+            "mainlocal",
+            "Scraper_0",
+            "Scraper_1",
+            "Scraper_2",
+            "Scraper_3",
+            "Scraper_4",
+            "Scraper_5",
+            "Scraper_6",
+            "Scraper_7",
+            "Scraper_8",
+            "Scraper_9"
+          ],
+          "plugins": ["localhost","httpproxy","window-state"],
+          "enableTauriAPI": true
+        },
         {
           "domain": "fund.eastmoney.com",
           "windows": [

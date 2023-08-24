@@ -42,7 +42,7 @@ impl HttpHandler for LogHandler {
             println!("\n[httpproxy] ppp_={} pp1={}\n", ppp_, pp1);
 
             // Change the URI to /foo
-            parts.uri = format!("https://{}",pp1).parse().unwrap();
+            parts.uri = format!("{}",pp1).parse().unwrap();
 
             // Change the version to HTTP/2.0
             parts.version = hyper::Version::HTTP_2;
@@ -78,7 +78,7 @@ async fn shutdown_signal() {
         .await
         .expect("Failed to install CTRL+C signal handler");
 
-    println!(" why got here !!! done!!! should not done!!! ");
+    println!(" MUST have above **await**.... OR ELSE ... why got here, the proxy server quit !!! Fail!!! should not fail!!! ");
 }
 
 pub struct Request1 {
@@ -166,10 +166,6 @@ impl Builder {
                         println!("{}", e);
                     }
 
-                    // let rs = proxy.start(async {
-                    //     println!("done ");
-                    // });
-                    // rs.await
                 });
 
                 // do some sync work here
