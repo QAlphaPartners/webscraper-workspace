@@ -192,9 +192,17 @@ fn main() {
     let port = portpicker::pick_unused_port().expect("failed to find unused port");
     let port = 8765;
     let mut context = tauri::generate_context!();
-    let url = format!("http://localhost:{}", port).parse().unwrap();
-    println!("\n port={} url={}\n", port, url);
+
+    let url_str = format!("http://localhost:{}/url=www.example.com", port);
+
+    let url = url_str.clone()
+        .parse()
+        .unwrap();
+
+    let url_ = url_str.replace("http://localhost:8765", "https://asset.localhost").parse().unwrap();
+    println!("\n [main] port={} url={}\n", port, url);
     let window_url = WindowUrl::External(url);
+    let window_url_ = WindowUrl::External(url_);
     // rewrite the config so the IPC is enabled on this URL
     context.config_mut().build.dist_dir = AppUrl::Url(window_url.clone());
 
@@ -215,7 +223,8 @@ fn main() {
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_jsinject::init())
         .plugin(
-            tauri_plugin_localhost::Builder::new(port)
+            // tauri_plugin_localhost::Builder::new(port)
+            tauri_plugin_httpproxy::Builder::new(port)
                 .on_request(|req, resp| {
                     // req is a reference to a Request object
                     // resp is a mutable reference to a Response object

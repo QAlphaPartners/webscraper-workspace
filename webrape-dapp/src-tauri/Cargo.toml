@@ -21,14 +21,17 @@ chrono = "0.4.26"
 url = "2.4.0"
 # NOTE: , features = ["format"] would be nice, but it is very heavy, and sometime have compiles issues with swc_ components
 ts-rs = { version = "7.0.0" }
+tokio = { version = "1.32.0", features = ["full"] }
 
 tauri-plugin-jsinject = { path = "../../plugins/tauri-plugin-jsinject" }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 fraction = "0.13.1"
 webrape-events = { path = "../../webrape-events" }
 tauri-plugin-localhost = { path = "../../plugins/localhost" }
+tauri-plugin-httpproxy = { path = "../../plugins/httpproxy" }
 portpicker = "0.1.1"
 tauri-utils = "1.4.0"
+
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
