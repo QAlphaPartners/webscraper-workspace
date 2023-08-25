@@ -30,14 +30,16 @@ impl SurrealStore {
         let ses = Session::for_db("appns", "appdb");
 
         // Define a unique index on the name column of the company table
-        ds.execute(
-            "DEFINE INDEX href ON TABLE scrape_task COLUMNS name UNIQUE",
-            &ses,
-            None,
-            true,
-        )
-        .await?;
+        let rs_idx = ds
+            .execute(
+                "USE NS appns DB appdb; DEFINE INDEX href ON TABLE scrape_task COLUMNS href UNIQUE",
+                &ses,
+                None,
+                true,
+            )
+            .await?;
 
+        println!("\n[SurrealStore] 'DEFINE INDEX href ON TABLE scrape_task COLUMNS href UNIQUE' rs_idx={:?} ses={:?}\n",rs_idx, ses);
 
         Ok(SurrealStore { ds, ses })
     }
