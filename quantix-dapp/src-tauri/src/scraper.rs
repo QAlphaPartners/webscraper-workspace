@@ -43,7 +43,7 @@ pub async fn start_scrape_task<R: Runtime>(
 
     if let Ok(ref task) = result {
         let url_str = task.href.clone();
-        let url_str = format!("{}","http://127.0.0.1:8080/url=https://fund.eastmoney.com/");
+        let url_str = format!("{}","https://fund.eastmoney.com/");
 
         // Parse a URL string into a Url struct
 
@@ -83,7 +83,7 @@ fn create_fund_eastmoney_window<R: Runtime>(
     .title(format!("[{}]Scraping...: {}", label_, url_))
     .initialization_script(
         &include_str!("../../dist-jslib/fund-eastmoney-scraper.min.js")
-            .replace("__DEBUG__", &format!("{}", true)),
+            .replace("__DEBUG__", &format!("{}", true)).replace("__BASE_URI__", &format!("'{}'", url_)),
     )
     .build()
     .unwrap();

@@ -7,9 +7,12 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 declare var __DEBUG__: boolean;
 
+let debug = __DEBUG__;
+
 let previousUrl: string = "null";
 
-console.log("[inject.ts] inject common js into webview with url ", window.location.href)
+console.log("[inject.ts] inject common js into webview with url ", window.location.href, " debug is ",debug)
+
 window.addEventListener("DOMContentLoaded", async (event) => {
 
   await invoke("greet", { name: "Conan" }).then((message) => {

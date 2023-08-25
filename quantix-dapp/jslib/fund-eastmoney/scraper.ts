@@ -5,9 +5,26 @@ import { waitForElm } from '../utils';
 import { Event as TauriEvent, listen } from '@tauri-apps/api/event';
 import type { FataEvent, BomaEvent, DataValue } from 'webrape-events';
 
+declare var __DEBUG__: boolean;
+
+let debug = __DEBUG__;
+
+declare var __BASE_URI__: string;
+
+let baseURI = __BASE_URI__;
 
 // add the function as an event listener for the load event
-window.addEventListener("DOMContentLoaded", handleLoaded);
+window.addEventListener("DOMContentLoaded", (event) => {
+
+    if (document.baseURI === baseURI) {
+        console.log(" do something with the main document ");
+        handleLoaded().then((v) => {
+            console.log("done handleLoaded for baseURI=",baseURI)
+        });
+    }
+
+});
+
 
 // Wait for the window to load
 async function handleLoaded() {

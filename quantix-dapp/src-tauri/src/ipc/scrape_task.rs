@@ -7,6 +7,7 @@ use crate::model::{ModelMutateResultData, ScrapeTask, ScrapeTaskBmc,  ScrapeTask
 use crate::{scraper, Error};
 use serde_json::Value;
 use tauri::{command, AppHandle, Runtime};
+use webrape_events::event::{FataEvent, DataValue};
 
 #[command]
 pub async fn get_scrape_task<R: Runtime>(app: AppHandle<R>, params: GetParams) -> IpcResponse<ScrapeTask> {
@@ -50,6 +51,24 @@ pub async fn list_scrape_tasks<R: Runtime>(
         Ok(ctx) => match params.filter.map(serde_json::from_value).transpose() {
             Ok(filter) => ScrapeTaskBmc::list(ctx, filter).await.into(),
             Err(err) => Err(Error::JsonSerde(err)).into(),
+        },
+        Err(_) => Err(Error::CtxFail).into(),
+    };
+
+    result
+}
+
+
+#[command]
+pub async fn batch_upsert_scrape_tasks<R: Runtime>(
+    app: AppHandle<R>,
+    params: FataEvent<DataValue>,
+) -> IpcResponse<ModelMutateResultData> {
+    // TODO: Needs to make error handling simpler (use ? rather than all into())
+    let result = match Ctx::from_app(app) {
+        Ok(ctx) => {
+            let _= ScrapeTaskBmc::batch_upsert_scrape_tasks(ctx,params).await;
+            Ok(ModelMutateResultData::from("id".to_string())).into()
         },
         Err(_) => Err(Error::CtxFail).into(),
     };

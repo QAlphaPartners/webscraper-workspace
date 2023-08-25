@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "tauri": "tauri",
-    "localhost": "servor dist index.html 8080 --reload",
+    "localhost": "servor dist index.html 1420 --reload",
     "pcss": "pcss",
     "rollup": "rollup -c",
     "ui-build": "rollup -c & pcss",

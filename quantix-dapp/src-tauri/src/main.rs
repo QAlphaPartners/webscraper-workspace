@@ -10,6 +10,7 @@ pub use error::{Error, Result};
 
 // -- Imports
 use model::{seed_store_for_dev, ModelStore};
+use tauri::{Runtime, Window};
 use std::sync::Arc;
 
 // -- Sub-Modules
@@ -22,6 +23,13 @@ mod prelude;
 mod utils;
 
 mod scraper;
+
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+#[tauri::command]
+fn greet<R: Runtime>(window:Window<R> ,name: &str) -> String {
+    println!("[main.rs] calling greet(name)={} from window={}",name, window.label());
+    format!("Hello, {}! You've been greeted from Rust on window={}", name,window.label())
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -61,6 +69,8 @@ async fn main() -> Result<()> {
 			ipc::update_scrape_task,
 			ipc::delete_scrape_task,
 			ipc::list_scrape_tasks,
+			ipc::batch_upsert_scrape_tasks,
+			greet
 
 		])
 		.run(tauri::generate_context!())

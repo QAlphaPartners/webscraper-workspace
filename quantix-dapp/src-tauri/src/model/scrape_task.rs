@@ -16,6 +16,7 @@ use std::sync::Arc;
 use surrealdb::sql::{Object, Value};
 use tauri::Runtime;
 use ts_rs::TS;
+use webrape_events::event::{DataValue, FataEvent};
 
 // region:    --- ScrapeTask
 
@@ -135,9 +136,12 @@ impl ScrapeTaskBmc {
         bmc_get::<ScrapeTask, R>(ctx, Self::ENTITY, id).await
     }
 
-	pub async fn create<R:Runtime>(ctx: Arc<Ctx<R>>, data: ScrapeTaskForCreate) -> Result<ModelMutateResultData> {
-		bmc_create(ctx, Self::ENTITY, data).await
-	}
+    pub async fn create<R: Runtime>(
+        ctx: Arc<Ctx<R>>,
+        data: ScrapeTaskForCreate,
+    ) -> Result<ModelMutateResultData> {
+        bmc_create(ctx, Self::ENTITY, data).await
+    }
 
     pub async fn update<R: Runtime>(
         ctx: Arc<Ctx<R>>,
@@ -161,6 +165,38 @@ impl ScrapeTaskBmc {
             order_bys: Some("!ctime".into()),
         };
         bmc_list(ctx, Self::ENTITY, filter, opts).await
+    }
+
+    pub async fn batch_upsert_scrape_tasks<R: Runtime>(
+        ctx: Arc<Ctx<R>>,
+        fata_event: FataEvent<DataValue>,
+    ) -> Result<ModelMutateResultData> {
+        let data_values = fata_event.data;
+
+        // match on the option of a vector of DataValue enums
+        match data_values {
+            Some(data_values) => {
+                println!("[batch_upsert_scrape_tasks] got data_values.size={}",data_values.len());
+                for (index, data_value) in data_values.iter().enumerate() {
+                    match data_value {
+                        DataValue::HTMLAnchorElementValue(value) => {
+                            // println!(
+                            //     "[batch_upsert_scrape_tasks] {}.value={:?} \n",
+                            //     index, value
+                            // );
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            None =>
+            // handle the case when there is no data
+            {
+                println!("got FataEvent None!!!!")
+            }
+        }
+
+        Ok(ModelMutateResultData::from("id".to_string()))
     }
 }
 

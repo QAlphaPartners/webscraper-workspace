@@ -1,7 +1,7 @@
 import { waitForElms } from './utils';
 import type { DataValue, FataEvent } from 'webrape-events';
 
-import { getCurrent } from '@tauri-apps/api/window';
+import { invoke } from "@tauri-apps/api/tauri";
 export async function scrape_urls() {
 
     var parent_url = window.location.href;
@@ -23,7 +23,7 @@ export async function scrape_urls() {
         })
 
         if (links.length > 0) {
-            var size = 10;
+            var size = 1000;
             var splitArray = Array.from(
                 new Array(Math.ceil(links.length / size)),
                 (_, i) => links.slice(i * size, i * size + size)
@@ -31,7 +31,7 @@ export async function scrape_urls() {
 
             splitArray.forEach(async function (subarray, index, array) {
                 // TODO: very important, event can not be too large to send, or else will block the ipc channel!!!
-                console.log("Subarray " + index + " of " + array.length + ": " + subarray);
+                // console.log("Subarray " + index + " of " + array.length + ": " + subarray);
                 // url网页刮取的网址
                 // Create an object literal with the required fields
                 let fataEvent = {
@@ -39,9 +39,16 @@ export async function scrape_urls() {
                     topic: "URLS_SCRAPED",
                     // Optionally, you can also add the label and data fields
                     label: "all http HTMLAnchorElement elements",
-                    data: links
+                    data: subarray
                 } as FataEvent<DataValue>; // Cast the object to unknown first, and then to FataEvent<DataValue[]>
-                await getCurrent().emit("FataEvent", fataEvent);
+
+                // await getCurrent().emit("FataEvent", fataEvent);
+
+
+                await invoke("batch_upsert_scrape_tasks", { params: fataEvent }).then((message) => {
+                    // console.log("[url_scraper.ts] got batch_upsert_scrape_tasks back message=", message)
+                });
+
             });
 
 

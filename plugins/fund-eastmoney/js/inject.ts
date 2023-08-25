@@ -9,6 +9,8 @@ import { UnlistenFn, emit, listen } from '@tauri-apps/api/event'
 
 declare var __DEBUG__: boolean;
 
+let debug = __DEBUG__;
+
 declare global {
   interface Window {
     Sentry: typeof Sentry;
