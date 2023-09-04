@@ -1,8 +1,0 @@
-dist/*.ts
-dist/*.js
-target/
-node_modules/
-Cargo.lock
-pnpm-lock.yaml
-yarn.lock
-WixTools/

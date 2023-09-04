@@ -25,10 +25,11 @@ tokio = { version = "1.32.0", features = ["full"] }
 
 tauri-plugin-jsinject = { path = "../../plugins/tauri-plugin-jsinject" }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-localhost = { path = "../../plugins/tauri-plugin-localhost" }
+tauri-plugin-httpproxy = { path = "../../plugins/tauri-plugin-httpproxy" }
+
 fraction = "0.13.1"
 webrape-events = { path = "../../webrape-events" }
-tauri-plugin-localhost = { path = "../../plugins/localhost" }
-tauri-plugin-httpproxy = { path = "../../plugins/httpproxy" }
 portpicker = "0.1.1"
 tauri-utils = "1.4.0"
 

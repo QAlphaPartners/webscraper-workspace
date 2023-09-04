@@ -6,11 +6,11 @@ Base desktop application code with Tauri, Native Web Components, and SurrealDB (
 
 **[Troubleshooting](#troubleshooting)** | **[Changelog](https://awesomeapp.dev/changelog)** | **[Discord Awesome App](https://discord.gg/XuKWrNGKpC)**
 
-> Note: To enable persitent storage, edit the `src-tauri/Cargo.toml` to enable all `surrealdb` features. 
+> Note: To enable persitent storage, edit the `src-tauri/Cargo.toml` to enable all `surrealdb` features.
 
 # Hot Reload dev
 
-For hot-reload UI and Tauri development, run the following in your VSCode from this root folder: 
+For hot-reload UI and Tauri development, run the following in your VSCode from this root folder:
 
 ```sh
 awesome-app dev
@@ -18,25 +18,24 @@ awesome-app dev
 
 > This assumes `awesome-app` was installed locally (e.g., `cargo install awesome-app`)
 
-> **IMPORTANT** - Requires **node.js v8 and above**. 
-
+> **IMPORTANT** - Requires **node.js v8 and above**.
 
 # How it works
 
-`awesome-app dev` will create an `Awesome.toml` which will be the list of commands it will run (format is self-explanatory). 
+`awesome-app dev` will create an `Awesome.toml` which will be the list of commands it will run (format is self-explanatory).
 
-You can run the commands manually if you want, or see below for list of commands. 
+You can run the commands manually if you want, or see below for list of commands.
 
 We recommend using `awesome-app dev` but running each command manually might help troubleshoot.
 
 # Build manually
 
-IMPORTANT: Make sure to have **node.js latest of 16** or above. 
+IMPORTANT: Make sure to have **node.js latest of 16** or above.
 
 - `pnpm install` - install nodejs dependencies first
-- `pnpm run tauri icon src-tauri/icons/app-icon.png` - This will build the application icons. 
+- `pnpm run tauri icon src-tauri/icons/app-icon.png` - This will build the application icons.
 
-- `pnpm install autoprefixer postcss-nested postcss-import --save-dev` 
+- `pnpm install autoprefixer postcss-nested postcss-import --save-dev`
 - `pnpm run pcss` - This will build the postcss files (`src-ui/pcss/**/*.pcss`).
 
 - `pnpm run rollup` - This will build and package the typescript files (`src-ui/src/**/*.ts`).
@@ -51,26 +50,25 @@ IMPORTANT: Make sure to have **node.js latest of 16** or above.
 
 - Make sure to have **node.js 18** or above.
 
-- If some cryptic errors, run the command above one by one. 
+- If some cryptic errors, run the command above one by one.
 
 - If `pnpm tauri dev` commands fail, try to do:
   - `cd src-tauri`
-  - `cargo build` 
-  - This might be an important first step when using full surrealdb (i.e., with default features and not only kv-mem) 
+  - `cargo build`
+  - This might be an important first step when using full surrealdb (i.e., with default features and not only kv-mem)
   
 - It failed to compile and came up with the error `failed to download replaced source registry crates-io`. **Deleting** the **cargo.lock** file and **package-lock.json** file fixed it.  
 
-- Installing Tauri in case some issues: 
+- Installing Tauri in case some issues:
+
 ```sh
 # install latest tauri in case there is none
 pnpm i -g @tauri-apps/cli @tauri-apps/api
 ```
 
+## Requirements on fedora 36
 
-
-## Requirements on fedora 36:
-
-On Fedora, and probably linux, the following needs to be present on the system. 
+On Fedora, and probably linux, the following needs to be present on the system.
 
 ```sh
 dnf install gtk3-devel
@@ -98,4 +96,3 @@ pnpm run tauri dev
 <br /><br />
 
 [This repo on GitHub](https://github.com/awesomeapp-dev/rust-desktop-app)
-
