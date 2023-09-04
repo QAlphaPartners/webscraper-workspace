@@ -7,6 +7,8 @@
         "./plugins/tauri-plugin-datarpc/Cargo.toml",
         "./plugins/tauri-plugin-localhost/Cargo.toml",
         "./plugins/tauri-plugin-httpproxy/Cargo.toml",
-        "./plugins/tauri-plugin-jsinject/examples/vanilla/src-tauri/Cargo.toml"
+        "./plugins/tauri-plugin-jsinject/examples/vanilla/src-tauri/Cargo.toml",
+        "./plugins/tauri-plugin-datarpc/examples/vanilla/src-tauri/Cargo.toml",
+        "./plugins/tauri-plugin-datarpc/Cargo.toml"
     ]
 }

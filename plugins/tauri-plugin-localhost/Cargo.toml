@@ -9,4 +9,4 @@ edition = "2021"
 [dependencies]
 tiny_http = "0.12"
 http = "0.2"
-tauri = { version = "1.4.0" }
+tauri = { version = "1" }

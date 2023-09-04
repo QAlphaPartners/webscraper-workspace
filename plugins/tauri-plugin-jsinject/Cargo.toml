@@ -8,4 +8,4 @@ rust-version = "1.60"
 exclude = ["/examples"]
 
 [dependencies]
-tauri = { version = "1.4.0" }
+tauri = { version = "1" }
