@@ -46,6 +46,20 @@ IMPORTANT: Make sure to have **node.js latest of 16** or above.
 
 <br />
 
+  Quick Command:
+
+```bsh
+
+Terminal 1:- 
+
+ pnpm run rollup; pnpm run localhost 
+
+Terminal 2:- 
+
+pnpm run tauri dev
+
+```
+
 # Troubleshooting
 
 - Make sure to have **node.js 18** or above.
