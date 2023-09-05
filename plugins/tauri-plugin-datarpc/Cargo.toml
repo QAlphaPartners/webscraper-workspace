@@ -24,8 +24,10 @@ uuid = {version = "1", features = ["v4","fast-rng",]}
 lazy-regex = "3"
 async-trait = "0.1"
 strum_macros = "0.25"
+axum-macros = "0"
 
 
 [dev-dependencies]
 anyhow = "1"
 httpc-test = "0.1.1"
+axum-macros = "0"

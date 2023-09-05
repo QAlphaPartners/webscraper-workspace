@@ -115,7 +115,6 @@ impl Builder {
                 // do some sync work here
                 println!("[httpproxy] tauri::async_runtime::spawn rs={:?}", rs);
 
-                std::thread::spawn(move || {});
                 Ok(())
             })
             .build()
