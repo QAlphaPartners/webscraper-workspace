@@ -21,7 +21,8 @@ use crate::web::{routes_login, routes_static};
 use axum::{middleware, Router};
 use std::net::SocketAddr;
 use tower_cookies::CookieManagerLayer;
-
+use tracing::info;
+use tracing_subscriber::EnvFilter;
 // endregion: --- Modules
 
 use std::collections::HashMap;
@@ -85,6 +86,11 @@ impl Builder {
                 let rs:tauri::async_runtime::JoinHandle<std::result::Result<(), Error>> = tauri::async_runtime::spawn(async move {
                     // do some async work here
 
+                    tracing_subscriber::fmt()
+                    .without_time() // For early local development.
+                    .with_target(false)
+                    .with_env_filter(EnvFilter::from_default_env())
+                    .init();
                     // Initialize ModelManager.
                     let mm = ModelManager::new().await?;
 
@@ -102,7 +108,7 @@ impl Builder {
 
                     // region:    --- Start Server
                     let addr = SocketAddr::from(([127, 0, 0, 1], port));
-                    println!("->> {:<12} - {addr}\n", "LISTENING");
+                    info!("->> {:<12} - {addr}\n", "LISTENING");
                     axum::Server::bind(&addr)
                         .serve(routes_all.into_make_service())
                         .await
@@ -113,7 +119,7 @@ impl Builder {
                 });
 
                 // do some sync work here
-                println!("[httpproxy] tauri::async_runtime::spawn rs={:?}", rs);
+                info!("[datarpc] tauri::async_runtime::spawn rs={:?}", rs);
 
                 Ok(())
             })
