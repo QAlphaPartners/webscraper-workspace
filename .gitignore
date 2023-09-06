@@ -12,3 +12,7 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
+plugins/tauri-plugin-datarpc/examples/vanilla/src-tauri/sqlite.db
+plugins/tauri-plugin-datarpc/examples/vanilla/src-tauri/sqlite.db-shm
+plugins/tauri-plugin-datarpc/examples/vanilla/src-tauri/sqlite.db-wal
+sqlite.session.sql

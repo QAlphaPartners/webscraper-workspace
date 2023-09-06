@@ -19,3 +19,7 @@ RUST_LOG="tauri_plugin_datarpc=debug"
 # This will be relative to Cargo.toml
 # In deployed images, probably use absolute path.
 SERVICE_WEB_FOLDER="web-folder/"
+
+
+# -- DATABASE
+DATABASE_URL="sqlite://sqlite.db"

@@ -10,5 +10,14 @@
         "./plugins/tauri-plugin-jsinject/examples/vanilla/src-tauri/Cargo.toml",
         "./plugins/tauri-plugin-datarpc/examples/vanilla/src-tauri/Cargo.toml",
         "./plugins/tauri-plugin-datarpc/Cargo.toml"
+    ],
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "sqlite",
+            "database": "${workspaceFolder:webscraper-workspace}/plugins/tauri-plugin-datarpc/examples/vanilla/src-tauri/sqlite.db"
+        }
     ]
 }

@@ -6,6 +6,9 @@ pub type Result<T> = core::result::Result<T, Error>;
 pub enum Error {
 	// -- Config
 	ConfigMissingEnv(&'static str),
+
+	// -- DB
+	DB(sqlx::Error),
 	// -- Modules
 	Model(model::Error),
 }
@@ -14,6 +17,12 @@ pub enum Error {
 impl From<model::Error> for Error {
 	fn from(val: model::Error) -> Self {
 		Self::Model(val)
+	}
+}
+
+impl From<sqlx::Error> for Error {
+	fn from(val: sqlx::Error) -> Self {
+		Self::DB(val)
 	}
 }
 // endregion: --- Froms
