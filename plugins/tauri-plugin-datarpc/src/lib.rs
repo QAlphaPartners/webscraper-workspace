@@ -15,7 +15,7 @@ mod web;
 
 pub use self::error::{Error, Result};
 pub use config::Config;
-use sqlx::{SqlitePool, FromRow};
+use sqlx::{FromRow, SqlitePool, Pool};
 
 use crate::model::ModelManager;
 use crate::web::mw_auth::mw_ctx_resolve;
@@ -31,14 +31,13 @@ use tracing_subscriber::EnvFilter;
 use std::collections::HashMap;
 
 use tauri::{
+    api::path,
     plugin::{Builder as PluginBuilder, TauriPlugin},
-    Runtime,api::path
+    Runtime,
 };
-
 
 use sqlx::{migrate::MigrateDatabase, Sqlite};
 const DB_URL: &str = "sqlite://sqlite.db";
-
 
 pub struct Request {
     url: String,
@@ -70,7 +69,8 @@ pub struct Builder {
 struct User {
     id: i64,
     name: String,
-    active: bool
+    lastname: String,
+    active: bool,
 }
 
 impl Builder {
@@ -102,112 +102,43 @@ impl Builder {
                 let app_data_path = path::app_data_dir(&config);
                 println!("app_data_path {:?}", app_data_path);
 
-                let rs:tauri::async_runtime::JoinHandle<std::result::Result<(), Error>> = tauri::async_runtime::spawn(
-                    async move {
+                let rs: tauri::async_runtime::JoinHandle<std::result::Result<(), Error>> =
+                    tauri::async_runtime::spawn(async move {
+                        // do some async work here
 
-                    // do some async work here
+                        let db = db_migrations().await?;
 
+                        tracing_subscriber::fmt()
+                            .without_time() // For early local development.
+                            .with_target(false)
+                            .with_env_filter(EnvFilter::from_default_env())
+                            .init();
+                        // Initialize ModelManager.
+                        let mm = ModelManager::new().await?;
 
-                    // db start
-                    if !Sqlite::database_exists(DB_URL).await.unwrap_or(false) {
-                        println!("Creating database {}", DB_URL);
-                        match Sqlite::create_database(DB_URL).await {
-                            Ok(_) => println!("Create db success"),
-                            Err(error) => panic!("error: {}", error),
-                        }
-                    } else {
-                        println!("Database [sqlite.db] already exists");
-                    }
-                    
-                    let db = SqlitePool::connect(DB_URL).await.unwrap();
+                        // -- Define Routes
+                        // let routes_rpc = rpc::routes(mm.clone())
+                        //   .route_layer(middleware::from_fn(mw_ctx_require));
 
-                    // let result = sqlx::query("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(250) NOT NULL);")
-                    // .execute(&db).await.unwrap();
-               
-                    //  println!("Create user table result: {:?}", result);
+                        let routes_all = Router::new()
+                            .merge(routes_login::routes())
+                            // .nest("/api", routes_rpc)
+                            .layer(middleware::map_response(mw_reponse_map))
+                            .layer(middleware::from_fn_with_state(mm.clone(), mw_ctx_resolve))
+                            .layer(CookieManagerLayer::new())
+                            .fallback_service(routes_static::serve_dir());
 
-                    let crate_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
+                        // region:    --- Start Server
+                        let addr = SocketAddr::from(([127, 0, 0, 1], port));
+                        info!("->> {:<12} - {addr}\n", "LISTENING");
+                        axum::Server::bind(&addr)
+                            .serve(routes_all.into_make_service())
+                            .await
+                            .unwrap();
+                        // endregion: --- Start Server
 
-                    let migrations = std::path::Path::new(&crate_dir).join("./migrations");
-                    
-                    println!("migrations PathBuf: {:?}", migrations);
-                    let migration_results = sqlx::migrate::Migrator::new(migrations)
-                        .await
-                        .unwrap()
-                        .run(&db)
-                        .await;
-                    match migration_results {
-                        Ok(_) => println!("Migration success"),
-                        Err(error) => {
-                            panic!("error: {}", error);
-                        }
-                    }
-                    println!("migration: {:?}", migration_results);
-
-
-                    let result = sqlx::query(
-                    "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")
-                    .fetch_all(&db)
-                    .await?;
-                
-                    let result = sqlx::query("INSERT INTO users (name) VALUES (?)")
-                    .bind("bobby")
-                    .execute(&db)
-                    .await
-                    .unwrap();
-            
-                    println!("Query result: {:?}", result);
-            
-                    let user_results = sqlx::query_as::<_, User>("SELECT id, name, active FROM users")
-                    .fetch_all(&db)
-                    .await
-                    .unwrap();
-            
-                    for user in user_results {
-                        println!("[{}] name: {} active: {}", user.id, &user.name, &user.active);
-                    }
-    
-                    let delete_result = sqlx::query("DELETE FROM users WHERE name=$1")
-                    .bind("bobby")
-                    .execute(&db)
-                    .await
-                    .unwrap();
-            
-                    println!("Delete result: {:?}", delete_result);
-                    
-                    // db end
-
-                    tracing_subscriber::fmt()
-                    .without_time() // For early local development.
-                    .with_target(false)
-                    .with_env_filter(EnvFilter::from_default_env())
-                    .init();
-                    // Initialize ModelManager.
-                    let mm = ModelManager::new().await?;
-
-                    // -- Define Routes
-                    // let routes_rpc = rpc::routes(mm.clone())
-                    //   .route_layer(middleware::from_fn(mw_ctx_require));
-
-                    let routes_all = Router::new()
-                        .merge(routes_login::routes())
-                        // .nest("/api", routes_rpc)
-                        .layer(middleware::map_response(mw_reponse_map))
-                        .layer(middleware::from_fn_with_state(mm.clone(), mw_ctx_resolve))
-                        .layer(CookieManagerLayer::new())
-                        .fallback_service(routes_static::serve_dir());
-
-                    // region:    --- Start Server
-                    let addr = SocketAddr::from(([127, 0, 0, 1], port));
-                    info!("->> {:<12} - {addr}\n", "LISTENING");
-                    axum::Server::bind(&addr)
-                        .serve(routes_all.into_make_service())
-                        .await
-                        .unwrap();
-                    // endregion: --- Start Server
-
-                    Ok(())
-                });
+                        Ok(())
+                    });
 
                 // do some sync work here
                 info!("[datarpc] tauri::async_runtime::spawn rs={:?}", rs);
@@ -216,4 +147,61 @@ impl Builder {
             })
             .build()
     }
+}
+
+async fn db_migrations() -> Result<Pool<Sqlite>> {
+    if !Sqlite::database_exists(DB_URL).await.unwrap_or(false) {
+        println!("Creating database {}", DB_URL);
+        match Sqlite::create_database(DB_URL).await {
+            Ok(_) => println!("Create db success"),
+            Err(error) => panic!("error: {}", error),
+        }
+    } else {
+        println!("Database [sqlite.db] already exists");
+    }
+    let db = SqlitePool::connect(DB_URL).await.unwrap();
+    let crate_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
+    let migrations = std::path::Path::new(&crate_dir).join("./migrations");
+    println!("migrations PathBuf: {:?}", migrations);
+    let migration_results = sqlx::migrate::Migrator::new(migrations)
+        .await
+        .unwrap()
+        .run(&db)
+        .await;
+    match migration_results {
+        Ok(_) => println!("Migration success"),
+        Err(error) => {
+            panic!("error: {}", error);
+        }
+    }
+    println!("migration: {:?}", migration_results);
+    let result = sqlx::query(
+        "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';",
+    )
+    .fetch_all(&db)
+    .await?;
+    let result = sqlx::query("INSERT INTO users (name, lastname) VALUES (?,?)")
+        .bind("bobby")
+        .bind("fischer")
+        .execute(&db)
+        .await
+        .unwrap();
+    println!("Query result: {:?}", result);
+    let user_results = sqlx::query_as::<_, User>("SELECT id, name, lastname, active FROM users")
+        .fetch_all(&db)
+        .await
+        .unwrap();
+    for user in user_results {
+        println!(
+            "[{}] name: {} lastname: {} active: {}",
+            user.id, &user.name, &user.lastname, &user.active
+        );
+    }
+    let delete_result = sqlx::query("DELETE FROM users WHERE name=$1")
+        .bind("bobby")
+        .execute(&db)
+        .await
+        .unwrap();
+    println!("Delete result: {:?}", delete_result);
+    Ok(db)
 }
