@@ -32,7 +32,7 @@ use std::collections::HashMap;
 
 use tauri::{
     plugin::{Builder as PluginBuilder, TauriPlugin},
-    Runtime,
+    Runtime,api::path
 };
 
 
@@ -70,6 +70,7 @@ pub struct Builder {
 struct User {
     id: i64,
     name: String,
+    active: bool
 }
 
 impl Builder {
@@ -97,6 +98,9 @@ impl Builder {
                 let asset_resolver = app.asset_resolver();
 
                 // do some sync work here
+                let config = tauri::Config::default();
+                let app_data_path = path::app_data_dir(&config);
+                println!("app_data_path {:?}", app_data_path);
 
                 let rs:tauri::async_runtime::JoinHandle<std::result::Result<(), Error>> = tauri::async_runtime::spawn(
                     async move {
@@ -154,13 +158,13 @@ impl Builder {
             
                     println!("Query result: {:?}", result);
             
-                    let user_results = sqlx::query_as::<_, User>("SELECT id, name FROM users")
+                    let user_results = sqlx::query_as::<_, User>("SELECT id, name, active FROM users")
                     .fetch_all(&db)
                     .await
                     .unwrap();
             
                     for user in user_results {
-                    println!("[{}] name: {}", user.id, &user.name);
+                        println!("[{}] name: {} active: {}", user.id, &user.name, &user.active);
                     }
     
                     let delete_result = sqlx::query("DELETE FROM users WHERE name=$1")
