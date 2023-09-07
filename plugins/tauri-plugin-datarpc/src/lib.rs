@@ -12,10 +12,12 @@ mod error;
 mod log;
 mod model;
 mod web;
+// #[cfg(test)] // Commented during early development.
+pub mod _test_utils;
 
 pub use self::error::{Error, Result};
 pub use config::Config;
-use sqlx::{FromRow, SqlitePool, Pool};
+use sqlx::{FromRow, Pool, SqlitePool};
 
 use crate::model::ModelManager;
 use crate::web::mw_auth::mw_ctx_resolve;
@@ -29,6 +31,7 @@ use tracing_subscriber::EnvFilter;
 // endregion: --- Modules
 
 use std::collections::HashMap;
+use tracing_log::LogTracer;
 
 use tauri::{
     api::path,
@@ -101,6 +104,8 @@ impl Builder {
                 let config = tauri::Config::default();
                 let app_data_path = path::app_data_dir(&config);
                 println!("app_data_path {:?}", app_data_path);
+                // Initialize the LogTracer and set it as the global logger
+                LogTracer::init().expect("Failed to set logger");
 
                 let rs: tauri::async_runtime::JoinHandle<std::result::Result<(), Error>> =
                     tauri::async_runtime::spawn(async move {
@@ -113,8 +118,9 @@ impl Builder {
                             .with_target(false)
                             .with_env_filter(EnvFilter::from_default_env())
                             .init();
+
                         // Initialize ModelManager.
-                        let mm = ModelManager::new().await?;
+                        let mm = ModelManager::new(config::config().DB_URL.as_str()).await?;
 
                         // -- Define Routes
                         // let routes_rpc = rpc::routes(mm.clone())
