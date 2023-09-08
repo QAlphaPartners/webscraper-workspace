@@ -27,10 +27,11 @@ pub struct TaskBmc;
 impl TaskBmc {
     pub async fn create(_ctx: &Ctx, mm: &ModelManager, task_c: TaskForCreate) -> Result<i64> {
         let db = mm.db();
-        let (id,) = sqlx::query_as::<_, (i64,)>("INSERT INTO task (title) values ($1) RETURNING id")
-            .bind(task_c.title)
-            .fetch_one(db)
-            .await?;
+        let (id,) =
+            sqlx::query_as::<_, (i64,)>("INSERT INTO task (title) values ($1) RETURNING id")
+                .bind(task_c.title)
+                .fetch_one(db)
+                .await?;
 
         Ok(id)
     }
@@ -62,6 +63,16 @@ impl TaskBmc {
 
         Ok(())
     }
+
+    pub async fn list(_ctx: &Ctx, mm: &ModelManager) -> Result<Vec<Task>> {
+        let db = mm.db();
+
+        let tasks: Vec<Task> = sqlx::query_as("SELECT * FROM task ORDER BY id")
+            .fetch_all(db)
+            .await?;
+
+        Ok(tasks)
+    }
 }
 
 // region:    --- Tests
@@ -72,23 +83,23 @@ mod tests {
     use anyhow::Result;
     use serial_test::serial;
 
+    const CREATE_TABLE_TASK: &'static str = r#"
+	CREATE TABLE  IF NOT EXISTS task (
+		id INTEGER PRIMARY KEY,
+		title varchar(256) NOT NULL
+	  );
+	"#;
+
     #[serial]
     #[tokio::test]
     async fn test_create_ok() -> Result<()> {
         // -- Setup & Fixtures
         let mm = _test_utils::Builder::new("sqlite::memory:")
-    
             .init_test()
             .await;
 
+        let _ = &mm.exec(CREATE_TABLE_TASK).await;
 
-		let _= &mm.exec(r#"
-		CREATE TABLE task (
-			id INTEGER PRIMARY KEY,
-			title varchar(256) NOT NULL
-		  );
-		"#).await;
-		
         let ctx = Ctx::root_ctx();
         let fx_title = "test_create_ok title";
 
@@ -104,6 +115,120 @@ mod tests {
 
         // -- Clean
         TaskBmc::delete(&ctx, &mm, id).await?;
+
+        Ok(())
+    }
+
+    #[serial]
+    #[tokio::test]
+    async fn test_get_err_not_found() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _test_utils::Builder::new("sqlite::memory:")
+            .init_test()
+            .await;
+
+        let _ = &mm.exec(CREATE_TABLE_TASK).await;
+
+        let ctx = Ctx::root_ctx();
+        let fx_id = 100;
+
+        // -- Exec
+        let res = TaskBmc::get(&ctx, &mm, fx_id).await;
+
+        // -- Check
+        assert!(
+            matches!(
+                res,
+                Err(Error::EntityNotFound {
+                    entity: "task",
+                    id: 100
+                })
+            ),
+            "EntityNotFound not matching"
+        );
+
+        Ok(())
+    }
+
+    #[serial]
+    #[tokio::test]
+    async fn test_list_ok() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _test_utils::Builder::new("sqlite::memory:")
+            .init_test()
+            .await;
+
+        let _ = &mm.exec(CREATE_TABLE_TASK).await;
+
+        let ctx = Ctx::root_ctx();
+        let fx_titles = &["test_list_ok-task 01", "test_list_ok-task 02"];
+        seed_tasks(&ctx, &mm, fx_titles).await?;
+
+        // -- Exec
+        let tasks = TaskBmc::list(&ctx, &mm).await?;
+
+        // -- Check
+        let tasks: Vec<Task> = tasks
+            .into_iter()
+            .filter(|t| t.title.starts_with("test_list_ok-task"))
+            .collect();
+        assert_eq!(tasks.len(), 2, "number of seeded tasks.");
+
+        // -- Clean
+        for task in tasks.iter() {
+            TaskBmc::delete(&ctx, &mm, task.id).await?;
+        }
+
+        Ok(())
+    }
+
+    pub async fn seed_tasks(ctx: &Ctx, mm: &ModelManager, titles: &[&str]) -> Result<Vec<Task>> {
+        let mut tasks = Vec::new();
+
+        for title in titles {
+            let id = TaskBmc::create(
+                ctx,
+                mm,
+                TaskForCreate {
+                    title: title.to_string(),
+                },
+            )
+            .await?;
+            let task = TaskBmc::get(ctx, mm, id).await?;
+
+            tasks.push(task);
+        }
+
+        Ok(tasks)
+    }
+
+    #[serial]
+    #[tokio::test]
+    async fn test_delete_err_not_found() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _test_utils::Builder::new("sqlite::memory:")
+            .init_test()
+            .await;
+
+        let _ = &mm.exec(CREATE_TABLE_TASK).await;
+
+        let ctx = Ctx::root_ctx();
+        let fx_id = 100;
+
+        // -- Exec
+        let res = TaskBmc::delete(&ctx, &mm, fx_id).await;
+
+        // -- Check
+        assert!(
+            matches!(
+                res,
+                Err(Error::EntityNotFound {
+                    entity: "task",
+                    id: 100
+                })
+            ),
+            "EntityNotFound not matching"
+        );
 
         Ok(())
     }

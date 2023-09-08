@@ -23,7 +23,7 @@ mod error;
 mod store;
 pub mod task;
 
-use tracing::info;
+use tracing::{info, debug};
 
 pub use self::error::{Error, Result};
 use crate::model::store::{new_db_pool, Db};
@@ -52,7 +52,7 @@ impl ModelManager {
 
         let rs= sqlx::query(sql).execute(&self.db).await;
 
-        println!("[ModelManager] exec rs={:?}",rs);
+        debug!("[ModelManager] exec rs={:?}",rs);
         Ok(())
     }
 }
