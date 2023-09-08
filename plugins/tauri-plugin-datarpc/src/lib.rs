@@ -7,6 +7,7 @@
 // region:    --- Modules
 
 mod config;
+mod crypt;
 mod ctx;
 mod error;
 mod log;
@@ -127,7 +128,7 @@ impl Builder {
                         //   .route_layer(middleware::from_fn(mw_ctx_require));
 
                         let routes_all = Router::new()
-                            .merge(routes_login::routes())
+                            .merge(routes_login::routes(mm.clone()))
                             // .nest("/api", routes_rpc)
                             .layer(middleware::map_response(mw_reponse_map))
                             .layer(middleware::from_fn_with_state(mm.clone(), mw_ctx_resolve))

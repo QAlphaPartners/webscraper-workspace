@@ -123,11 +123,11 @@ mod tests {
     use serial_test::serial;
 
     const CREATE_TABLE_TASK: &'static str = r#"
-	CREATE TABLE  IF NOT EXISTS task (
-		id INTEGER PRIMARY KEY,
-		title varchar(256) NOT NULL,
-		completed bool
-	  );
+		CREATE TABLE IF NOT EXISTS task (
+			id INTEGER PRIMARY KEY,
+			title varchar(256) NOT NULL,
+			completed bool
+		  );
 	"#;
 
     #[serial]

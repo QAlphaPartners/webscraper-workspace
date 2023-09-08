@@ -1,6 +1,7 @@
 use serde::Serialize;
 use serde_with::{serde_as, DisplayFromStr};
 
+use crate::crypt;
 use crate::model::store;
 
 pub type Result<T> = core::result::Result<T, Error>;
@@ -12,12 +13,18 @@ pub enum Error {
 
     // -- Modules
     Store(store::Error),
-
+    Crypt(crypt::Error),
     // -- Externals
     Sqlx(#[serde_as(as = "DisplayFromStr")] sqlx::Error),
 }
 
 // region:    --- Froms
+impl From<crypt::Error> for Error {
+	fn from(val: crypt::Error) -> Self {
+		Self::Crypt(val)
+	}
+}
+
 impl From<sqlx::Error> for Error {
     fn from(val: sqlx::Error) -> Self {
         Self::Sqlx(val)
