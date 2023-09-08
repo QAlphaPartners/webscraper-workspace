@@ -15,6 +15,11 @@ tauri-plugin-datarpc = { path = "../../../" }
 
 portpicker = "0.1.1"
 
+# -- Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+
 [build-dependencies]
 tauri-build = { version = "1" }
 

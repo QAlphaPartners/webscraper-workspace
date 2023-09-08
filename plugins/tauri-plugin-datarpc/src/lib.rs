@@ -32,7 +32,6 @@ use tracing_subscriber::EnvFilter;
 // endregion: --- Modules
 
 use std::collections::HashMap;
-use tracing_log::LogTracer;
 
 use tauri::{
     api::path,
@@ -105,20 +104,13 @@ impl Builder {
                 let config = tauri::Config::default();
                 let app_data_path = path::app_data_dir(&config);
                 println!("app_data_path {:?}", app_data_path);
-                // Initialize the LogTracer and set it as the global logger
-                LogTracer::init().expect("Failed to set logger");
+                
 
                 let rs: tauri::async_runtime::JoinHandle<std::result::Result<(), Error>> =
                     tauri::async_runtime::spawn(async move {
                         // do some async work here
 
                         let db = db_migrations().await?;
-
-                        tracing_subscriber::fmt()
-                            .without_time() // For early local development.
-                            .with_target(false)
-                            .with_env_filter(EnvFilter::from_default_env())
-                            .init();
 
                         // Initialize ModelManager.
                         let mm = ModelManager::new(config::config().DB_URL.as_str()).await?;

@@ -24,6 +24,7 @@ sqlx = { version = "0", features = [ "runtime-tokio-native-tls", "sqlite", "uuid
 # -- Tracing
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+log = "0.4"
 # -- Crypt & Encoding
 rand = "0.8"
 hmac = "0.12"
@@ -35,8 +36,6 @@ lazy-regex = "3"
 async-trait = "0.1"
 strum_macros = "0.25"
 axum-macros = "0"
-log = "0.4"
-tracing-log = "0"
 
 
 [dev-dependencies]
