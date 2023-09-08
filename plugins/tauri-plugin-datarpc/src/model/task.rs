@@ -1,7 +1,9 @@
 use crate::ctx::Ctx;
+use crate::model::base::{self, DbBmc};
 use crate::model::ModelManager;
 use crate::model::{Error, Result};
 use serde::{Deserialize, Serialize};
+use sqlx::sqlite::SqliteQueryResult;
 use sqlx::FromRow;
 
 // region:    --- Task Types
@@ -9,6 +11,7 @@ use sqlx::FromRow;
 pub struct Task {
     pub id: i64,
     pub title: String,
+    completed: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -19,10 +22,16 @@ pub struct TaskForCreate {
 #[derive(Deserialize)]
 pub struct TaskForUpdate {
     pub title: Option<String>,
+    pub completed: Option<bool>,
 }
+
 // endregion: --- Task Types
 
 pub struct TaskBmc;
+
+impl DbBmc for TaskBmc {
+    const TABLE: &'static str = "task";
+}
 
 impl TaskBmc {
     pub async fn create(_ctx: &Ctx, mm: &ModelManager, task_c: TaskForCreate) -> Result<i64> {
@@ -36,32 +45,34 @@ impl TaskBmc {
         Ok(id)
     }
 
-    pub async fn get(_ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Task> {
-        let db = mm.db();
+    pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Task> {
+        // let db = mm.db();
+        // let task: Task = sqlx::query_as("SELECT * FROM task WHERE id = $1")
+        //     .bind(id)
+        //     .fetch_optional(db)
+        //     .await?
+        //     .ok_or(Error::EntityNotFound { entity: "task", id })?;
+        // Ok(task)
 
-        let task: Task = sqlx::query_as("SELECT * FROM task WHERE id = $1")
-            .bind(id)
-            .fetch_optional(db)
-            .await?
-            .ok_or(Error::EntityNotFound { entity: "task", id })?;
-
-        Ok(task)
+        base::get::<Self, _>(ctx, mm, id).await
     }
 
-    pub async fn delete(_ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
-        let db = mm.db();
+    pub async fn delete(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
+        // let db = mm.db();
 
-        let count = sqlx::query("DELETE FROM task where id = $1")
-            .bind(id)
-            .execute(db)
-            .await?
-            .rows_affected();
+        // let count = sqlx::query("DELETE FROM task where id = $1")
+        //     .bind(id)
+        //     .execute(db)
+        //     .await?
+        //     .rows_affected();
 
-        if count == 0 {
-            return Err(Error::EntityNotFound { entity: "task", id });
-        }
+        // if count == 0 {
+        //     return Err(Error::EntityNotFound { entity: "task", id });
+        // }
 
-        Ok(())
+        // Ok(())
+
+        base::delete::<Self>(ctx, mm, id).await
     }
 
     pub async fn list(_ctx: &Ctx, mm: &ModelManager) -> Result<Vec<Task>> {
@@ -72,6 +83,34 @@ impl TaskBmc {
             .await?;
 
         Ok(tasks)
+    }
+
+    pub async fn update(
+        ctx: &Ctx,
+        mm: &ModelManager,
+        id: i64,
+        task_u: TaskForUpdate,
+    ) -> Result<()> {
+        let db = mm.db();
+
+        // Write the update SQL query as a string
+        let sql = "UPDATE task SET title = COALESCE(?, title), completed = COALESCE(?, completed) WHERE id = ?";
+
+        // Create a Query object from the SQL string and bind the values from the TaskForUpdate struct
+        let query = sqlx::query(sql)
+            .bind(task_u.title.as_ref())
+            .bind(task_u.completed.as_ref())
+            .bind(id);
+
+        // Execute the query and get the number of rows affected
+        let result: SqliteQueryResult = query.execute(db).await?;
+        let count: u64 = result.rows_affected();
+
+        if count == 0 {
+            Err(Error::EntityNotFound { entity: "task", id })
+        } else {
+            Ok(())
+        }
     }
 }
 
@@ -86,7 +125,8 @@ mod tests {
     const CREATE_TABLE_TASK: &'static str = r#"
 	CREATE TABLE  IF NOT EXISTS task (
 		id INTEGER PRIMARY KEY,
-		title varchar(256) NOT NULL
+		title varchar(256) NOT NULL,
+		completed bool
 	  );
 	"#;
 
@@ -200,6 +240,42 @@ mod tests {
         }
 
         Ok(tasks)
+    }
+
+    #[serial]
+    #[tokio::test]
+    async fn test_update_ok() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _test_utils::Builder::new("sqlite::memory:")
+            .init_test()
+            .await;
+
+        let _ = &mm.exec(CREATE_TABLE_TASK).await;
+
+        let ctx = Ctx::root_ctx();
+        let fx_title = "test_update_ok - task 01";
+        let fx_title_new = "test_update_ok - task 01 - new";
+        let fx_task = seed_tasks(&ctx, &mm, &[fx_title])
+            .await?
+            .remove(0);
+
+        // -- Exec
+        TaskBmc::update(
+            &ctx,
+            &mm,
+            fx_task.id,
+            TaskForUpdate {
+                title: Some(fx_title_new.to_string()),
+				completed:None
+            },
+        )
+        .await?;
+
+        // -- Check
+        let task = TaskBmc::get(&ctx, &mm, fx_task.id).await?;
+        assert_eq!(task.title, fx_title_new);
+
+        Ok(())
     }
 
     #[serial]
