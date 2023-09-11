@@ -7,7 +7,7 @@
 // region:    --- Modules
 
 mod config;
-mod crypt;
+pub mod crypt;
 mod ctx;
 mod error;
 mod log;
