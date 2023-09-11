@@ -174,33 +174,6 @@ async fn db_migrations() -> Result<Pool<Sqlite>> {
         }
     }
     println!("migration: {:?}", migration_results);
-    let result = sqlx::query(
-        "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';",
-    )
-    .fetch_all(&db)
-    .await?;
-    let result = sqlx::query("INSERT INTO users (name, lastname) VALUES (?,?)")
-        .bind("bobby")
-        .bind("fischer")
-        .execute(&db)
-        .await
-        .unwrap();
-    println!("Query result: {:?}", result);
-    let user_results = sqlx::query_as::<_, User>("SELECT id, name, lastname, active FROM users")
-        .fetch_all(&db)
-        .await
-        .unwrap();
-    for user in user_results {
-        println!(
-            "[{}] name: {} lastname: {} active: {}",
-            user.id, &user.name, &user.lastname, &user.active
-        );
-    }
-    let delete_result = sqlx::query("DELETE FROM users WHERE name=$1")
-        .bind("bobby")
-        .execute(&db)
-        .await
-        .unwrap();
-    println!("Delete result: {:?}", delete_result);
+   
     Ok(db)
 }

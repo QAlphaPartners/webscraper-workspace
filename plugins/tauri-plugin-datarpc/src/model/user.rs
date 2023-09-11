@@ -97,6 +97,8 @@ impl UserBmc {
             salt: user.pwd_salt.to_string(),
         })?;
 
+        println!("[update_pwd] pwd:{}",pwd);
+
         // Write the update SQL query as a string
         let sql = "UPDATE user SET pwd = COALESCE(?, pwd) WHERE id = ?";
 
