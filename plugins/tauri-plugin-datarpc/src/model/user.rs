@@ -3,12 +3,11 @@ use crate::ctx::Ctx;
 use crate::model::base::{self, DbBmc};
 use crate::model::ModelManager;
 use crate::model::{Error, Result};
+use rand::RngCore;
 use serde::{Deserialize, Serialize};
-use sqlx::sqlite::{SqliteRow, SqliteQueryResult};
+use sqlx::sqlite::{SqliteQueryResult, SqliteRow};
 use sqlx::FromRow;
 use uuid::Uuid;
-use rand::RngCore;
-
 
 // region:    --- User Types
 #[derive(Clone, FromRow, Debug, Serialize)]
@@ -70,7 +69,7 @@ impl UserBmc {
         base::get::<Self, _>(ctx, mm, id).await
     }
 
-    pub async fn first_by_username<E>(_ctx: &Ctx, mm: &ModelManager, username: &str) -> Result<E>
+    pub async fn first_by_username<E>(_ctx: &Ctx, mm: &ModelManager, username: &str) -> Result<Option<E>>
     where
         E: UserBy,
     {
@@ -79,11 +78,7 @@ impl UserBmc {
         let user = sqlx::query_as("SELECT * FROM user WHERE username = $1")
             .bind(username)
             .fetch_optional(db)
-            .await?
-            .ok_or(Error::EntityNotFound {
-                entity: "user",
-                id: 123i64,
-            })?;
+            .await?;
 
         Ok(user)
     }
@@ -97,15 +92,13 @@ impl UserBmc {
             salt: user.pwd_salt.to_string(),
         })?;
 
-        println!("[update_pwd] pwd:{}",pwd);
+        println!("[update_pwd] pwd:{}", pwd);
 
         // Write the update SQL query as a string
         let sql = "UPDATE user SET pwd = COALESCE(?, pwd) WHERE id = ?";
 
         // Create a Query object from the SQL string and bind the values from the TaskForUpdate struct
-        let query = sqlx::query(sql)
-            .bind(pwd)
-            .bind(id);
+        let query = sqlx::query(sql).bind(pwd).bind(id);
 
         // Execute the query and get the number of rows affected
         let result: SqliteQueryResult = query.execute(db).await?;
@@ -116,7 +109,6 @@ impl UserBmc {
         } else {
             Ok(())
         }
-
     }
 }
 
@@ -155,19 +147,17 @@ mod tests {
         let _ = &mm.exec(CREATE_TABLE_USER).await;
         let _ = &mm.exec(INSERT_USER_DEMO1).await;
 
-        
         let ctx = Ctx::root_ctx();
         let fx_username = "demo1";
 
         // -- Exec
-        let user = UserBmc::first_by_username::<User>(&ctx, &mm, fx_username).await?;
+        let user = UserBmc::first_by_username::<User>(&ctx, &mm, fx_username).await?.context("Should have user 'demo1'")?;
 
         // -- Check
         assert_eq!(user.username, fx_username);
 
         Ok(())
     }
-
 
     #[serial]
     #[tokio::test]
@@ -185,16 +175,16 @@ mod tests {
         let fx_username = "demo1";
 
         // -- Exec
-        let demo1_user  = UserBmc::first_by_username::<User>(&ctx, &mm, fx_username).await?;
+        let demo1_user = UserBmc::first_by_username::<User>(&ctx, &mm, fx_username).await?.context("Should have user 'demo1'")?;
 
-        println!("[test_update_pwd] User {:?}",demo1_user);
-
+        println!("[test_update_pwd] User {:?}", demo1_user);
 
         UserBmc::update_pwd(&ctx, &mm, demo1_user.id, DEMO_PWD).await?;
 
-        let user_login: UserForLogin = UserBmc::first_by_username::<UserForLogin>(&ctx, &mm, fx_username).await?;
-        println!("[test_update_pwd] UserForLogin {:?}",user_login);
- 
+        let user_login: UserForLogin =
+            UserBmc::first_by_username::<UserForLogin>(&ctx, &mm, fx_username).await?.context("Should have user 'demo1'")?;
+        println!("[test_update_pwd] UserForLogin {:?}", user_login);
+
         // -- Check
         assert_eq!(demo1_user.username, fx_username);
 
