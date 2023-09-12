@@ -36,13 +36,18 @@ impl DbBmc for TaskBmc {
 impl TaskBmc {
     pub async fn create(_ctx: &Ctx, mm: &ModelManager, task_c: TaskForCreate) -> Result<i64> {
         let db = mm.db();
-        let (id,) =
-            sqlx::query_as::<_, (i64,)>("INSERT INTO task (title) values ($1) RETURNING id")
-                .bind(task_c.title)
-                .fetch_one(db)
-                .await?;
+        let rs = sqlx::query_as::<_, (i64,)>("INSERT INTO task (title) values ($1) RETURNING id")
+            .bind(task_c.title)
+            .fetch_one(db)
+            .await;
 
-        Ok(id)
+        match (rs) {
+            Ok(r) => Ok(r.0),
+            Err(e) => {
+                println!("[create] error:{:?}", e);
+                Err(Error::Sqlx(e))
+            }
+        }
     }
 
     pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Task> {
@@ -255,9 +260,7 @@ mod tests {
         let ctx = Ctx::root_ctx();
         let fx_title = "test_update_ok - task 01";
         let fx_title_new = "test_update_ok - task 01 - new";
-        let fx_task = seed_tasks(&ctx, &mm, &[fx_title])
-            .await?
-            .remove(0);
+        let fx_task = seed_tasks(&ctx, &mm, &[fx_title]).await?.remove(0);
 
         // -- Exec
         TaskBmc::update(
@@ -266,7 +269,7 @@ mod tests {
             fx_task.id,
             TaskForUpdate {
                 title: Some(fx_title_new.to_string()),
-				completed:None
+                completed: None,
             },
         )
         .await?;
