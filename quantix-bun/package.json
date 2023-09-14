@@ -2,17 +2,25 @@
   "name": "quantix-bun",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "pcss && vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "typescript": "latest",
+    "sketchdev": "^0.6.9",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.2",
+    "vite": "^4.4.5",
+    "pcss-cli": "^0.1.5",
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.9",
+    "postcss-import": "^14.0.1",
+    "postcss-nested": "^5.0.5"
+
   },
   "dependencies": {
-    "dom-native": "^0.11.2"
+    "dom-native": "latest"
   }
 }
