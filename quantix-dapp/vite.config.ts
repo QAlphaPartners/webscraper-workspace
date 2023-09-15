@@ -5,8 +5,8 @@ export default defineConfig({
 
   css: {
     postcss: {
-      from: "src/pcss",
-      to:"dist-css"
+      from: "src/pcss/main.pcss",
+      to:"dist-css/main.css"
     }
   },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
