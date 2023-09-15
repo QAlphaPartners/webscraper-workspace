@@ -1,5 +1,5 @@
 import { waitForElms } from './utils';
-import type { DataValue, FataEvent } from 'webrape-events';
+import type { DataValue, FataEvent } from 'webrape-events/dist-jslib';
 
 import { getCurrent } from '@tauri-apps/api/window';
 export async function scrape_urls() {

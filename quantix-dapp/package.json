@@ -3,15 +3,13 @@
   "version": "0.9.22",
   "type": "module",
   "scripts": {
-    "tauri": "tauri",
-    "localhost": "servor dist index.html 1420 --reload",
-    "pcss": "pcss",
-    "rollup": "rollup -c",
-    "ui-build": "rollup -c & pcss",
-    "ui-dev": "rollup -c -w & pcss -w & npm run localhost",
+    "dev": "vite",
+    "build": "bun run build:jslib",
+    "pcss": "bun run postcss src/pcss/main.pcss -o dist-css/main.css --watch ",
+    "build:jslib": "bun run tsc --project ./jslib/tsconfig.json && rollup -c ./jslib/rollup.config.js",
     "app-icons": "tauri icon src-tauri/icons/app-icon.png",
     "svg-symbols": "sketchdev",
-    "build:jslib": "tsc --project ./jslib/tsconfig.json && rollup -c ./jslib/rollup.config.js"
+    "tauri": "tauri"
   },
   "dependencies": {
     "@dom-native/ui": "0.3.0-alpha.1",
@@ -23,18 +21,23 @@
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-multi-entry": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.2.0",
+    "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-typescript": "^11.1.2",
     "@tauri-apps/cli": "^1.4.0",
+    "@types/postcss-import": "^14.0.0",
     "autoprefixer": "^10.4.15",
+    "cssnano": "^6.0.1",
     "pcss-cli": "^0.2.9",
+    "postcss": "^8.4.29",
     "postcss-import": "^15.1.0",
     "postcss-nested": "^6.0.1",
+    "postcss-nesting": "^12.0.1",
     "rollup": "^3.28.0",
-    "servor": "^4.0.2",
     "sketchdev": "^0.7.4",
+    "tailwindcss": "^3.3.3",
     "tslib": "^2.6.1",
-    "typescript": "^5.1.6",
-    "webrape-events": "file:../webrape-events/dist-jslib"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "webrape-events": "../webrape-events"
   }
 }

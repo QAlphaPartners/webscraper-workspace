@@ -3,7 +3,7 @@ import { getCurrent } from '@tauri-apps/api/window';
 import { scrape_urls } from '../url_scraper';
 import { waitForElm } from '../utils';
 import { Event as TauriEvent, listen } from '@tauri-apps/api/event';
-import type { FataEvent, BomaEvent, DataValue } from 'webrape-events';
+import type { FataEvent, BomaEvent, DataValue } from 'webrape-events/dist-jslib';
 
 
 

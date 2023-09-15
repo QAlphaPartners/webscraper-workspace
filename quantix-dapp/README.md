@@ -2,6 +2,46 @@
 
 Base desktop application code with Tauri, Native Web Components, and SurrealDB (follow the VMES app architecture)
 
+Use the command postcss src/pcss/main.pcss -o dist/css/main.css to compile your pcss files into a css file and output it to the dist/css folder. You can also use the -w flag to watch for changes and recompile automatically.
+
+```bsh
+postcss src/pcss/main.pcss -o dist-css/main.css --watch 
+```
+
+```bsh
+bun install  
+
+or 
+
+pnpm install
+
+```
+
+Quick Command, Refer to scripts section of package.json:
+
+**> Terminal 0**
+
+```bsh
+bun run pcss 
+```
+
+**> Terminal 1**
+
+```bsh
+bun run dev 
+
+or directly 
+
+vite
+
+```
+
+**> Terminal 2**
+
+```bsh
+bun run tauri dev
+```
+
 **See [awesomeapp.dev](https://awesomeapp.dev) for more info**
 
 **[Troubleshooting](#troubleshooting)** | **[Changelog](https://awesomeapp.dev/changelog)** | **[Discord Awesome App](https://discord.gg/XuKWrNGKpC)**
@@ -46,19 +86,6 @@ IMPORTANT: Make sure to have **node.js latest of 16** or above.
 
 <br />
 
-  Quick Command:
-
-```bsh
-
-Terminal 1:- 
-
- pnpm run rollup; pnpm run localhost 
-
-Terminal 2:- 
-
-pnpm run tauri dev
-
-```
 
 # Troubleshooting
 

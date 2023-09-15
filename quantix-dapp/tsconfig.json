@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"strict": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+
+		// Allows TS Decorators
+		"experimentalDecorators": true, 
+
+		// Paths info
+		"outDir": "dist", // for checkin tsc output only. Rollup is used for runtime
+		"baseUrl": ".",
+
+	},
+	// We want more control about which code we will compile and exclude
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

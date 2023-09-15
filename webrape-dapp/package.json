@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm build && vite",
-    "build": "pnpm build:jslib && tsc && vite build",
+    "dev": "bun run build; vite",
+    "build": "bun run build:jslib && vite build",
     "build:jslib": "tsc --project ./jslib/tsconfig.json && rollup -c ./jslib/rollup.config.js",
     "preview": "vite preview",
     "tauri": "tauri"
@@ -26,6 +26,6 @@
     "globby": "^13.2.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "webrape-events": "file:../webrape-events/dist-jslib"
+    "webrape-events": "../webrape-events"
   }
 }

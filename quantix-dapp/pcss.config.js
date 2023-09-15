@@ -11,12 +11,12 @@ const plugins = [
 
 export default {
 	// required. Support single string, or array, will be processed in order
-	input: ['./src-ui/pcss/main.pcss'],
+	input: ['./src/pcss/main.pcss'],
 
 	// required. single css file supported for now. 
 	output: './dist/css/app-bundle.css',
 
-	watchPath: ['./src-ui/pcss/**/*.pcss'],
+	watchPath: ['./src/pcss/**/*.pcss'],
 
 	// postcss processor arrays
 	plugins

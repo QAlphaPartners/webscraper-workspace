@@ -6,10 +6,18 @@
   1. build webrape-events first
   1. build plugins/tauri-plugin-jsinject first
 
-## build
+## build & dev
 
-```bs
-    pnpm install && pnpm run tauri dev
+Terminal 1:
+
+```bsh
+    bun install ; bun run dev
+```
+
+Terminal 2:
+
+```bsh
+  bun run tauri dev
 ```
 
 ## Tauri + Vanilla TS

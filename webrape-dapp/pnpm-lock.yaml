@@ -47,8 +47,8 @@ devDependencies:
     specifier: ^4.4.9
     version: 4.4.9(@types/node@20.5.9)
   webrape-events:
-    specifier: file:../webrape-events/dist-jslib
-    version: file:../webrape-events/dist-jslib
+    specifier: ../webrape-events
+    version: link:../webrape-events
 
 packages:
 
@@ -1215,9 +1215,4 @@ packages:
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-    dev: true
-
-  file:../webrape-events/dist-jslib:
-    resolution: {directory: ../webrape-events/dist-jslib, type: directory}
-    name: dist-jslib
     dev: true

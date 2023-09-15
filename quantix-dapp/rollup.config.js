@@ -3,7 +3,7 @@ import rollup_tsc from '@rollup/plugin-typescript';
 
 export default [
   {
-    input: './src-ui/src/main.ts',
+    input: './src/main.ts',
     output: {
       file: './dist/js/app-bundle.js',
       format: 'iife',
@@ -14,7 +14,7 @@ export default [
       // rollup_cjs(),
       rollup_nre(),
       rollup_tsc({
-        tsconfig: './src-ui/tsconfig.json',
+        tsconfig: './tsconfig.json',
         compilerOptions: {
           declaration: false,
           declarationDir: null
