@@ -10,17 +10,15 @@ target/
 package-lock.json
 
 # --- tauri dist build assets
-dist
-dist-jslib
-dist-css
+dist/
+dist-jslib/
+dist-css/
 
 # --- No png except in dist or the app-icon.
 # For generating the app icons, npm run tauri icon src-tauri/icons/app-icon.png)
 *.png
 !dist/images/*.png
 !src-tauri/icons/app-icon.png
-
-dist-jslib
 
 # --- Safety net
 __pycache__/
